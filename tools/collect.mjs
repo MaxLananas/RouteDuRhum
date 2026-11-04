@@ -75,6 +75,15 @@ async function fetchWithRetry(url, { tries = 3, timeoutMs = 25000, headers = {} 
   throw lastErr;
 }
 
+/* Laurent's identity — declared before any step that needs it. */
+const LAURENT = { lastName: /bourgu[eè]s/i, boat: /french\s*fab/i };
+function findLaurentId(boats = {}) {
+  for (const [id, b] of Object.entries(boats)) {
+    if (LAURENT.lastName.test(b.skipper || '') || LAURENT.boat.test(b.name || '')) return id;
+  }
+  return null;
+}
+
 const meta = readJson(join(DATA, 'meta.json'), {}) || {};
 meta.sources = meta.sources || {};
 meta.generatedAt = now();
