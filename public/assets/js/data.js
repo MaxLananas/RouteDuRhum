@@ -103,10 +103,11 @@
     store.core = core;
     store.lastLoad = new Date().toISOString();
 
+    const fileUrl = (name) => `/data/${name}?v=${Date.now()}`;
     const jobs = [];
     if (core.files.trackLaurent) {
       jobs.push(
-        fetchJson(`/data/${core.files.trackLaurent}?v=${Date.now()}`)
+        fetchJson(fileUrl(core.files.trackLaurent))
           .then((raw) => {
             store.track = denoiseTrack(decodeTrack(raw));
           })
@@ -114,18 +115,18 @@
       );
     }
     jobs.push(
-      fetchJson(`${CORE.replace('core.json', core.files.historyLaurent)}?v=${Date.now()}`)
+      fetchJson(fileUrl(core.files.historyLaurent))
         .then((h) => (store.history = h))
         .catch((e) => store.errors.push({ what: 'historique', msg: e.message }))
     );
     jobs.push(
-      fetchJson(`${CORE.replace('core.json', core.files.historyOce50)}?v=${Date.now()}`)
+      fetchJson(fileUrl(core.files.historyOce50))
         .then((h) => (store.oce50History = h))
         .catch((e) => store.errors.push({ what: 'historique flotte', msg: e.message }))
     );
     if (opts.weather !== false) {
       jobs.push(
-        fetchJson(`${CORE.replace('core.json', core.files.weather)}?v=${Date.now()}`)
+        fetchJson(fileUrl(core.files.weather))
           .then((w) => (store.weather = w))
           .catch((e) => store.errors.push({ what: 'météo', msg: e.message }))
       );

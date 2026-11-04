@@ -6,9 +6,11 @@
 (function () {
   'use strict';
 
+  // Open-Meteo accepts multi-coordinate grids but caps the number of cells per request:
+  // 140 points x 3 days with 6 variables is validated (HTTP 200, ~540 kB).
   const GRID = {
-    lat: [52, 48, 44, 40, 36, 32, 28, 24, 20, 16, 12],
-    lon: [-68, -63, -58, -53, -48, -43, -38, -33, -28, -23, -18, -13, -8],
+    lat: [52, 48, 44, 40, 36, 32, 28, 24, 20, 16],
+    lon: [-68, -64, -60, -56, -52, -48, -44, -40, -36, -32, -28, -24, -20, -16],
   };
 
   const W = {
@@ -42,7 +44,7 @@
     W.error = null;
     const lat = GRID.lat.join(',');
     const lon = GRID.lon.join(',');
-    const common = `latitude=${lat}&longitude=${lon}&timezone=UTC&forecast_days=5&cell_selection=sea`;
+    const common = `latitude=${lat}&longitude=${lon}&timezone=UTC&forecast_days=3`;
     const atmoUrl = `${API_ATMO}?${common}&hourly=${qs([
       'wind_speed_10m',
       'wind_direction_10m',
@@ -76,6 +78,10 @@
       const grid = Array.isArray(a) ? a : [a];
       const mgrid = m ? (Array.isArray(m) ? m : [m]) : [];
       if (!grid.length || !grid[0].hourly) throw new Error('réponse vide');
+      const expected = GRID.lat.length * GRID.lon.length;
+      if (grid.length !== expected) {
+        throw new Error(`grille incomplète (${grid.length}/${expected} points)`);
+      }
       W.atmo = grid;
       W.marine = mgrid;
       W.times = grid[0].hourly.time;
