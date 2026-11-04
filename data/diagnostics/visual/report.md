@@ -1,4 +1,4 @@
-# Rapport de test — 2026-11-04T22:07:14.241Z
+# Rapport de test — 2026-11-04T22:10:46.457Z
 
 **50 tests OK / 0 en échec**
 
@@ -21,13 +21,13 @@
 | communiqués de course affichés | ✅ | {"count":7,"first":"Matthieu PERRAUT · ELVEST RET · Abandon Chavirage le 3 novembre au soir, à 400 milles au n","links":7,"empty":false} |
 | comparaison avec la flotte | ✅ | 10 courbes |
 | graphiques rendus | ✅ | [{"key":"chartSpeed","points":109,"w":379,"h":176,"visible":true},{"key":"chartRank","points":109,"w":379,"h":132,"visible":true},{"key":"chartDtf","points":109 |
-| graphiques : axe de temps réel | ✅ | {"type":"linear","points":109,"uniform":true,"early":0,"late":5,"tick":"03 nov. 11:00"} |
-| particules de vent visibles | ✅ | 35815 pixels visibles |
+| graphiques : axe de temps réel | ✅ | {"type":"linear","points":109,"uniform":true,"early":1,"late":8,"tick":"03 nov. 11:00","bounds":{"leadH":0.75,"tailH":0.75}} |
+| particules de vent visibles | ✅ | 39327 pixels visibles |
 | lecteur météo au survol | ✅ | 15.8 nd 254° OSO |
 | couche nuages : voile dessiné | ✅ | {"layer":"clouds","painted":16486,"legend":true,"otherLegends":[],"readout":"16 % partiellement couvert","hasValue":true} |
 | calque météo : couvre toute la carte | ✅ | {"stage":[1188,938],"css":[1188,938],"backing":[1188,938],"internal":[1188,938],"dpr":1} |
 | couche nuages : légende et lecteur dédiés | ✅ | 16 % partiellement couvert |
-| replay actif | ✅ | {"active":true,"playing":true,"t":1793516699.9879997,"timelineOpen":true,"ghost":true} |
+| replay actif | ✅ | {"active":true,"playing":true,"t":1793516701.992,"timelineOpen":true,"ghost":true} |
 | replay : direct mis en retrait | ✅ | {"card":true,"op":"0.28"} |
 | desktop 1024px : rail entièrement visible | ✅ | {"iw":1024,"rail":360,"railRight":1024,"barRight":1024,"stage":664,"outside":0,"chipsOn":3,"chipsClipped":[],"markers":11} |
 | desktop 1024px : aucun élément hors écran | ✅ | 0 éléments |
@@ -53,7 +53,7 @@
           Les données sont momentanément indisponibles.
           HTTP 503 sur /data/core |
 | panne de source : aucune fausse position | ✅ | 0 marqueurs |
-| API live bloquée : snapshot conservé | ✅ | {"markers":11,"status":"Direct · pointage officiel il y a 8 h 09","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,5 |
+| API live bloquée : snapshot conservé | ✅ | {"markers":11,"status":"Direct · pointage officiel il y a 8 h 12","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,5 |
 | sans tuiles : mode schématique annoncé | ✅ | {"cls":true,"badge":true,"markers":11,"trail":3566} |
 | sans tuiles : trace et bateaux toujours lisibles | ✅ | {"cls":true,"badge":true,"markers":11,"trail":3566} |
 
@@ -114,17 +114,21 @@ FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapSer
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/8 — net::ERR_ABORTED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/3 — net::ERR_ABORTED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_ABORTED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/3 — net::ERR_ABORTED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/9 — net::ERR_ABORTED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/3 — net::ERR_ABORTED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/9 — net::ERR_ABORTED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/3 — net::ERR_ABORTED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/9 — net::ERR_ABORTED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/3 — net::ERR_ABORTED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/9 — net::ERR_ABORTED
 FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED
 FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED
-HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793830135630
+HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793830343033
 FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED
 FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED
-FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793830140899 — net::ERR_FAILED
-HTTP 404 http://127.0.0.1:8099/api/classement?_=1793830140899
+FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793830348266 — net::ERR_FAILED
+HTTP 404 http://127.0.0.1:8099/api/classement?_=1793830348266
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/6 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/6 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/5 — net::ERR_FAILED
