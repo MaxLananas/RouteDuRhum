@@ -1,6 +1,6 @@
-# Rapport de test — 2026-11-04T16:30:07.847Z
+# Rapport de test — 2026-11-04T16:35:27.471Z
 
-**41 tests OK / 0 en échec**
+**43 tests OK / 0 en échec**
 
 | Test | Résultat | Détail |
 | --- | --- | --- |
@@ -20,9 +20,11 @@
 | aucune erreur JS | ✅ |  |
 | comparaison avec la flotte | ✅ | 10 courbes |
 | graphiques rendus | ✅ | [{"key":"chartSpeed","points":109,"w":379,"h":176,"visible":true},{"key":"chartRank","points":109,"w":379,"h":132,"visible":true},{"key":"chartDtf","points":109 |
-| particules de vent visibles | ✅ | 39238 pixels visibles |
+| particules de vent visibles | ✅ | 37734 pixels visibles |
 | lecteur météo au survol | ✅ | 15.9 nd 279° O |
-| replay actif | ✅ | {"active":true,"playing":true,"t":1793516701.9919999,"timelineOpen":true,"ghost":true} |
+| couche nuages : voile dessiné | ✅ | {"layer":"clouds","painted":16719,"legend":true,"otherLegends":[],"readout":"9 % ciel dégagé","hasValue":true} |
+| couche nuages : légende et lecteur dédiés | ✅ | 9 % ciel dégagé |
+| replay actif | ✅ | {"active":true,"playing":true,"t":1793516699.9880009,"timelineOpen":true,"ghost":true} |
 | replay : direct mis en retrait | ✅ | {"card":true,"op":"0.28"} |
 | desktop 1024px : rail entièrement visible | ✅ | {"iw":1024,"rail":360,"railRight":1024,"barRight":1024,"stage":664,"outside":0,"chipsOn":3,"chipsClipped":[],"markers":11} |
 | desktop 1024px : aucun élément hors écran | ✅ | 0 éléments |
@@ -44,7 +46,7 @@
           Les données sont momentanément indisponibles.
           HTTP 503 sur /data/core |
 | panne de source : aucune fausse position | ✅ | 0 marqueurs |
-| API live bloquée : snapshot conservé | ✅ | {"markers":11,"status":"Direct · pointage officiel il y a 2 h 31","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,5 |
+| API live bloquée : snapshot conservé | ✅ | {"markers":11,"status":"Direct · pointage officiel il y a 2 h 37","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,5 |
 | sans tuiles : mode schématique annoncé | ✅ | {"cls":true,"badge":true,"markers":11,"trail":3566} |
 | sans tuiles : trace et bateaux toujours lisibles | ✅ | {"cls":true,"badge":true,"markers":11,"trail":3566} |
 
@@ -77,8 +79,6 @@
 [error] Failed to load resource: net::ERR_FAILED
 [error] Failed to load resource: net::ERR_FAILED
 [error] Failed to load resource: net::ERR_FAILED
-[error] Failed to load resource: net::ERR_TIMED_OUT
-[error] Failed to load resource: net::ERR_TIMED_OUT
 ```
 
 ## Réseau (erreurs)
@@ -109,15 +109,14 @@ FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapSer
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_ABORTED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/9 — net::ERR_ABORTED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/9 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/9 — net::ERR_ABORTED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/9 — net::ERR_ABORTED
 FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED
 FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED
-HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793809892574
+HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793810214744
 FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED
 FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED
-FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793809897982 — net::ERR_FAILED
-HTTP 404 http://127.0.0.1:8099/api/classement?_=1793809897982
+FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793810220064 — net::ERR_FAILED
+HTTP 404 http://127.0.0.1:8099/api/classement?_=1793810220064
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/6 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/6 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/5 — net::ERR_FAILED
@@ -138,6 +137,4 @@ FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapSer
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/8 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/4 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_FAILED
-FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_TIMED_OUT
-FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_TIMED_OUT
 ```
