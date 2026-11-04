@@ -105,6 +105,7 @@
       <!-- top-right HUD -->
       <div class="hud hud--tr">
         <div style="display:flex;gap:6px">
+          <button class="iconbtn" id="btnSheet" title="Ouvrir le tableau de bord"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
           <button class="iconbtn" id="btnCenter" title="Recentrer sur La French Fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
           <button class="iconbtn" id="btnReplay" title="Replay de la course" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v14"/><path d="M8 6l11 6-11 6z"/></svg></button>
           <button class="iconbtn" id="btnFs" title="Plein écran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
@@ -169,11 +170,26 @@
         <button class="tab" role="tab" aria-selected="false" data-pane="meteo">Météo</button>
         <button class="tab" role="tab" aria-selected="false" data-pane="boat">Bateau</button>
         <button class="tab" role="tab" aria-selected="false" data-pane="sources">Sources</button>
+        <button class="tab tab--map" role="tab" aria-selected="false" data-pane="map" title="Revenir à la carte">Carte ↑</button>
       </div>
       <div class="rail__body" id="railBody">
 
         <!-- ================================================= DIRECT -->
         <div class="pane is-active" data-pane="live">
+          <div class="sec">
+            <div class="hero-card">
+              <img id="heroPhoto" class="hero-card__img" alt="Laurent Bourguès à bord de La French Fab" loading="lazy" referrerpolicy="no-referrer">
+              <div class="hero-card__body">
+                <div class="eyebrow">Ocean Fifty · FRA 3</div>
+                <div class="hero-card__name">Laurent Bourguès</div>
+                <div class="hero-card__sub">La French Fab · 13ᵉ Route du Rhum</div>
+                <div class="hero-card__meta">
+                  <span><b id="heroRank">—</b> au classement</span>
+                  <span><b id="heroSail">—</b></span>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="sec">
             <div class="hero-stats">
               <div class="stat stat--gold">

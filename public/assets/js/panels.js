@@ -51,6 +51,18 @@
     set('mbDtf', util.int(L.dtf));
     set('mbTime', when ? util.ago(when) : '—');
 
+    // hero card
+    const hero = document.getElementById('heroPhoto');
+    if (hero) {
+      if (L.photo) {
+        hero.src = L.photo;
+        hero.classList.remove('is-missing');
+        hero.onerror = () => hero.classList.add('is-missing');
+      } else hero.classList.add('is-missing');
+    }
+    set('heroRank', L.rank ? `${L.rank}ᵉ` : '—');
+    set('heroSail', L.sail || 'FRA 3');
+
     // boat pane static data
     set('raceStart', core.race.start ? util.fmtDate(core.race.start) : '—');
     set('raceDist', `${util.int(core.race.distance)} milles nautiques`);

@@ -84,6 +84,9 @@
   }
 
   function wireMapButtons() {
+    document.getElementById('btnSheet')?.addEventListener('click', () => {
+      document.getElementById('rail')?.classList.toggle('is-open');
+    });
     document.getElementById('btnCenter')?.addEventListener('click', () => mapCtl.centerOnLaurent());
     const stage = document.getElementById('stage');
     stage?.addEventListener('mousemove', (e) => {
@@ -239,6 +242,11 @@
   }
 
   function switchPane(name, openRail) {
+    if (name === 'map') {
+      document.getElementById('rail')?.classList.remove('is-open');
+      util.$$('#tabs .tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.pane === 'live')));
+      return;
+    }
     util.$$('#tabs .tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.pane === name)));
     util.$$('.pane').forEach((p) => p.classList.toggle('is-active', p.dataset.pane === name));
     const rail = document.getElementById('rail');

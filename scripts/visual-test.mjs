@@ -243,6 +243,8 @@ await new Promise((r) => setTimeout(r, 5000));
 await shot(m, '20-mobile-carte');
 const mobileInfo = await m.evaluate(() => ({
   railOpen: document.getElementById('rail')?.classList.contains('is-open'),
+  sheetBtn: !!document.getElementById('btnSheet'),
+  mapTab: !!document.querySelector('.tab--map'),
   markers: document.querySelectorAll('.boat-marker').length,
   topbarH: document.querySelector('.topbar')?.getBoundingClientRect().height,
   overflow: document.documentElement.scrollWidth > window.innerWidth + 2,
@@ -289,6 +291,13 @@ const mobileInfo = await m.evaluate(() => ({
 }));
 check('mobile : pas de débordement horizontal', !mobileInfo.overflow, `${mobileInfo.scrollWidth}px / ${mobileInfo.innerWidth}px ${JSON.stringify(mobileInfo.offenders)}`);
 check('mobile : marqueurs présents', mobileInfo.markers >= 2, String(mobileInfo.markers));
+check('mobile : bouton d’ouverture du panneau', mobileInfo.sheetBtn && mobileInfo.mapTab, JSON.stringify({ b: mobileInfo.sheetBtn, t: mobileInfo.mapTab }));
+// the hero photo must come from the official CDN
+const hero = await m.evaluate(() => {
+  const img = document.getElementById('heroPhoto');
+  return img ? { src: img.getAttribute('src'), ok: img.complete && img.naturalWidth > 0, hidden: img.classList.contains('is-missing') } : null;
+});
+check('photo officielle du skipper', !!hero && /wixstatic/.test(hero.src || '') && (hero.ok || hero.hidden), JSON.stringify(hero));
 console.log('MOBILE DEBUG', JSON.stringify(mobileInfo.debug));
 await m.evaluate(() => document.getElementById('rail')?.classList.add('is-open'));
 await new Promise((r) => setTimeout(r, 900));
