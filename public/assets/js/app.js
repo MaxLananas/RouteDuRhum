@@ -472,20 +472,40 @@
       const i = CHIP_PRIORITY.indexOf(el.querySelector('.tchip__v')?.id);
       return i < 0 ? CHIP_PRIORITY.length : i; // unknown chips go last
     };
-    chips.forEach((c) => c.classList.remove('is-cut'));
-    // measure every chip while all of them are still rendered; ceil() so a
-    // fractional width can never end up a hair wider than the room available
-    const width = new Map(chips.map((c) => [c, Math.ceil(c.getBoundingClientRect().width)]));
+
+    // Measure with every chip rendered, then restore. Both steps happen in the
+    // same task, so no resize observer can observe the intermediate state.
+    const wasCut = chips.map((c) => c.classList.contains('is-cut'));
+    const width = new Map();
+    chips.forEach((c, i) => {
+      if (wasCut[i]) c.classList.remove('is-cut');
+      width.set(c, Math.ceil(c.getBoundingClientRect().width));
+    });
     const avail = Math.floor(strip.getBoundingClientRect().width);
+
+    const hide = new Set();
     let used = chips.reduce((n, c) => n + (width.get(c) || 0), 0);
-    const drop = [...chips].sort((a, b) => prio(b) - prio(a));
-    for (const chip of drop) {
-      if (used <= avail - 1) break; // 1px slack
-      chip.classList.add('is-cut');
+    for (const chip of [...chips].sort((a, b) => prio(b) - prio(a))) {
+      if (used <= avail - 1) break; // 1px slack for fractional layout
+      hide.add(chip);
       used -= width.get(chip) || 0;
     }
+    // only touch the DOM when the answer actually changes (keeps this stable)
+    chips.forEach((c, i) => {
+      const cut = hide.has(c);
+      if (cut !== wasCut[i]) c.classList.toggle('is-cut', cut);
+    });
   }
-  window.addEventListener('load', fitTopStats);
+
+  /* Values are live ("36 min" can become "1 h 26"), so a single pass at load
+     would go stale and clip a number. Refit whenever a chip changes size. */
+  function watchTopStats() {
+    const strip = document.getElementById('topStats');
+    if (!strip || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => fitTopStats());
+    [...strip.children].forEach((c) => ro.observe(c));
+  }
+  window.addEventListener('load', () => { fitTopStats(); watchTopStats(); });
   window.addEventListener('resize', util.debounce(fitTopStats, 120));
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTopStats);
 
