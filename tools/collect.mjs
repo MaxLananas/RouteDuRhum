@@ -208,9 +208,19 @@ try {
   const dec = await resource('tracks', { maxAgeH: 2 });
   const raw = parseTracks(dec);
   const boats = {};
+  let predPoints = 0;
   for (const [id, t] of Object.entries(raw)) {
     if (!t.t.length) continue;
     boats[id] = t;
+    if (t.pred) predPoints += t.pred.t.length;
+  }
+  if (INSPECT) {
+    const j = JSON.parse(new TextDecoder().decode(dec));
+    const sample = (j.tracks || []).find((x) => String(x.id) === String(findLaurentId(config.boats)));
+    writeFileSync(
+      join(DATA, 'diagnostics', 'pred-sample.json'),
+      JSON.stringify({ hasPred: !!sample?.pred, head: sample?.pred?.slice(0, 6), count: sample?.pred?.length }, null, 1)
+    );
   }
   // pred: predicted route from live/reports if present
   tracks = { updatedAt: now(), version: versions.tracks ?? null, boats };
@@ -219,6 +229,7 @@ try {
   markSource('carto.tracks', true, {
     bytes: dec.length,
     points: Object.values(boats).reduce((s, b) => s + b.t.length, 0),
+    predPoints,
     boats: Object.keys(boats).length,
     laurentPoints: laurentId && boats[laurentId] ? boats[laurentId].t.length : 0,
     lastPoint: laurentId && boats[laurentId] ? new Date(boats[laurentId].t.at(-1) * 1000).toISOString() : null,

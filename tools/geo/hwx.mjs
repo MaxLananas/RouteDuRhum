@@ -122,7 +122,8 @@ export function parseConfig(bytes) {
 
 /* ------------------------------------------------------------------ tracks */
 
-/** Full tracks: { boatId: { t: [ts...], lat: [...], lon: [...] } } (delta decoded). */
+/** Full tracks + the tracker's own predicted route, when published.
+ *  { boatId: { t, lat, lon, pred?: {t, lat, lon} } } — all coordinates delta-decoded. */
 export function parseTracks(bytes, coordsFactor = 100000) {
   const data = JSON.parse(text(bytes));
   const list = data.tracks || data;
@@ -145,7 +146,35 @@ export function parseTracks(bytes, coordsFactor = 100000) {
       LA.push(Math.round(lat * 1e5) / 1e5);
       LO.push(Math.round(lon * 1e5) / 1e5);
     }
-    if (T.length) out[String(track.id)] = { t: T, lat: LA, lon: LO };
+    if (!T.length) continue;
+    const entry = { t: T, lat: LA, lon: LO };
+    // `pred` is the router's projected track: same delta encoding, relative to the
+    // boat's projected position at the time of the report.
+    const pred = track.pred;
+    if (Array.isArray(pred) && pred.length > 1) {
+      const PT = [];
+      const PLA = [];
+      const PLO = [];
+      let pts = 0;
+      let plat = 0;
+      let plon = 0;
+      const lastLat = LA[LA.length - 1];
+      const lastLon = LO[LO.length - 1];
+      for (const p of pred) {
+        if (!Array.isArray(p) || p.length < 3) continue;
+        pts += p[0];
+        plat += p[1] / coordsFactor;
+        plon += p[2] / coordsFactor;
+        const a = lastLat + plat;
+        const o = lastLon + plon;
+        if (!Number.isFinite(a) || !Number.isFinite(o) || Math.abs(a) > 90 || Math.abs(o) > 360) continue;
+        PT.push(T[T.length - 1] + pts);
+        PLA.push(Math.round(a * 1e5) / 1e5);
+        PLO.push(Math.round(o * 1e5) / 1e5);
+      }
+      if (PT.length > 1) entry.pred = { t: PT, lat: PLA, lon: PLO };
+    }
+    out[String(track.id)] = entry;
   }
   return out;
 }
