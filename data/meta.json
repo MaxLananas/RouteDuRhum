@@ -2,9 +2,9 @@
   "sources": {
     "carto.versions": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:51:18.910Z",
-      "lastAttempt": "2026-11-04T14:51:18.910Z",
-      "lastSuccessBefore": "2026-11-04T14:50:33.096Z",
+      "lastSuccess": "2026-11-04T14:52:26.074Z",
+      "lastAttempt": "2026-11-04T14:52:26.074Z",
+      "lastSuccessBefore": "2026-11-04T14:51:18.910Z",
       "versions": {
         "config": 20261104114533,
         "tracks": 20261104140442,
@@ -15,25 +15,25 @@
     },
     "carto.config": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:51:19.056Z",
-      "lastAttempt": "2026-11-04T14:51:19.056Z",
-      "lastSuccessBefore": "2026-11-04T14:50:33.717Z",
+      "lastSuccess": "2026-11-04T14:52:26.216Z",
+      "lastAttempt": "2026-11-04T14:52:26.216Z",
+      "lastSuccessBefore": "2026-11-04T14:51:19.056Z",
       "bytes": 64274,
       "boats": 115
     },
     "carto.tracks": {
       "ok": false,
-      "lastError": "Cannot access 'LAURENT' before initialization",
-      "lastFailure": "2026-11-04T14:51:19.141Z",
-      "lastAttempt": "2026-11-04T14:51:19.141Z",
+      "lastError": "findLaurentId is not defined",
+      "lastFailure": "2026-11-04T14:52:26.275Z",
+      "lastAttempt": "2026-11-04T14:52:26.275Z",
       "lastSuccessBefore": null,
-      "error": "Cannot access 'LAURENT' before initialization"
+      "error": "findLaurentId is not defined"
     },
     "carto.reports": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:51:19.332Z",
-      "lastAttempt": "2026-11-04T14:51:19.332Z",
-      "lastSuccessBefore": "2026-11-04T14:50:34.091Z",
+      "lastSuccess": "2026-11-04T14:52:26.454Z",
+      "lastAttempt": "2026-11-04T14:52:26.454Z",
+      "lastSuccessBefore": "2026-11-04T14:51:19.332Z",
       "bytes": 1953838,
       "reports": 108,
       "columns": 38,
@@ -41,9 +41,9 @@
     },
     "carto.live": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:51:19.367Z",
-      "lastAttempt": "2026-11-04T14:51:19.367Z",
-      "lastSuccessBefore": "2026-11-04T14:50:34.154Z",
+      "lastSuccess": "2026-11-04T14:52:26.475Z",
+      "lastAttempt": "2026-11-04T14:52:26.475Z",
+      "lastSuccessBefore": "2026-11-04T14:51:19.367Z",
       "bytes": 24062,
       "bytesDecoded": 24062,
       "latestReport": "2026-11-04T14:00:00Z",
@@ -51,30 +51,28 @@
       "state": "RUNNING"
     },
     "rdr.classement": {
-      "ok": true,
-      "lastSuccess": "2026-11-04T14:51:19.760Z",
-      "lastAttempt": "2026-11-04T14:51:19.760Z",
-      "lastSuccessBefore": "2026-11-04T14:50:34.441Z",
-      "bytes": 75895,
-      "maj": "2026-11-04T14:00:24Z",
-      "boats": 115,
-      "laurentFound": true
+      "ok": false,
+      "lastError": "LAURENT is not defined",
+      "lastFailure": "2026-11-04T14:52:26.780Z",
+      "lastAttempt": "2026-11-04T14:52:26.780Z",
+      "lastSuccessBefore": "2026-11-04T14:51:19.760Z",
+      "error": "LAURENT is not defined"
     },
     "open-meteo": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:51:20.639Z",
-      "lastAttempt": "2026-11-04T14:51:20.639Z",
-      "lastSuccessBefore": "2026-11-04T14:50:35.751Z",
+      "lastSuccess": "2026-11-04T14:52:27.255Z",
+      "lastAttempt": "2026-11-04T14:52:27.255Z",
+      "lastSuccessBefore": "2026-11-04T14:51:20.639Z",
       "position": {
         "lat": 42.258,
         "lon": -26.822
       }
     }
   },
-  "generatedAt": "2026-11-04T14:51:18.441Z",
+  "generatedAt": "2026-11-04T14:52:25.939Z",
   "host": "github-actions",
-  "runId": "41851706139",
-  "runNumber": "14",
+  "runId": "41851886845",
+  "runNumber": "15",
   "versionCache": {
     "config": 20261104114533,
     "tracks": 20261104140442,
@@ -85,11 +83,7 @@
     "name": "Route du Rhum",
     "category": "multiclass real",
     "state": "RUNNING",
-    "start": "2026-11-01T12:02:00Z",
-    "depart": "2026-11-01T12:02:00Z",
-    "distance": 3542,
-    "phase": "course",
-    "maj": "2026-11-04T14:00:24Z"
+    "start": "2026-11-01T12:02:00Z"
   },
   "classes": [
     {
