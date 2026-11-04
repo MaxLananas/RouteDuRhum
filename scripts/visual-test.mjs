@@ -196,10 +196,22 @@ const axis = await page.evaluate(() => {
     early: Math.round(px(pts[3].x) - px(pts[1].x)),
     late: Math.round(px(pts[pts.length - 1].x) - px(pts[pts.length - 3].x)),
     tick: String(sc.ticks?.[1]?.label || ''),
+    // the axis must not invent hours before the start or after the last report
+    bounds: (() => {
+      const first = sc.min;
+      const last = sc.max;
+      const dataFirst = pts[0].x;
+      const dataLast = pts[pts.length - 1].x;
+      return {
+        leadH: +((dataFirst - first) / 3.6e6).toFixed(2),
+        tailH: +((last - dataLast) / 3.6e6).toFixed(2),
+      };
+    })(),
   };
 });
 check('graphiques : axe de temps réel',
-  !!axis && axis.type === 'linear' && axis.uniform && axis.late > axis.early + 4,
+  !!axis && axis.type === 'linear' && axis.uniform && axis.late > axis.early + 4
+  && axis.bounds.leadH < 2 && axis.bounds.tailH < 2,
   JSON.stringify(axis));
 
 /* weather layers */

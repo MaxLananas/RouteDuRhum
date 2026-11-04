@@ -21,7 +21,11 @@
     ticks: { padding: 6, maxRotation: 0, autoSkipPadding: 14 },
   };
 
-  function baseOpts(yTitle, unit) {
+  /** Datasets of every chart built so far, so baseOpts can pin the time range. */
+  const DATA = {};
+
+  function baseOpts(yTitle, unit, chartId) {
+    const range = chartId && DATA[chartId] ? pinTimeRange(DATA[chartId]) : null;
     return {
       responsive: true,
       maintainAspectRatio: false,
@@ -58,6 +62,7 @@
             maxTicksLimit: 6,
             callback: (v) => dateTick(v),
           },
+          ...(range || {}),
         },
         y: { ...AXIS, beginAtZero: false, title: { display: !!yTitle, text: yTitle, color: '#4d637a', font: { size: 8 } } },
       },
@@ -65,6 +70,7 @@
   }
 
   function make(id, conf) {
+    DATA[id] = conf?.data?.datasets || [];
     const el = document.getElementById(id);
     if (!el) return null;
     if (C.instances[id]) C.instances[id].destroy();
@@ -116,6 +122,25 @@
     });
   };
 
+  /**
+   * Pin the x axis to the first and last real report. Chart.js otherwise pads a
+   * linear axis, which invents empty hours at both ends of the race.
+   */
+  function pinTimeRange(datasets) {
+    let min = Infinity;
+    let max = -Infinity;
+    (datasets || []).forEach((d) => {
+      (d.data || []).forEach((pt) => {
+        if (!Number.isFinite(pt?.x)) return;
+        if (pt.x < min) min = pt.x;
+        if (pt.x > max) max = pt.x;
+      });
+    });
+    if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) return null;
+    const pad = (max - min) * 0.01;
+    return { min: min - pad, max: max + pad };
+  }
+
   /** Build [{x, y}] pairs from a parallel array of ISO dates. */
   const pairs = (dates, values) => dates.map((iso, i) => ({ x: ms(iso), y: values[i] ?? null })).filter((p) => p.x !== null);
 
@@ -131,7 +156,7 @@
           line(pairs(h.dates, h.vmg), 'rgb(114,185,241)', { label: 'VMG', dash: [4, 3] }),
         ],
       },
-      options: baseOpts('nœuds', 'nd'),
+      options: baseOpts('nœuds', 'nd', 'chartSpeed'),
     });
 
     const ranks = h.rank.map((r) => (Number.isFinite(r) ? r : null));
@@ -154,9 +179,13 @@
         ],
       },
       options: {
-        ...baseOpts('rang', ''),
+        ...baseOpts('rang', '', 'chartRank'),
         scales: {
-          x: { ...AXIS, type: 'linear', ticks: { ...AXIS.ticks, maxTicksLimit: 6, callback: (v) => dateTick(v) } },
+          x: {
+            ...AXIS, type: 'linear',
+            ticks: { ...AXIS.ticks, maxTicksLimit: 6, callback: (v) => dateTick(v) },
+            ...(pinTimeRange(DATA.chartRank || []) || {}),
+          },
           y: { ...AXIS, reverse: true, min: 1, max: maxRank, ticks: { ...AXIS.ticks, stepSize: 1, precision: 0 } },
         },
       },
@@ -170,7 +199,7 @@
           line(pairs(h.dates, h.dtl), 'rgb(255,107,87)', { label: 'DTL' }),
         ],
       },
-      options: baseOpts('milles', 'mi'),
+      options: baseOpts('milles', 'mi', 'chartDtf'),
     });
 
     make('chartWind', {
@@ -183,7 +212,7 @@
           line(pairs(h.dates, h.waveheight.map((v) => (Number.isFinite(v) ? v / 10 : null))), 'rgb(62,230,176)', { label: 'Vagues' }),
         ],
       },
-      options: baseOpts('nd · m', ''),
+      options: baseOpts('nd · m', '', 'chartWind'),
     });
   };
 
@@ -201,7 +230,7 @@
           line(pairs(iso, s.waves), 'rgb(62,230,176)', { label: 'Vagues', dash: [4, 3] }),
         ],
       },
-      options: baseOpts('nd · m', ''),
+      options: baseOpts('nd · m', '', 'chartForecast'),
     });
   };
 
@@ -229,7 +258,7 @@
       type: 'line',
       data: { datasets },
       options: {
-        ...baseOpts('milles de retard', 'mi'),
+        ...baseOpts('milles de retard', 'mi', 'chartRivals'),
         plugins: {
           ...baseOpts().plugins,
           tooltip: {
