@@ -1,4 +1,4 @@
-# Bundles internals — 2026-11-04T14:29:42.955Z
+# Bundles internals — 2026-11-04T14:56:07.422Z
 
 ## viewer.js (83345 o)
 
