@@ -118,6 +118,12 @@
     });
     // stop the browser's context menu so the map feels like a native app
     map.on('contextmenu', (e) => L.DomEvent.preventDefault(e));
+    // shareable view in the URL hash
+    map.on('moveend', () => {
+      const c = map.getCenter();
+      const z = map.getZoom().toFixed(2);
+      history.replaceState(null, '', `#${c.lat.toFixed(3)},${c.lng.toFixed(3)},${z}`);
+    });
     window.addEventListener('resize', () => M.scheduleTrail());
 
     // click on empty map: dismiss focus
@@ -406,13 +412,15 @@
         interactive: false,
       }).addTo(M.map);
     }
-    // dim the live pictogram
-    const me = String(core.laurent.trackerId);
-    const rec = M.boatMarkers.get(me);
-    if (rec) {
+    // dim the live pictograms so the replay ghost is unambiguous
+    for (const rec of M.boatMarkers.values()) {
       const el = rec.marker.getElement();
-      if (el) el.style.opacity = '0.35';
+      if (el) {
+        el.style.transition = 'opacity .3s';
+        el.style.opacity = '0.28';
+      }
     }
+    document.getElementById('liveCard')?.classList.add('is-replay');
     return true;
   };
 
@@ -423,12 +431,11 @@
       M.map.removeLayer(M.ghost);
       M.ghost = null;
     }
-    const me = String(core.laurent.trackerId);
-    const rec = M.boatMarkers.get(me);
-    if (rec) {
+    for (const rec of M.boatMarkers.values()) {
       const el = rec.marker.getElement();
       if (el) el.style.opacity = '1';
     }
+    document.getElementById('liveCard')?.classList.remove('is-replay');
     M.scheduleTrail();
   };
 
@@ -620,6 +627,18 @@
   };
 
   /* --------------------------------------------------------------- misc */
+  /** Restore a shared view from #lat,lon,zoom if present. */
+  M.restoreView = function () {
+    const m = /^#(-?[\d.]+),(-?[\d.]+),([\d.]+)$/.exec(location.hash || '');
+    if (!m) return false;
+    const lat = Number(m[1]);
+    const lon = Number(m[2]);
+    const z = Number(m[3]);
+    if (![lat, lon, z].every(Number.isFinite)) return false;
+    M.map.setView([lat, lon], util.clamp(z, 2, 12));
+    return true;
+  };
+
   M.fitRace = function (core) {
     const tr = dataStore.track;
     if (!tr || !tr.t.length) {

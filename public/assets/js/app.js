@@ -330,7 +330,7 @@
       const speedAt = buildOfficialSpeedLookup();
       mapCtl.drawLaurentTrail(dataStore.track, speedAt);
       mapCtl.updateFleet(core, { showOthers: true });
-      mapCtl.fitRace(core);
+      if (!mapCtl.restoreView()) mapCtl.fitRace(core);
       setTimeout(() => mapCtl.map.invalidateSize(), 150);
     } else {
       mapCtl.drawLaurentTrail(dataStore.track, buildOfficialSpeedLookup());

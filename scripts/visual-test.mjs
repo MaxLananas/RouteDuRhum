@@ -202,6 +202,11 @@ const replayState = await page.evaluate(() => ({
   ghost: !!window.mapCtl.ghost,
 }));
 check('replay actif', replayState.active && replayState.timelineOpen && replayState.ghost, JSON.stringify(replayState));
+const dimmed = await page.evaluate(() => {
+  const el = document.querySelector('.boat-marker');
+  return { card: document.getElementById('liveCard')?.classList.contains('is-replay'), op: el ? getComputedStyle(el).opacity : null };
+});
+check('replay : direct mis en retrait', dimmed.card === true && Number(dimmed.op) < 0.5, JSON.stringify(dimmed));
 await shot(page, '10-desktop-replay');
 // scrub
 await page.evaluate(() => {

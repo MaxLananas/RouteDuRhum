@@ -67,7 +67,7 @@
 
       <!-- top-left HUD -->
       <div class="hud hud--tl">
-        <div class="livecard" id="liveCard">
+        <div class="livecard" id="liveCard"><span class="replay-flag">REPLAY</span>
           <div class="livecard__head">
             <span class="livecard__flag" aria-hidden="true"></span>
             <div style="min-width:0;flex:1">
@@ -326,33 +326,43 @@
           <div class="sec">
             <div class="sec__head"><h3 class="sec__title">La French Fab</h3><span class="sec__note">Ocean Fifty · FRA 3</span></div>
             <div class="panel" style="padding:14px;background:rgba(255,255,255,.03)">
-              <svg class="boatfig" viewBox="0 0 320 200" width="320" height="200" style="max-width:100%;height:auto" role="img" aria-label="Silhouette de trimaran Ocean Fifty">
+              <svg class="boatfig" viewBox="0 0 320 210" width="320" height="210" style="max-width:100%;height:auto" role="img" aria-label="Ocean Fifty : trimaran de 15,24 m, vue de face">
                 <defs>
-                  <linearGradient id="hull" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0" stop-color="#dfe9f5"/><stop offset="1" stop-color="#8ba3bd"/>
+                  <linearGradient id="hullG" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#eef4fb"/><stop offset=".55" stop-color="#c3d4e6"/><stop offset="1" stop-color="#7f97b0"/>
                   </linearGradient>
-                  <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0" stop-color="rgba(47,123,255,.35)"/><stop offset="1" stop-color="rgba(5,10,17,0)"/>
+                  <linearGradient id="sailG" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="rgba(47,123,255,.42)"/><stop offset="1" stop-color="rgba(47,123,255,.10)"/>
+                  </linearGradient>
+                  <linearGradient id="jibG" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="rgba(255,255,255,.26)"/><stop offset="1" stop-color="rgba(255,255,255,.06)"/>
+                  </linearGradient>
+                  <linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="rgba(47,123,255,.30)"/><stop offset="1" stop-color="rgba(5,10,17,0)"/>
                   </linearGradient>
                 </defs>
-                <rect x="0" y="140" width="320" height="60" fill="url(#sea)"/>
-                <g stroke="rgba(255,255,255,.14)" stroke-width="1">
-                  <path d="M0 152q40-7 80 0t80 0 80 0 80 0"/>
-                  <path d="M0 166q40-5 80 0t80 0 80 0 80 0"/>
+                <rect x="0" y="150" width="320" height="60" fill="url(#seaG)"/>
+                <g stroke="rgba(255,255,255,.12)" fill="none" stroke-width="1">
+                  <path d="M0 160q40-6 80 0t80 0 80 0 80 0"/>
+                  <path d="M0 176q40-5 80 0t80 0 80 0 80 0"/>
                 </g>
                 <!-- main hull -->
-                <path d="M152 44h16l14 86q1 8-6 8h-32q-7 0-6-8z" fill="url(#hull)"/>
+                <path d="M152 52h16l10 82q1 9-7 9h-22q-8 0-7-9z" fill="url(#hullG)"/>
+                <path d="M152 52h16l3 84h-22z" fill="rgba(0,0,0,.10)"/>
                 <!-- floats -->
-                <path d="M84 74h11l6 56q0 7-6 7h-9q-6 0-6-7z" fill="url(#hull)" opacity=".85"/>
-                <path d="M225 74h11l4 56q0 7-6 7h-8q-6 0-6-7z" fill="url(#hull)" opacity=".85"/>
+                <path d="M78 84h13l6 48q0 7-6 7h-7q-6 0-6-7z" fill="url(#hullG)" opacity=".96"/>
+                <path d="M229 84h13l-2 50q0 7-6 7h-7q-6 0-6-7z" fill="url(#hullG)" opacity=".96"/>
                 <!-- beams -->
-                <rect x="90" y="86" width="140" height="5" rx="2.5" fill="#c3d4e6" opacity=".8"/>
-                <rect x="96" y="112" width="128" height="4" rx="2" fill="#a9bdd2" opacity=".6"/>
-                <!-- mast + sails -->
-                <path d="M160 44V12" stroke="#e6eef7" stroke-width="3.4" stroke-linecap="round"/>
-                <path d="M160 16 96 92h64z" fill="rgba(47,123,255,.3)" stroke="rgba(120,170,255,.8)" stroke-width="1.4"/>
-                <path d="M163 20 219 96h-56z" fill="rgba(255,255,255,.16)" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/>
-                <circle cx="160" cy="12" r="2.6" fill="#ffc24b"/>
+                <rect x="84" y="96" width="152" height="6" rx="3" fill="#cddced" opacity=".92"/>
+                <rect x="90" y="122" width="140" height="4.5" rx="2.2" fill="#a9bdd2" opacity=".72"/>
+                <!-- rig -->
+                <path d="M160 52V14" stroke="#eaf2fb" stroke-width="3.6" stroke-linecap="round"/>
+                <path d="M160 18 104 100h56z" fill="url(#sailG)" stroke="rgba(120,170,255,.85)" stroke-width="1.6"/>
+                <path d="M164 22 214 100h-50z" fill="url(#jibG)" stroke="rgba(255,255,255,.55)" stroke-width="1.3"/>
+                <path d="M160 14V52" stroke="rgba(255,255,255,.35)" stroke-width="1"/>
+                <circle cx="160" cy="14" r="3" fill="#ffc24b"/>
+                <!-- waterline -->
+                <path d="M70 143q45 8 90 0t90 0" stroke="rgba(114,185,241,.55)" stroke-width="1.6" fill="none"/>
               </svg>
             </div>
             <p class="serif" style="font-size:17px;line-height:1.4;margin:14px 0 8px">Un plan Irens/Cabaret de 2009, vainqueur de la Route du Rhum 2010 avec Lionel Lemonchois, remis à niveau pour le solitaire.</p>

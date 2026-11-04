@@ -306,6 +306,14 @@ p { margin: 0 0 0.75em; }
 .iconbtn svg { width: 16px; height: 16px; }
 
 /* live boat card on the map */
+.replay-flag {
+  display: none; position: absolute; top: 8px; right: 10px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: .16em; padding: 2px 6px;
+  border-radius: 4px; background: var(--gold); color: #10172a; font-weight: 700;
+}
+.livecard { position: relative; }
+.livecard.is-replay { opacity: .62; }
+.livecard.is-replay .replay-flag { display: block; }
 .livecard {
   width: 100%; padding: 14px 16px 12px;
   background: linear-gradient(140deg, rgba(16, 34, 58, 0.92), rgba(7, 14, 24, 0.86));
@@ -390,7 +398,7 @@ p { margin: 0 0 0.75em; }
 .kv { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.07); font-size: 12.5px; }
 .kv:last-child { border-bottom: 0; }
 .kv__k { color: var(--ink-dim); }
-.kv__v { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.kv__v { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; overflow-wrap: anywhere; }
 
 table.tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
 .tbl th {
@@ -565,8 +573,24 @@ input[type='range']::-moz-range-thumb { width: 14px; height: 14px; border: 0; bo
   }
   .mobilebar b { color: var(--ink); }
   .hud--tl { max-width: none; right: 14px; }
-  .hud--tl .livecard { display: none; }
-  .livecard { width: 100%; }
+  .hud--tl .replay-flag {
+  display: none; position: absolute; top: 8px; right: 10px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: .16em; padding: 2px 6px;
+  border-radius: 4px; background: var(--gold); color: #10172a; font-weight: 700;
+}
+.livecard { position: relative; }
+.livecard.is-replay { opacity: .62; }
+.livecard.is-replay .replay-flag { display: block; }
+.livecard { display: none; }
+  .replay-flag {
+  display: none; position: absolute; top: 8px; right: 10px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: .16em; padding: 2px 6px;
+  border-radius: 4px; background: var(--gold); color: #10172a; font-weight: 700;
+}
+.livecard { position: relative; }
+.livecard.is-replay { opacity: .62; }
+.livecard.is-replay .replay-flag { display: block; }
+.livecard { width: 100%; }
   .hud--tr { top: auto; bottom: 108px; right: 10px; left: auto; max-width: calc(100vw - 20px); }
   .hud--tr > div:first-child { flex-wrap: wrap; justify-content: flex-end; }
   .iconbtn { width: 32px; height: 32px; }
