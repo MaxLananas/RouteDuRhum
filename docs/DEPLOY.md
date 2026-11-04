@@ -62,13 +62,24 @@ déclenchait le workflow.
 
 Conséquences pratiques :
 
-1. Il faut que `main` contienne le workflow (`collect.yml`) pour que le cron démarre.
-   C'est le cas dès que la pull request est fusionnée.
-2. Vérifier ensuite avec `gh run list --workflow=collect.yml --event=schedule`.
+1. **Il faut que `main` contienne `.github/workflows/collect.yml`.** Vérifié le
+   4 novembre : `git ls-tree -r --name-only origin/main` ne renvoie que `README.md`.
+   Tant que c'est le cas, aucun cron ne peut partir, quelle que soit la branche de
+   travail. La fusion de la PR suffit à corriger cela.
+2. Vérifier ensuite, dans cet ordre :
+   - `gh ls-tree`-équivalent : `git ls-tree -r --name-only origin/main | grep workflows`
+   - `gh run list --workflow=collect.yml --event=schedule` (doit renvoyer des runs)
+   - `python3 -c "import json;print(json.load(open('public/data/core.json'))['freshness'])"`
+     doit montrer un `lastRun` de quelques minutes.
 3. Le site **détecte** ce cas : si la dernière collecte date de plus de 40 minutes, le
    bandeau passe en « Instantané figé — collecte il y a X » (pastille ambre, infobulle
    explicite) et un message précise que rien n'est extrapolé. C'est testé
    (`instantané figé`, 6 h simulées).
+
+> Tant que la PR n'est pas fusionnée, les données ne se rafraîchissent que sur
+> `push`/`workflow_dispatch`. C'est acceptable pour une démonstration, pas pour suivre
+> une course : la fusion n'est pas une formalité, c'est la condition de fonctionnement
+> du temps réel.
 
 > Autres limites du cron GitHub, à connaître : granularité **5 minutes** minimum, démarrages
 > parfois retardés de 5 à 15 min aux heures de pointe, et **désactivation automatique

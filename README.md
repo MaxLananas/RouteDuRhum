@@ -50,13 +50,16 @@ Le workflow GitHub Actions `collect.yml` interroge les sources toutes les
 5 minutes, met à jour `public/data/*.json` et pousse sur la branche de données :
 Cloudflare Pages redéploie automatiquement, sans action manuelle.
 
-> **Avant mise en ligne** : GitHub n'exécute un cron que depuis la **branche par
-> défaut**. Tant que `main` ne contient que le README initial, aucune exécution
-> planifiée ne part (vérifié : 0 run `schedule` sur 129). Après fusion de la PR,
-> vérifier avec `gh run list --workflow=collect.yml --event=schedule`. Le site signale
-> de lui-même un collecteur muet : bandeau « Instantané figé — collecte il y a X »,
-> pastille ambre, aucun chiffre extrapolé. Détails et quotas (dont les 500 déploiements
-> Pages/mois) dans [`docs/DEPLOY.md`](docs/DEPLOY.md).
+> **Condition de fonctionnement du temps réel** : GitHub n'exécute un cron que depuis
+> la **branche par défaut**. `main` ne contient aujourd'hui que le README initial, donc
+> aucune exécution planifiée ne part (vérifié : 0 run `schedule`). **Fusionner la PR**
+> est donc nécessaire pour que la collecte tourne seule ; ensuite, vérifier avec
+> `gh run list --workflow=collect.yml --event=schedule`.
+>
+> Le site signale de lui-même un collecteur muet : bandeau « Instantané figé — collecte
+> il y a X », pastille ambre, aucun chiffre extrapolé. Détails, quotas (dont les
+> 500 déploiements Pages/mois) et les deux pannes réelles corrigées le 4 novembre dans
+> [`docs/DEPLOY.md`](docs/DEPLOY.md).
 
 ## Tests
 
