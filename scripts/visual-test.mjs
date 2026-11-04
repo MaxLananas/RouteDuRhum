@@ -153,10 +153,10 @@ const windPainted = await page.evaluate(() => {
   const c = document.getElementById('windCanvas');
   const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
   let n = 0;
-  for (let i = 3; i < d.length; i += 4) if (d[i] > 0) n++;
+  for (let i = 3; i < d.length; i += 4) if (d[i] > 40) n++;
   return n;
 });
-check('particules de vent dessinées', windPainted > 1000, `${windPainted} pixels opaques`);
+check('particules de vent visibles', windPainted > 20000, `${windPainted} pixels visibles`);
 // hover the wind layer to capture the model readout chip
 const box = await page.$eval('#map', (el) => {
   const r = el.getBoundingClientRect();

@@ -363,7 +363,7 @@
         p.age = p.life;
         continue;
       }
-      const scale = 1.15;
+      const scale = 0.105;
       p.x += v.u * scale * k;
       p.y -= v.v * scale * k;
       p.age += k;
@@ -373,7 +373,7 @@
         p.px = p.x;
         p.py = p.y;
         p.age = 0;
-        p.life = 70 + Math.random() * 90;
+        p.life = 90 + Math.random() * 110;
       }
     }
   };
@@ -448,7 +448,7 @@
       // Real flowing trails: fade the previous frame instead of clearing it, so each
       // particle leaves a streak whose colour is the local model wind speed.
       ctx.globalCompositeOperation = 'destination-out';
-      ctx.fillStyle = 'rgba(0,0,0,0.085)';
+      ctx.fillStyle = 'rgba(0,0,0,0.038)';
       ctx.fillRect(0, 0, W.w, W.h);
       ctx.globalCompositeOperation = 'lighter';
       ctx.lineCap = 'round';
@@ -461,9 +461,9 @@
         const v = W.vectorAt(ll.lat, ll.lng);
         if (!v) continue;
         const ageF = p.age / p.life;
-        const alpha = Math.sin(Math.PI * util.clamp(ageF, 0.02, 0.98)) * 0.95;
+        const alpha = (0.35 + 0.6 * Math.sin(Math.PI * util.clamp(ageF, 0.02, 0.98)));
         ctx.strokeStyle = `rgba(${windRGB(v.speed).join(',')},${alpha.toFixed(3)})`;
-        ctx.lineWidth = v.speed > 22 ? 1.7 : v.speed > 12 ? 1.35 : 1.05;
+        ctx.lineWidth = v.speed > 22 ? 2.1 : v.speed > 12 ? 1.7 : 1.3;
         ctx.beginPath();
         ctx.moveTo(p.px, p.py);
         ctx.lineTo(p.x, p.y);
