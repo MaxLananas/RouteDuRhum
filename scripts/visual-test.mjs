@@ -426,6 +426,7 @@ const noOverlap = await m.evaluate(() => {
   const hits = [...document.querySelectorAll('#mobileBar span, #tabs .tab, .rail__grab')]
     .map((el) => ({ el, r: el.getBoundingClientRect() }))
     .filter(({ el, r }) => el !== document.querySelector('.tab--map') && r.width > 0 && r.height > 0
+      && !el.closest('#railGrab') // the drag handle deliberately sits on top
       && !(r.right <= t.left || r.left >= t.right || r.bottom <= t.top || r.top >= t.bottom))
     .map(({ el, r }) => ({
       html: el.outerHTML.slice(0, 70),
