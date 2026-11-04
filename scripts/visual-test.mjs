@@ -176,6 +176,22 @@ await page.evaluate(() => {
 });
 await new Promise((r) => setTimeout(r, 500));
 await shot(page, '02b-desktop-communiques');
+// the "conditions at his position" cards must never show a bare dash
+const wxCards = await page.evaluate(() => {
+  const wn = document.getElementById('wxNow');
+  const txt = wn?.textContent.replace(/\s+/g, ' ').trim() || '';
+  const ready = window.wxCtl?.ready;
+  return {
+    text: txt.slice(0, 90),
+    dashesOnly: /^(Vent|Rafales)\s*—/.test(txt) || /=+\s*—\s*$/.test(txt),
+    explains: /Chargement|indisponible|aucune valeur|n\.d\.|nd|modèle/i.test(txt),
+    cards: wn?.querySelectorAll('.stat').length || 0,
+  };
+});
+check('conditions à sa position : jamais une valeur vide',
+  wxCards.cards > 0 && wxCards.text.length > 6 && !/^—\s*$/.test(wxCards.text) && wxCards.explains,
+  JSON.stringify(wxCards));
+
 check('communiqués de course affichés',
   news.count > 0 && news.first.length > 12 && !news.empty,
   JSON.stringify(news));

@@ -260,6 +260,36 @@
     }
   };
 
+  /* The two "conditions at his position" cards live in the Direct pane, so they
+     must be rendered even when the weather model is unavailable — otherwise the
+     static markup stays on screen and an em dash passes for a measurement. */
+  P.renderConditionsNow = function () {
+    const wn = document.getElementById('wxNow');
+    const core = dataStore.core;
+    if (!wn || !core) return;
+    const L = core.laurent;
+    const w = wxCtl;
+    const cond = w.ready ? w.at(L.lat, L.lon, core.freshness.officialStandings) : null;
+    if (!cond) {
+      const why = w.loading
+        ? 'Chargement du modèle…'
+        : w.error
+          ? 'Open-Meteo indisponible (' + util.esc(String(w.error).slice(0, 60)) + ') — aucune valeur inventée.'
+          : 'Position officielle indisponible — modèle non interpolé.';
+      wn.innerHTML = `<div class="stat" style="grid-column:1/-1">
+        <div class="stat__k">Modèle météo</div>
+        <div class="stat__d" style="font-size:11px;line-height:1.5">${why}</div></div>`;
+      return;
+    }
+    const num = (v, unit, digits) =>
+      Number.isFinite(v) ? `${digits ? util.one(v) : util.int(v)}<small>${unit}</small>` : 'n.d.';
+    wn.innerHTML =
+      `<div class="stat"><div class="stat__k">Vent</div><div class="stat__v" style="font-size:21px">${num(cond.wind, 'nd', true)}</div>
+        <div class="stat__d">${Number.isFinite(cond.windDir) ? Math.round(cond.windDir) + '° ' + util.cardinal(cond.windDir) : 'direction n.d.'} · rafales ${Number.isFinite(cond.gust) ? util.one(cond.gust) : 'n.d.'}</div></div>` +
+      `<div class="stat"><div class="stat__k">Vagues</div><div class="stat__v" style="font-size:21px">${num(cond.waves, 'm', true)}</div>
+        <div class="stat__d">${Number.isFinite(cond.waves) ? 'hauteur significative' : 'hors couverture marine'}</div></div>`;
+  };
+
   /* -------------------------------------------------------- weather pane */
   P.renderWeather = function () {
     const w = wxCtl;
@@ -270,6 +300,7 @@
     if (!core) return;
     const L = core.laurent;
     if (!w.ready) {
+      P.renderConditionsNow();
       box.innerHTML = `<div class="stat" style="grid-column:1/-1"><div class="stat__k">Modèle</div><div class="stat__v" style="font-size:14px;font-weight:500">${w.loading ? 'Chargement du modèle…' : 'Indisponible'}</div><div class="stat__d">${util.esc(w.error || '')}</div></div>`;
       if (warn) {
         warn.style.display = w.error && !w.loading ? '' : 'none';
@@ -299,24 +330,7 @@
         card('Mer', `${util.one(cond.sst)}<small>°C</small>`, 'température de surface');
     }
 
-    // live card weather (2 stats)
-    const wn = document.getElementById('wxNow');
-    if (wn) {
-      if (!cond) {
-        // say why, rather than showing a dash that looks like a measurement
-        wn.innerHTML = `<div class="stat" style="grid-column:1/-1">
-          <div class="stat__k">Modèle météo</div>
-          <div class="stat__d" style="font-size:11px;line-height:1.5">${
-            w.ready === false && w.error
-              ? 'Open-Meteo indisponible (' + util.esc(String(w.error).slice(0, 60)) + ') — aucune valeur inventée.'
-              : 'Chargement du modèle…'
-          }</div></div>`;
-      } else {
-        wn.innerHTML =
-          `<div class="stat"><div class="stat__k">Vent</div><div class="stat__v" style="font-size:21px">${Number.isFinite(cond.wind) ? util.one(cond.wind) : 'n.d.'}<small>nd</small></div><div class="stat__d">${Number.isFinite(cond.windDir) ? util.cardinal(cond.windDir) : 'direction n.d.'} · rafales ${Number.isFinite(cond.gust) ? util.one(cond.gust) : 'n.d.'}</div></div>` +
-          `<div class="stat"><div class="stat__k">Vagues</div><div class="stat__v" style="font-size:21px">${Number.isFinite(cond.waves) ? util.one(cond.waves) : 'n.d.'}<small>m</small></div><div class="stat__d">${Number.isFinite(cond.waves) ? 'hauteur significative' : 'hors couverture marine'}</div></div>`;
-      }
-    }
+    P.renderConditionsNow();
 
     if (cond) {
       const s = w.seriesAt(L.lat, L.lon, core.freshness.officialStandings, 48);

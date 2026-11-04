@@ -472,6 +472,9 @@
     wxCtl.watch();
     wxCtl.onChange.push(() => {
       if (document.querySelector('.pane[data-pane="meteo"].is-active')) panels.renderWeather();
+      // the Direct pane carries two model cards: update them whenever the model
+      // arrives, retries or fails, not only when the Météo tab is open
+      panels.renderConditionsNow();
       wxCtl.frame();
     });
 
