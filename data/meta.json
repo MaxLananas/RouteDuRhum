@@ -2,9 +2,9 @@
   "sources": {
     "carto.versions": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:52:37.800Z",
-      "lastAttempt": "2026-11-04T14:52:37.800Z",
-      "lastSuccessBefore": "2026-11-04T14:52:26.074Z",
+      "lastSuccess": "2026-11-04T14:53:35.356Z",
+      "lastAttempt": "2026-11-04T14:53:35.356Z",
+      "lastSuccessBefore": "2026-11-04T14:52:37.800Z",
       "versions": {
         "config": 20261104114533,
         "tracks": 20261104140442,
@@ -15,25 +15,29 @@
     },
     "carto.config": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:52:37.932Z",
-      "lastAttempt": "2026-11-04T14:52:37.932Z",
-      "lastSuccessBefore": "2026-11-04T14:52:26.216Z",
+      "lastSuccess": "2026-11-04T14:53:35.445Z",
+      "lastAttempt": "2026-11-04T14:53:35.445Z",
+      "lastSuccessBefore": "2026-11-04T14:52:37.932Z",
       "bytes": 64274,
       "boats": 115
     },
     "carto.tracks": {
-      "ok": false,
-      "lastError": "findLaurentId is not defined",
-      "lastFailure": "2026-11-04T14:52:38.008Z",
-      "lastAttempt": "2026-11-04T14:52:38.008Z",
+      "ok": true,
+      "lastSuccess": "2026-11-04T14:53:35.510Z",
+      "lastAttempt": "2026-11-04T14:53:35.510Z",
       "lastSuccessBefore": null,
-      "error": "findLaurentId is not defined"
+      "bytes": 629853,
+      "points": 35774,
+      "predPoints": 0,
+      "boats": 115,
+      "laurentPoints": 321,
+      "lastPoint": "2026-11-04T13:45:00.000Z"
     },
     "carto.reports": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:52:38.226Z",
-      "lastAttempt": "2026-11-04T14:52:38.226Z",
-      "lastSuccessBefore": "2026-11-04T14:52:26.454Z",
+      "lastSuccess": "2026-11-04T14:53:35.681Z",
+      "lastAttempt": "2026-11-04T14:53:35.681Z",
+      "lastSuccessBefore": "2026-11-04T14:52:38.226Z",
       "bytes": 1953838,
       "reports": 108,
       "columns": 38,
@@ -41,9 +45,9 @@
     },
     "carto.live": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:52:38.251Z",
-      "lastAttempt": "2026-11-04T14:52:38.251Z",
-      "lastSuccessBefore": "2026-11-04T14:52:26.475Z",
+      "lastSuccess": "2026-11-04T14:53:35.701Z",
+      "lastAttempt": "2026-11-04T14:53:35.701Z",
+      "lastSuccessBefore": "2026-11-04T14:52:38.251Z",
       "bytes": 24062,
       "bytesDecoded": 24062,
       "latestReport": "2026-11-04T14:00:00Z",
@@ -51,28 +55,30 @@
       "state": "RUNNING"
     },
     "rdr.classement": {
-      "ok": false,
-      "lastError": "LAURENT is not defined",
-      "lastFailure": "2026-11-04T14:52:38.586Z",
-      "lastAttempt": "2026-11-04T14:52:38.586Z",
+      "ok": true,
+      "lastSuccess": "2026-11-04T14:53:36.171Z",
+      "lastAttempt": "2026-11-04T14:53:36.171Z",
       "lastSuccessBefore": "2026-11-04T14:51:19.760Z",
-      "error": "LAURENT is not defined"
+      "bytes": 75895,
+      "maj": "2026-11-04T14:00:24Z",
+      "boats": 115,
+      "laurentFound": true
     },
     "open-meteo": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:52:39.084Z",
-      "lastAttempt": "2026-11-04T14:52:39.084Z",
-      "lastSuccessBefore": "2026-11-04T14:52:27.255Z",
+      "lastSuccess": "2026-11-04T14:53:36.724Z",
+      "lastAttempt": "2026-11-04T14:53:36.724Z",
+      "lastSuccessBefore": "2026-11-04T14:52:39.084Z",
       "position": {
         "lat": 42.258,
         "lon": -26.822
       }
     }
   },
-  "generatedAt": "2026-11-04T14:52:37.632Z",
+  "generatedAt": "2026-11-04T14:53:35.117Z",
   "host": "github-actions",
-  "runId": "41851899339",
-  "runNumber": "16",
+  "runId": "41852068850",
+  "runNumber": "17",
   "versionCache": {
     "config": 20261104114533,
     "tracks": 20261104140442,
@@ -83,7 +89,11 @@
     "name": "Route du Rhum",
     "category": "multiclass real",
     "state": "RUNNING",
-    "start": "2026-11-01T12:02:00Z"
+    "start": "2026-11-01T12:02:00Z",
+    "depart": "2026-11-01T12:02:00Z",
+    "distance": 3542,
+    "phase": "course",
+    "maj": "2026-11-04T14:00:24Z"
   },
   "classes": [
     {
@@ -123,6 +133,6 @@
   "dataFreshness": {
     "live": "2026-11-04T14:00:00Z",
     "reports": "2026-11-01T12:02:00Z",
-    "trackLast": null
+    "trackLast": "2026-11-04T13:45:00.000Z"
   }
 }
