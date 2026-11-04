@@ -252,8 +252,14 @@ for (const w of [1024, 1280, 1440, 1920]) {
       barRight: Math.round(bar.right),
       stage: Math.round(r('.stage').width),
       // real overflow test: getBoundingClientRect ignores the overflow:hidden mask
-      outside: [...document.querySelectorAll('.topbar__stats .tchip, .rail__body *')]
+      outside: [...document.querySelectorAll('.rail__body *, .topbar__right *, .brand *')]
         .filter((el) => el.getBoundingClientRect().right > window.innerWidth + 1).length,
+      chipsOn: [...document.querySelectorAll('.topbar__stats .tchip')]
+        .filter((el) => getComputedStyle(el).display !== 'none').length,
+      // a visible chip must sit fully left of the action buttons
+      chipsClipped: [...document.querySelectorAll('.topbar__stats .tchip')]
+        .filter((el) => getComputedStyle(el).display !== 'none')
+        .filter((el) => el.getBoundingClientRect().right > r('.topbar__right').left + 1).length,
       markers: document.querySelectorAll('.boat-marker').length,
     };
   });
@@ -261,6 +267,8 @@ for (const w of [1024, 1280, 1440, 1920]) {
     m.railRight <= m.iw + 1 && m.barRight <= m.iw + 1 && Math.abs(m.stage + m.rail - m.iw) <= 1 && m.markers > 0,
     JSON.stringify(m));
   check(`desktop ${w}px : aucun élément hors écran`, m.outside === 0, `${m.outside} éléments`);
+  check(`desktop ${w}px : indicateurs du bandeau non tronqués`,
+    m.chipsClipped === 0 && m.chipsOn >= 3, `${m.chipsOn} indicateurs, ${m.chipsClipped} tronqués`);
   if (w === 1280) await shot(rp, '19-desktop-1280');
   await rp.close();
 }

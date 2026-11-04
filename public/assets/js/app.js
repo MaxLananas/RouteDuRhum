@@ -434,6 +434,7 @@
     }
 
     paintAll(true);
+    fitTopStats();
     setStatus(true, `Direct · pointage officiel ${util.ago(dataStore.core.freshness.officialStandings)}`);
     scheduleRefresh();
 
@@ -453,6 +454,27 @@
     // window resize → chart resize handled by Chart.js
     window.addEventListener('resize', util.debounce(() => wxCtl.resize(), 200));
   }
+
+  /* ---------------------------------------------------- topbar stat fitting
+     The KPI strip only keeps the chips that physically fit. Chips never shrink
+     (a squeezed "…dernier pointage" reads as broken), and nothing is ever
+     drawn underneath the Direct/Actualiser buttons. */
+  function fitTopStats() {
+    const strip = document.getElementById('topStats');
+    if (!strip) return;
+    const chips = [...strip.querySelectorAll('.tchip')];
+    if (!chips.length) return;
+    chips.forEach((c) => c.classList.remove('is-cut'));
+    // measure against the room actually available, not the strip's scroll width
+    const limit = strip.getBoundingClientRect().right;
+    for (let i = chips.length - 1; i >= 0; i--) {
+      const r = chips[i].getBoundingClientRect();
+      if (r.right > limit + 0.5 || r.width < 24) chips[i].classList.add('is-cut');
+    }
+  }
+  window.addEventListener('load', fitTopStats);
+  window.addEventListener('resize', util.debounce(fitTopStats, 120));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTopStats);
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();

@@ -131,7 +131,7 @@ p { margin: 0 0 0.75em; }
   backdrop-filter: var(--blur);
   z-index: 60;
 }
-.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 0 1 auto; }
 .brand__mark {
   width: 34px; height: 34px; border-radius: 10px;
   background: radial-gradient(120% 120% at 20% 0%, #3d86ff 0%, #1147b8 55%, #0a2a6e 100%);
@@ -149,7 +149,9 @@ p { margin: 0 0 0.75em; }
   font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--ink-faint); white-space: nowrap;
 }
-.topbar__stats { display: flex; align-items: stretch; gap: 0; margin-left: 6px; flex: 1; min-width: 0; overflow: hidden; }
+.topbar__stats { display: flex; align-items: stretch; gap: 0; margin-left: 6px; flex: 1 1 auto; min-width: 0; overflow: hidden; }
+.topbar__stats .tchip { flex: 0 0 auto; }
+.topbar__stats .tchip.is-cut { display: none; }
 .tchip {
   display: flex; flex-direction: column; justify-content: center;
   padding: 0 16px; border-left: 1px solid var(--line); min-width: 0;
@@ -163,7 +165,7 @@ p { margin: 0 0 0.75em; }
 .tchip__v { font-family: var(--mono); font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .tchip__v small { font-size: 10px; color: var(--ink-dim); font-weight: 500; margin-left: 2px; }
 .tchip--rank .tchip__v { color: var(--gold); }
-.topbar__right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.topbar__right { display: flex; align-items: center; gap: 8px; margin-left: auto; flex: 0 0 auto; z-index: 1; }
 
 .pill {
   display: inline-flex; align-items: center; gap: 7px;
@@ -586,7 +588,6 @@ input[type='range']::-moz-range-thumb { width: 14px; height: 14px; border: 0; bo
 
 @media (max-width: 1180px) {
   :root { --rail-w: 360px; }
-  .topbar__stats .tchip:nth-child(n + 5) { display: none; }
 }
 
 @media (max-width: 900px) {
