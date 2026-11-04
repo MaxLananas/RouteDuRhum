@@ -191,6 +191,29 @@ p { margin: 0 0 0.75em; }
 .main { position: relative; display: grid; grid-template-columns: 1fr var(--rail-w); min-height: 0; }
 .stage { position: relative; min-height: 0; overflow: hidden; }
 #map { position: absolute; inset: 0; background: #04080f; }
+/* fallback when no tile server is reachable: a calm, readable ocean backdrop */
+.stage.no-tiles #map,
+.stage.no-tiles .leaflet-container {
+  background:
+    radial-gradient(120% 90% at 30% 10%, rgba(20, 62, 104, 0.55), rgba(4, 10, 18, 0) 60%),
+    radial-gradient(90% 70% at 80% 80%, rgba(12, 46, 82, 0.5), rgba(4, 10, 18, 0) 65%),
+    linear-gradient(160deg, #071726 0%, #04101c 45%, #030a12 100%) !important;
+}
+.stage.no-tiles .leaflet-container::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(120, 170, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 170, 255, 0.07) 1px, transparent 1px);
+  background-size: 90px 90px, 90px 90px;
+  mask-image: radial-gradient(120% 90% at 50% 40%, #000 40%, transparent 100%);
+}
+.tile-badge {
+  position: absolute; z-index: 505; left: 50%; transform: translateX(-50%); bottom: 74px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+  color: #ffd9a3; background: rgba(255,176,32,.10); border: 1px solid rgba(255,176,32,.35);
+  padding: 4px 9px; border-radius: 6px; backdrop-filter: blur(8px); white-space: nowrap;
+}
 .map-canvas { position: absolute; inset: 0; z-index: 450; pointer-events: none; }
 .map-canvas canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .leaflet-container { background: #04080f !important; font-family: var(--sans) !important; }
@@ -347,6 +370,8 @@ p { margin: 0 0 0.75em; }
 }
 .tabs { display: flex; gap: 2px; padding: 10px 10px 0; overflow-x: auto; scrollbar-width: none; }
 @media (max-width: 900px) { .tab--map { display: block; } }
+#btnSheet { display: none; }
+@media (max-width: 900px) { #btnSheet { display: grid; } }
 .tabs::-webkit-scrollbar { display: none; }
 .tab--map { display: none; }
 .tab {

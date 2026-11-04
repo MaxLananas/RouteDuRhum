@@ -358,6 +358,31 @@ await p2.click('#tabs .tab[data-pane="meteo"]');
 await new Promise((r) => setTimeout(r, 1200));
 await shot(p2, '32-panne-meteo');
 
+/* fallback when tile CDNs are unreachable */
+const nb = await newPage(1280, 800, false);
+await nb.setRequestInterception(true);
+nb.on('request', (req) => {
+  if (/arcgisonline|basemaps\.cartocdn|tile\.openstreetmap/.test(req.url())) return req.abort();
+  req.continue();
+});
+await nb.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 60000 });
+await new Promise((r) => setTimeout(r, 5000));
+const noTiles = await nb.evaluate(() => ({
+  cls: document.getElementById('stage')?.classList.contains('no-tiles'),
+  badge: !document.getElementById('tileBadge')?.classList.contains('hide'),
+  markers: document.querySelectorAll('.boat-marker').length,
+  trail: (() => {
+    const c = document.getElementById('trailCanvas');
+    const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+    let n = 0;
+    for (let i = 3; i < d.length; i += 4) if (d[i] > 40) n++;
+    return n;
+  })(),
+}));
+check('sans tuiles : mode schématique annoncé', noTiles.cls && noTiles.badge, JSON.stringify(noTiles));
+check('sans tuiles : trace et bateaux toujours lisibles', noTiles.trail > 1000 && noTiles.markers > 0, JSON.stringify(noTiles));
+await shot(nb, '33-sans-tuiles');
+
 /* ----------------------------------------------------------------- done */
 report.info = info;
 report.mobileInfo = mobileInfo;

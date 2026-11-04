@@ -138,6 +138,8 @@
     const conf = BASES[key];
     if (!conf) return;
     if (M.baseLayer) M.map.removeLayer(M.baseLayer);
+    M.tileErrors = 0;
+    M.tilesOk = 0;
     M.baseLayer = L.tileLayer(conf.url, {
       attribution: conf.attr,
       maxZoom: 18,
@@ -146,9 +148,35 @@
       detectRetina: false,
       keepBuffer: 3,
       updateWhenIdle: false,
-    }).addTo(M.map);
+    });
+    M.baseLayer.on('tileload', () => {
+      M.tilesOk++;
+      if (M.offlineBase) M.setOfflineBase(false);
+    });
+    M.baseLayer.on('tileerror', () => {
+      M.tileErrors++;
+      // no tile ever loaded and several failures -> the tile CDN is unreachable.
+      // We say so and switch to a schematic ocean backdrop instead of a black void.
+      if (M.tilesOk === 0 && M.tileErrors >= 6 && !M.offlineBase) M.setOfflineBase(true);
+    });
+    M.baseLayer.addTo(M.map);
     M.baseKey = key;
     if (!silent) M.emitBase();
+  };
+
+  /** Schematic ocean backdrop used only when no basemap tile can be fetched. */
+  M.setOfflineBase = function (on) {
+    M.offlineBase = on;
+    const stage = document.getElementById('stage');
+    if (stage) stage.classList.toggle('no-tiles', on);
+    const badge = document.getElementById('tileBadge');
+    if (badge) badge.classList.toggle('hide', !on);
+    if (on) {
+      util.toast(
+        'Fond de carte indisponible sur ce réseau : la carte passe en mode schématique. Les positions et la trace restent les données officielles.',
+        'bad'
+      );
+    }
   };
 
   M.emitBase = function () {
