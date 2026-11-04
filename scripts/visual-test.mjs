@@ -342,6 +342,12 @@ await shot(m, '20-mobile-carte');
 const mobileInfo = await m.evaluate(() => ({
   railOpen: document.getElementById('rail')?.classList.contains('is-open'),
   sheetBtn: !!document.getElementById('btnSheet'),
+  sheetBtnVisible: (() => {
+    const b = document.getElementById('btnSheet');
+    if (!b) return false;
+    const r = b.getBoundingClientRect();
+    return getComputedStyle(b).display !== 'none' && r.width > 8 && r.height > 8;
+  })(),
   mapTab: !!document.querySelector('.tab--map'),
   markers: document.querySelectorAll('.boat-marker').length,
   topbarH: document.querySelector('.topbar')?.getBoundingClientRect().height,
@@ -389,7 +395,9 @@ const mobileInfo = await m.evaluate(() => ({
 }));
 check('mobile : pas de débordement horizontal', !mobileInfo.overflow, `${mobileInfo.scrollWidth}px / ${mobileInfo.innerWidth}px ${JSON.stringify(mobileInfo.offenders)}`);
 check('mobile : marqueurs présents', mobileInfo.markers >= 2, String(mobileInfo.markers));
-check('mobile : bouton d’ouverture du panneau', mobileInfo.sheetBtn && mobileInfo.mapTab, JSON.stringify({ b: mobileInfo.sheetBtn, t: mobileInfo.mapTab }));
+check('mobile : boutons carte ⇄ panneau',
+  mobileInfo.sheetBtnVisible && mobileInfo.mapTab,
+  JSON.stringify({ sheet: mobileInfo.sheetBtnVisible, carte: mobileInfo.mapTab }));
 
 const mobileBar = await page.evaluate(() => {
   const name = document.querySelector('.brand__name');
