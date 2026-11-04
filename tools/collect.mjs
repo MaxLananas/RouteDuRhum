@@ -330,13 +330,6 @@ try {
 }
 
 /* ------------------------------------------------- 6. official classement */
-const LAURENT = { lastName: /bourgu[eè]s/i, boat: /french\s*fab/i };
-function findLaurentId(boats = {}) {
-  for (const [id, b] of Object.entries(boats)) {
-    if (LAURENT.lastName.test(b.skipper || '') || LAURENT.boat.test(b.name || '')) return id;
-  }
-  return null;
-}
 function findLaurentLine(classement) {
   for (const c of classement?.classes || []) {
     for (const l of c.lignes || []) {
