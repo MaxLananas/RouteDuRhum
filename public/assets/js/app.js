@@ -497,7 +497,6 @@
 
     paintAll(true);
     fitTopStats();
-    setStatus(true, `Direct · pointage officiel ${util.ago(dataStore.core.freshness.officialStandings)}`);
     scheduleRefresh();
 
     dataStore.on('official', () => {

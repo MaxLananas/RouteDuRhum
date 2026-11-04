@@ -604,13 +604,14 @@ await fr.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 60000 });
 await new Promise((r) => setTimeout(r, 5000));
 const frozen = await fr.evaluate(() => ({
   status: document.getElementById('mapStatusTxt')?.textContent.trim() || '',
-  statusOk: !document.querySelector('#mapStatus .dot')?.classList.contains('dot--bad') === false,
+  // the dot must be the "bad" one when the collector is silent
+  dotBad: !!document.querySelector('#mapStatus .dot.dot--bad'),
   pillStale: !!document.querySelector('#liveBtn.pill--stale'),
   markers: document.querySelectorAll('.boat-marker').length,
   toast: [...document.querySelectorAll('.toast')].map((t) => t.textContent).join(' ').slice(0, 200),
 }));
 check('instantané figé : la page cesse de dire « direct »',
-  /Instantané figé/.test(frozen.status) && frozen.pillStale && frozen.markers > 0,
+  /Instantané figé/.test(frozen.status) && frozen.pillStale && frozen.dotBad && frozen.markers > 0,
   JSON.stringify(frozen));
 await shot(fr, '34-instantane-fige');
 await fr.close();
