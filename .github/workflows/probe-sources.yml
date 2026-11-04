@@ -25,17 +25,20 @@ jobs:
         with:
           node-version: '22'
       - name: Probe tiles and APIs
-        run: node tools/probe-tiles.mjs 2>&1 | tee probe.log
+        run: |
+          node tools/probe-tiles.mjs 2>&1 | tee probe.log
+          node tools/probe-carto.mjs 2>&1 | tee -a probe.log || true
       - name: Publish results
         if: always()
         run: |
           mkdir -p data/diagnostics
           cp -f tiles-probe.json data/diagnostics/tiles-probe.json || true
+          rm -f data/diagnostics/bundle-*.js
           echo '```json' >> $GITHUB_STEP_SUMMARY
           cat tiles-probe.json >> $GITHUB_STEP_SUMMARY || true
           echo '```' >> $GITHUB_STEP_SUMMARY
           git config user.name 'rdr-bot'
           git config user.email 'rdr-bot@users.noreply.github.com'
-          git add data/diagnostics/tiles-probe.json
+          git add data/diagnostics/
           git commit -m 'data: third-party source probe [skip ci]' || true
           git push origin "HEAD:${DATA_BRANCH}" || true
