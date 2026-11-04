@@ -390,6 +390,22 @@ const mobileInfo = await m.evaluate(() => ({
 check('mobile : pas de débordement horizontal', !mobileInfo.overflow, `${mobileInfo.scrollWidth}px / ${mobileInfo.innerWidth}px ${JSON.stringify(mobileInfo.offenders)}`);
 check('mobile : marqueurs présents', mobileInfo.markers >= 2, String(mobileInfo.markers));
 check('mobile : bouton d’ouverture du panneau', mobileInfo.sheetBtn && mobileInfo.mapTab, JSON.stringify({ b: mobileInfo.sheetBtn, t: mobileInfo.mapTab }));
+const mapTab = await page.evaluate(() => {
+  const t = document.querySelector('.tab--map');
+  if (!t) return { found: false };
+  const r = t.getBoundingClientRect();
+  const mid = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+  return {
+    found: true,
+    shown: getComputedStyle(t).display !== 'none',
+    inside: r.left >= -0.5 && r.right <= window.innerWidth + 0.5 && r.width > 24,
+    clickable: !!mid && t.contains(mid),
+    label: t.textContent.trim(),
+  };
+});
+check('mobile : onglet Carte visible et cliquable',
+  mapTab.found && mapTab.shown && mapTab.inside && mapTab.clickable,
+  JSON.stringify(mapTab));
 const mobileBar = await page.evaluate(() => {
   const name = document.querySelector('.brand__name');
   const live = document.getElementById('liveBtn');
