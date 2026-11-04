@@ -1,4 +1,4 @@
-# Visual test run 73 — 2026-11-04T18:43:00Z
+# Visual test run 75 — 2026-11-04T22:09:17Z
 
 ```
 PASS  core chargé
@@ -10,20 +10,21 @@ PASS  pictogrammes sur la carte — 11 marqueurs
 PASS  trace dessinée sur le canvas
 PASS  météo modèle chargée
 PASS  performances officielles non nulles — ["4 heures37,2 mi8,7 nd12,6 nd","24 heures259 mi8,9 nd20,2 nd","48 heures—14,8 nd25,4 nd","Depuis le départ1 284 mi15,0 nd25,4 nd"]
-PASS  écarts flotte sans doublon Laurent — ["Anne-Claire LE BERRE +35,0 mi 9,7","Erwan LE DRAOULEC −82,5 mi 15,5","Luke BERRY −132,1 mi 20,4","Thibaut VAUCHEL-CAMUS −188,5 mi 20,1","Baptiste HULIN −253,9
+PASS  écarts flotte sans doublon Laurent — ["Anne-Claire LE BERRE +25,7 mi 14,0","Erwan LE DRAOULEC −116,8 mi 20,2","Luke BERRY −173,3 mi 21,9","Thibaut VAUCHEL-CAMUS −216,4 mi 18,6","Baptiste HULIN −268
 PASS  API officielle live
 PASS  rang affiché — 8 / 10
-PASS  vitesse affichée — 12,5nd
+PASS  vitesse affichée — 14,3nd
 PASS  aucune erreur JS
 PASS  communiqués de course affichés — {"count":7,"first":"Matthieu PERRAUT · ELVEST RET · Abandon Chavirage le 3 novembre au soir, à 400 milles au n","links":7,"empty":false}
 PASS  comparaison avec la flotte — 10 courbes
 PASS  graphiques rendus — [{"key":"chartSpeed","points":109,"w":379,"h":176,"visible":true},{"key":"chartRank","points":109,"w":379,"h":132,"visible":true},{"key":"chartDtf","points":109,"w":379,"h":132,"visible":true},{"key":"chartWind","points":109,"w":379,"h":132,"visible":true},{"key":"chartRivals","points":109,"w":379,"h":176,"visible":true},{"key":"chartForecast","points":48,"w":379,"h":176,"visible":false}]
-PASS  particules de vent visibles — 34957 pixels visibles
-PASS  lecteur météo au survol — 15.5 nd 272° O
-PASS  couche nuages : voile dessiné — {"layer":"clouds","painted":16453,"legend":true,"otherLegends":[],"readout":"23 % partiellement couvert","hasValue":true}
+PASS  graphiques : axe de temps réel — {"type":"linear","points":109,"uniform":true,"early":0,"late":5,"tick":"03 nov. 11:00"}
+PASS  particules de vent visibles — 35815 pixels visibles
+PASS  lecteur météo au survol — 15.8 nd 254° OSO
+PASS  couche nuages : voile dessiné — {"layer":"clouds","painted":16486,"legend":true,"otherLegends":[],"readout":"16 % partiellement couvert","hasValue":true}
 PASS  calque météo : couvre toute la carte — {"stage":[1188,938],"css":[1188,938],"backing":[1188,938],"internal":[1188,938],"dpr":1}
-PASS  couche nuages : légende et lecteur dédiés — 23 % partiellement couvert
-PASS  replay actif — {"active":true,"playing":true,"t":1793516699.9880002,"timelineOpen":true,"ghost":true}
+PASS  couche nuages : légende et lecteur dédiés — 16 % partiellement couvert
+PASS  replay actif — {"active":true,"playing":true,"t":1793516699.9879997,"timelineOpen":true,"ghost":true}
 PASS  replay : direct mis en retrait — {"card":true,"op":"0.28"}
 PASS  desktop 1024px : rail entièrement visible — {"iw":1024,"rail":360,"railRight":1024,"barRight":1024,"stage":664,"outside":0,"chipsOn":3,"chipsClipped":[],"markers":11}
 PASS  desktop 1024px : aucun élément hors écran — 0 éléments
@@ -50,9 +51,9 @@ PASS  panne de source : message explicite —
           Les données sont momentanément indisponibles.
           HTTP 503 sur /data/core
 PASS  panne de source : aucune fausse position — 0 marqueurs
-PASS  API live bloquée : snapshot conservé — {"markers":11,"status":"Direct · pointage officiel il y a 4 h 42","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn","marine":"https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wave_height,wave_direction,wave_period,sea_surface_temperature"},"perfRows":["4 heures37,2 mi8,7 nd12,6 nd","24 heures259 mi8,9 nd20,2 nd","48 heures—14,8 nd25,4 nd","Depuis le départ1 284 mi15,0 nd25,4 nd"],"gapRows":["Anne-Claire LE BERRE +19,5 mi 13,0","Erwan LE DRAOULEC −75,0 mi 12,7","Luke BERRY −104,8 mi 14,2","Thibaut VAUCHEL-CAMUS −162,4 mi 16,9","Baptiste HULIN −262,7 mi 17,6"],"officialOk":false,"wxReady":false,"rank":"8 / 10"}
+PASS  API live bloquée : snapshot conservé — {"markers":11,"status":"Direct · pointage officiel il y a 8 h 09","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn","marine":"https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wave_height,wave_direction,wave_period,sea_surface_temperature"},"perfRows":["4 heures37,2 mi8,7 nd12,6 nd","24 heures259 mi8,9 nd20,2 nd","48 heures—14,8 nd25,4 nd","Depuis le départ1 284 mi15,0 nd25,4 nd"],"gapRows":["Anne-Claire LE BERRE +19,5 mi 13,0","Erwan LE DRAOULEC −75,0 mi 12,7","Luke BERRY −104,8 mi 14,2","Thibaut VAUCHEL-CAMUS −162,4 mi 16,9","Baptiste HULIN −262,7 mi 17,6"],"officialOk":false,"wxReady":false,"rank":"8 / 10"}
 PASS  sans tuiles : mode schématique annoncé — {"cls":true,"badge":true,"markers":11,"trail":3566}
 PASS  sans tuiles : trace et bateaux toujours lisibles — {"cls":true,"badge":true,"markers":11,"trail":3566}
 
-49 OK / 0 FAIL — screenshots in data/diagnostics/visual
+50 OK / 0 FAIL — screenshots in data/diagnostics/visual
 ```
