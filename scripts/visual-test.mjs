@@ -583,6 +583,38 @@ await p2.click('#tabs .tab[data-pane="meteo"]');
 await new Promise((r) => setTimeout(r, 1200));
 await shot(p2, '32-panne-meteo');
 
+/* a frozen collector: the snapshot is hours old but the ranking API still answers.
+   This is the exact failure that went unnoticed in production, so it is tested. */
+const fr = await newPage(1280, 800, false);
+await fr.setRequestInterception(true);
+fr.on('request', async (req) => {
+  if (!/\/data\/core\.json/.test(req.url())) return req.continue();
+  try {
+    const res = await fetch(req.url());
+    const core = await res.json();
+    const old = new Date(Date.now() - 6 * 3600 * 1000).toISOString();
+    core.freshness.lastRun = old;
+    core.generatedAt = old;
+    req.respond({ status: 200, contentType: 'application/json', body: JSON.stringify(core) });
+  } catch (e) {
+    req.continue();
+  }
+});
+await fr.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 60000 });
+await new Promise((r) => setTimeout(r, 5000));
+const frozen = await fr.evaluate(() => ({
+  status: document.getElementById('mapStatusTxt')?.textContent.trim() || '',
+  statusOk: !document.querySelector('#mapStatus .dot')?.classList.contains('dot--bad') === false,
+  pillStale: !!document.querySelector('#liveBtn.pill--stale'),
+  markers: document.querySelectorAll('.boat-marker').length,
+  toast: [...document.querySelectorAll('.toast')].map((t) => t.textContent).join(' ').slice(0, 200),
+}));
+check('instantané figé : la page cesse de dire « direct »',
+  /Instantané figé/.test(frozen.status) && frozen.pillStale && frozen.markers > 0,
+  JSON.stringify(frozen));
+await shot(fr, '34-instantane-fige');
+await fr.close();
+
 /* fallback when tile CDNs are unreachable */
 const nb = await newPage(1280, 800, false);
 await nb.setRequestInterception(true);
