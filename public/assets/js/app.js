@@ -500,6 +500,15 @@
       const cut = hide.has(c);
       if (cut !== wasCut[i]) c.classList.toggle('is-cut', cut);
     });
+    // exposed for the visual test / manual diagnosis
+    window.__topStatsFit = {
+      avail: Math.round(avail),
+      stripLeft: Math.round(strip.getBoundingClientRect().left),
+      stripWidth: Math.round(strip.getBoundingClientRect().width),
+      rightsLeft: Math.round(right.getBoundingClientRect().left),
+      widths: chips.map((c) => [c.querySelector('.tchip__v')?.id, Math.round(width.get(c))]),
+      hidden: chips.filter((c) => hide.has(c)).map((c) => c.querySelector('.tchip__v')?.id),
+    };
   }
   window.addEventListener('load', fitTopStats);
   window.addEventListener('topstats:changed', () => requestAnimationFrame(fitTopStats));

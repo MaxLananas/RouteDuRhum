@@ -282,9 +282,10 @@ for (const w of [1024, 1280, 1440, 1920]) {
     m.railRight <= m.iw + 1 && m.barRight <= m.iw + 1 && Math.abs(m.stage + m.rail - m.iw) <= 1 && m.markers > 0,
     JSON.stringify(m));
   check(`desktop ${w}px : aucun élément hors écran`, m.outside === 0, `${m.outside} éléments`);
+  const fit = await rp.evaluate(() => window.__topStatsFit || null);
   check(`desktop ${w}px : indicateurs du bandeau lisibles`,
     m.chipsClipped.length === 0 && m.chipsOn >= 3,
-    `${m.chipsOn} indicateurs, tronqués: ${JSON.stringify(m.chipsClipped)}`);
+    `${m.chipsOn} indicateurs, tronqués: ${JSON.stringify(m.chipsClipped)} | fit ${JSON.stringify(fit)}`);
   if (w === 1280) await shot(rp, '19-desktop-1280');
   await rp.close();
 }
