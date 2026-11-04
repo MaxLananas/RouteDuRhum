@@ -456,58 +456,64 @@
   }
 
   /* ---------------------------------------------------- topbar stat fitting
-     The KPI strip only keeps the chips that physically fit — a squeezed value
-     ("42°05′N 27°00′…") reads as broken, and nothing may sit under the action
-     buttons. Chips are dropped least-important-first: the exact position is on
-     the map and in the live card, whereas freshness ("dernier pointage") is
-     precisely what tells the reader whether the numbers can be trusted. */
+     The KPI strip only keeps the chips that physically fit: a squeezed value
+     ("42°05′N 27°00′…") reads as broken, and nothing may slide under the action
+     buttons. Chips go least-important-first — the exact position is on the map
+     and in the live card, whereas freshness ("dernier pointage") is precisely
+     what tells the reader whether the numbers can be trusted. */
   const CHIP_PRIORITY = ['tRank', 'tSpeed', 'tDtf', 'tAge', 'tDtl', 'tPos'];
+  let statsRO = null;
 
   function fitTopStats() {
     const strip = document.getElementById('topStats');
-    if (!strip) return;
+    const right = document.querySelector('.topbar__right');
+    if (!strip || !right) return;
     const chips = [...strip.querySelectorAll('.tchip')];
     if (!chips.length) return;
-    const prio = (el) => {
-      const i = CHIP_PRIORITY.indexOf(el.querySelector('.tchip__v')?.id);
-      return i < 0 ? CHIP_PRIORITY.length : i; // unknown chips go last
-    };
 
-    // Measure with every chip rendered, then restore. Both steps happen in the
-    // same task, so no resize observer can observe the intermediate state.
-    const wasCut = chips.map((c) => c.classList.contains('is-cut'));
-    const width = new Map();
-    chips.forEach((c, i) => {
-      if (wasCut[i]) c.classList.remove('is-cut');
-      width.set(c, Math.ceil(c.getBoundingClientRect().width));
-    });
-    // What is really available is the space left before the action buttons —
-    // flexbox clips whatever pokes out of the strip, clientWidth lies about it.
-    const right = document.querySelector('.topbar__right');
-    const edge = right ? right.getBoundingClientRect().left - strip.getBoundingClientRect().left : strip.clientWidth;
-    const avail = Math.floor(Math.min(strip.getBoundingClientRect().width, edge));
+    // Never let our own changes re-enter the observer below.
+    if (statsRO) statsRO.disconnect();
+    try {
+      const prio = (el) => {
+        const i = CHIP_PRIORITY.indexOf(el.querySelector('.tchip__v')?.id);
+        return i < 0 ? CHIP_PRIORITY.length : i; // unknown chips go last
+      };
+      const wasCut = chips.map((c) => c.classList.contains('is-cut'));
+      const width = new Map();
+      chips.forEach((c, i) => {
+        if (wasCut[i]) c.classList.remove('is-cut'); // measure the full value
+        width.set(c, Math.ceil(c.getBoundingClientRect().width));
+      });
 
-    const hide = new Set();
-    let used = chips.reduce((n, c) => n + (width.get(c) || 0), 0);
-    for (const chip of [...chips].sort((a, b) => prio(b) - prio(a))) {
-      if (used <= avail - 1) break; // 1px slack for fractional layout
-      hide.add(chip);
-      used -= width.get(chip) || 0;
+      // Real room = up to the action buttons; flexbox clips anything past it.
+      const edge = right.getBoundingClientRect().left - strip.getBoundingClientRect().left;
+      const avail = Math.floor(Math.min(strip.getBoundingClientRect().width, edge));
+
+      const hide = new Set();
+      let used = chips.reduce((n, c) => n + (width.get(c) || 0), 0);
+      for (const chip of [...chips].sort((a, b) => prio(b) - prio(a))) {
+        if (used <= avail - 1) break; // 1px slack for fractional layout
+        hide.add(chip);
+        used -= width.get(chip) || 0;
+      }
+      chips.forEach((c, i) => {
+        const cut = hide.has(c);
+        if (cut !== wasCut[i]) c.classList.toggle('is-cut', cut);
+      });
+    } finally {
+      if (statsRO) statsRO.observe(strip);
     }
-    // only touch the DOM when the answer actually changes (keeps this stable)
-    chips.forEach((c, i) => {
-      const cut = hide.has(c);
-      if (cut !== wasCut[i]) c.classList.toggle('is-cut', cut);
-    });
   }
 
-  /* Values are live ("36 min" can become "1 h 26"), so a single pass at load
-     would go stale and clip a number. Refit whenever a chip changes size. */
+  /* Values are live ("39 min" becomes "1 h 26"), so a single pass at load goes
+     stale and clips a number. The strip's own width is set by the grid, not by
+     its contents, so watching it cannot loop; a slow timer covers value growth. */
   function watchTopStats() {
     const strip = document.getElementById('topStats');
     if (!strip || typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver(() => fitTopStats());
-    [...strip.children].forEach((c) => ro.observe(c));
+    statsRO = new ResizeObserver(() => fitTopStats());
+    statsRO.observe(strip);
+    setInterval(fitTopStats, 15000);
   }
   window.addEventListener('load', () => { fitTopStats(); watchTopStats(); });
   window.addEventListener('resize', util.debounce(fitTopStats, 120));
