@@ -136,6 +136,13 @@ const news = await page.evaluate(() => {
     empty: /Aucun abandon/.test(box?.textContent || ''),
   };
 });
+// capture the pane scrolled to the news block, so the section is actually reviewed
+await page.evaluate(() => {
+  const n = document.getElementById('raceNews');
+  n?.scrollIntoView({ block: 'center' });
+});
+await new Promise((r) => setTimeout(r, 500));
+await shot(page, '02b-desktop-communiques');
 check('communiqués de course affichés',
   news.count > 0 && news.first.length > 12 && !news.empty,
   JSON.stringify(news));
