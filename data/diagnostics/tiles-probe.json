@@ -8,7 +8,7 @@
   "cors": "*",
   "cache": "max-age=86400",
   "server": "Apache",
-  "ms": 285,
+  "ms": 355,
   "head": ""
  },
  {
@@ -20,7 +20,7 @@
   "cors": "*",
   "cache": "max-age=86400",
   "server": "Apache",
-  "ms": 15,
+  "ms": 175,
   "head": ""
  },
  {
@@ -32,7 +32,7 @@
   "cors": "*",
   "cache": "max-age=86400",
   "server": "Apache",
-  "ms": 6,
+  "ms": 23,
   "head": ""
  },
  {
@@ -44,7 +44,7 @@
   "cors": "*",
   "cache": null,
   "server": "ServerTokens ProductOnly",
-  "ms": 189,
+  "ms": 244,
   "head": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <ExceptionReport xmlns=\"http://www.opengis.net/ows/1.1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-i"
  },
  {
@@ -54,9 +54,9 @@
   "type": "text/html; charset=iso-8859-1",
   "bytes": 196,
   "cors": "*",
-  "cache": "max-age=0, no-store, no-cache, must-revalidate",
+  "cache": null,
   "server": "ServerTokens ProductOnly",
-  "ms": 107,
+  "ms": 172,
   "head": "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\"> <html><head> <title>404 Not Found</title> </head><body> <h1>Not Found</h1> <p>The request"
  },
  {
@@ -68,7 +68,7 @@
   "cors": "*",
   "cache": "public, max-age=2592000, immutable",
   "server": "Varnish",
-  "ms": 26,
+  "ms": 107,
   "head": ""
  },
  {
@@ -80,7 +80,7 @@
   "cors": "*",
   "cache": "public, max-age=2592000, immutable",
   "server": "Varnish",
-  "ms": 11,
+  "ms": 62,
   "head": ""
  },
  {
@@ -90,9 +90,9 @@
   "type": "image/png",
   "bytes": 9218,
   "cors": "*",
-  "cache": "max-age=87983, stale-while-revalidate=604800, stale-if-error=604800",
+  "cache": "max-age=90440, stale-while-revalidate=604800, stale-if-error=604800",
   "server": "Apache",
-  "ms": 32,
+  "ms": 96,
   "head": ""
  },
  {
@@ -104,7 +104,7 @@
   "cors": "*",
   "cache": "max-age=604800",
   "server": "nginx/1.24.0 (Ubuntu)",
-  "ms": 606,
+  "ms": 994,
   "head": ""
  },
  {
@@ -116,7 +116,7 @@
   "cors": "*",
   "cache": null,
   "server": "",
-  "ms": 87,
+  "ms": 81,
   "head": "<html lang=\"en\"> <head> <title> Error: Invalid URL</title> <link href=\"/arcgis/rest/static/main.css\" rel=\"stylesheet\" type=\"text/css\"/> </he"
  },
  {
@@ -128,32 +128,32 @@
   "cors": null,
   "cache": null,
   "server": null,
-  "ms": 76,
-  "head": "[{\"latitude\":39.964848,\"longitude\":-39.972046,\"generationtime_ms\":0.06771087646484375,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbr"
+  "ms": 611,
+  "head": "[{\"latitude\":39.964848,\"longitude\":-39.972046,\"generationtime_ms\":0.04088878631591797,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbr"
  },
  {
   "name": "open-meteo-marine-grid",
   "url": "https://marine-api.open-meteo.com/v1/marine?latitude=40,-20&longitude=-40,-30&hourly=wave_height,wave_direction,wave_period&forecast_days=3&timezone=UTC",
   "status": 200,
   "type": "application/json; charset=utf-8",
-  "bytes": 5389,
+  "bytes": 5391,
   "cors": null,
   "cache": null,
   "server": null,
-  "ms": 380,
-  "head": "[{\"latitude\":40.041664,\"longitude\":-40.041656,\"generationtime_ms\":0.0896453857421875,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbre"
+  "ms": 580,
+  "head": "[{\"latitude\":40.041664,\"longitude\":-40.041656,\"generationtime_ms\":0.10836124420166016,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbr"
  },
  {
   "name": "open-meteo-archive",
   "url": "https://archive-api.open-meteo.com/v1/archive?latitude=45&longitude=-30&start_date=2026-11-01&end_date=2026-11-03&hourly=wind_speed_10m&wind_speed_unit=kn",
   "status": 200,
   "type": "application/json; charset=utf-8",
-  "bytes": 1993,
+  "bytes": 1994,
   "cors": null,
   "cache": null,
   "server": null,
-  "ms": 437,
-  "head": "{\"latitude\":44.956062,\"longitude\":-29.99997,\"generationtime_ms\":0.04303455352783203,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbrev"
+  "ms": 603,
+  "head": "{\"latitude\":44.956062,\"longitude\":-29.99997,\"generationtime_ms\":0.047087669372558594,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbre"
  },
  {
   "name": "rdr-carto-index",
@@ -164,7 +164,7 @@
   "cors": null,
   "cache": null,
   "server": "AmazonS3",
-  "ms": 131,
+  "ms": 142,
   "head": " <!DOCTYPE html> <html> <head> <meta charset=\"utf-8\" /> <title>Route du Rhum 2026</title> <meta name=\"apple-mobile-web-app-capable\" content="
  },
  {
@@ -176,7 +176,7 @@
   "cors": null,
   "cache": null,
   "server": "AmazonS3",
-  "ms": 5,
+  "ms": 23,
   "head": " <!DOCTYPE html> <html> <head> <meta charset=\"utf-8\" /> <title>Route du Rhum 2026</title> <meta name=\"apple-mobile-web-app-capable\" content="
  },
  {
@@ -184,11 +184,11 @@
   "url": "https://www.routedurhum.com/",
   "status": 200,
   "type": "text/html; charset=UTF-8",
-  "bytes": 856817,
+  "bytes": 856703,
   "cors": null,
   "cache": "public,max-age=0,must-revalidate",
   "server": "cloudflare",
-  "ms": 178,
+  "ms": 294,
   "head": "<!DOCTYPE html> <html lang=\"fr\"> <head> <meta charset='utf-8'> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" id=\"wixDe"
  },
  {
@@ -200,7 +200,7 @@
   "cors": "*",
   "cache": "public, max-age=60",
   "server": "cloudflare",
-  "ms": 206,
+  "ms": 248,
   "head": "{\"phase\":\"course\",\"depart\":\"2026-11-01T12:02:00Z\",\"maj\":\"2026-11-04T13:00:40Z\",\"distance\":3542,\"classes\":[{\"id\":\"b859b1f9-39d1-4264-8a19-daf"
  },
  {
@@ -212,7 +212,7 @@
   "cors": null,
   "cache": null,
   "server": "cloudflare",
-  "ms": 176,
+  "ms": 247,
   "head": ""
  },
  {
@@ -224,7 +224,7 @@
   "cors": null,
   "cache": null,
   "server": "AmazonS3",
-  "ms": 281,
+  "ms": 384,
   "head": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Error><Code>AccessDenied</Code><Message>Access Denied</Message></Error>"
  },
  {
@@ -236,7 +236,7 @@
   "cors": null,
   "cache": null,
   "server": "AmazonS3",
-  "ms": 310,
+  "ms": 436,
   "head": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Error><Code>AccessDenied</Code><Message>Access Denied</Message></Error>"
  },
  {
@@ -248,7 +248,7 @@
   "cors": "*",
   "cache": "public, max-age=60",
   "server": "cloudflare",
-  "ms": 4497,
+  "ms": 249,
   "head": "{\"phase\":\"course\",\"depart\":\"2026-11-01T12:02:00Z\",\"maj\":\"2026-11-04T13:00:40Z\",\"distance\":3542,\"classes\":[{\"id\":\"b859b1f9-39d1-4264-8a19-daf"
  }
 ]
