@@ -256,10 +256,15 @@ for (const w of [1024, 1280, 1440, 1920]) {
         .filter((el) => el.getBoundingClientRect().right > window.innerWidth + 1).length,
       chipsOn: [...document.querySelectorAll('.topbar__stats .tchip')]
         .filter((el) => getComputedStyle(el).display !== 'none').length,
-      // a visible chip must sit fully left of the action buttons
+      // a visible chip must sit fully left of the action buttons and not be squeezed
       chipsClipped: [...document.querySelectorAll('.topbar__stats .tchip')]
         .filter((el) => getComputedStyle(el).display !== 'none')
-        .filter((el) => el.getBoundingClientRect().right > r('.topbar__right').left + 1).length,
+        .filter((el) => {
+          const v = el.querySelector('.tchip__v');
+          return el.getBoundingClientRect().right > r('.topbar__right').left + 1
+            || (v && v.scrollWidth > v.clientWidth + 1);
+        })
+        .map((el) => el.textContent.trim()),
       markers: document.querySelectorAll('.boat-marker').length,
     };
   });
@@ -267,8 +272,9 @@ for (const w of [1024, 1280, 1440, 1920]) {
     m.railRight <= m.iw + 1 && m.barRight <= m.iw + 1 && Math.abs(m.stage + m.rail - m.iw) <= 1 && m.markers > 0,
     JSON.stringify(m));
   check(`desktop ${w}px : aucun élément hors écran`, m.outside === 0, `${m.outside} éléments`);
-  check(`desktop ${w}px : indicateurs du bandeau non tronqués`,
-    m.chipsClipped === 0 && m.chipsOn >= 3, `${m.chipsOn} indicateurs, ${m.chipsClipped} tronqués`);
+  check(`desktop ${w}px : indicateurs du bandeau lisibles`,
+    m.chipsClipped.length === 0 && m.chipsOn >= 3,
+    `${m.chipsOn} indicateurs, tronqués: ${JSON.stringify(m.chipsClipped)}`);
   if (w === 1280) await shot(rp, '19-desktop-1280');
   await rp.close();
 }

@@ -456,20 +456,30 @@
   }
 
   /* ---------------------------------------------------- topbar stat fitting
-     The KPI strip only keeps the chips that physically fit. Chips never shrink
-     (a squeezed "…dernier pointage" reads as broken), and nothing is ever
-     drawn underneath the Direct/Actualiser buttons. */
+     The KPI strip only keeps the chips that physically fit — a squeezed value
+     ("42°05′N 27°00′…") reads as broken, and nothing may sit under the action
+     buttons. Chips are dropped least-important-first: the exact position is on
+     the map and in the live card, whereas freshness ("dernier pointage") is
+     precisely what tells the reader whether the numbers can be trusted. */
+  const CHIP_PRIORITY = ['tRank', 'tSpeed', 'tDtf', 'tAge', 'tDtl', 'tPos'];
+
   function fitTopStats() {
     const strip = document.getElementById('topStats');
     if (!strip) return;
     const chips = [...strip.querySelectorAll('.tchip')];
     if (!chips.length) return;
+    const prio = (el) => {
+      const i = CHIP_PRIORITY.indexOf(el.querySelector('.tchip__v')?.id);
+      return i < 0 ? CHIP_PRIORITY.length : i; // unknown chips go last
+    };
     chips.forEach((c) => c.classList.remove('is-cut'));
-    // measure against the room actually available, not the strip's scroll width
-    const limit = strip.getBoundingClientRect().right;
-    for (let i = chips.length - 1; i >= 0; i--) {
-      const r = chips[i].getBoundingClientRect();
-      if (r.right > limit + 0.5 || r.width < 24) chips[i].classList.add('is-cut');
+    const avail = strip.clientWidth;
+    const drop = [...chips].sort((a, b) => prio(b) - prio(a));
+    let used = chips.reduce((n, c) => n + c.offsetWidth, 0);
+    for (const chip of drop) {
+      if (used <= avail) break;
+      chip.classList.add('is-cut');
+      used -= chip.offsetWidth || 0;
     }
   }
   window.addEventListener('load', fitTopStats);
