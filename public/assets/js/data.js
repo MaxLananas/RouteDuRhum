@@ -72,6 +72,22 @@
     return out;
   }
 
+  /** The history must read oldest -> newest; detect and fix a reversed payload. */
+  function normaliseHistory(h) {
+    if (!h || !Array.isArray(h.dates) || h.dates.length < 2) return h;
+    const first = Date.parse(h.dates[0]);
+    const last = Date.parse(h.dates[h.dates.length - 1]);
+    if (first > last) {
+      const out = { ...h, dates: [...h.dates].reverse() };
+      for (const [k, v] of Object.entries(h)) {
+        if (Array.isArray(v) && v.length === h.dates.length) out[k] = [...v].reverse();
+      }
+      out.reversed = true;
+      return out;
+    }
+    return h;
+  }
+
   /* --------------------------------------------------------- noise filter */
   /** Remove the "hidden position" jitter the tracker publishes for some boats. */
   function denoiseTrack(tr) {
@@ -116,7 +132,7 @@
     }
     jobs.push(
       fetchJson(fileUrl(core.files.historyLaurent))
-        .then((h) => (store.history = h))
+        .then((h) => (store.history = normaliseHistory(h)))
         .catch((e) => store.errors.push({ what: 'historique', msg: e.message }))
     );
     jobs.push(
@@ -160,6 +176,17 @@
   };
 
   /** Overlay fresh official numbers on top of the snapshot (never the opposite). */
+  /** True only for Laurent Bourguès — never for another skipper such as Bourgnon. */
+  function isLaurentName(name) {
+    const n = String(name || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toUpperCase();
+    return /\bBOURGUES\b/.test(n.replace(/[^A-Z ]/g, ' '));
+  }
+
+  store.isLaurentName = isLaurentName;
+
   store.mergeOfficial = function () {
     const j = store.official;
     const core = store.core;
@@ -170,7 +197,7 @@
     for (const c of j.classes) {
       for (const l of c.lignes || []) {
         const name = `${l.prenom || ''} ${l.nom || ''}`.trim().toUpperCase();
-        if (name.includes(laurentName) && /BOURG/.test(name)) {
+        if (isLaurentName(name)) {
           found = l;
           cls = c;
           break;
@@ -238,7 +265,7 @@
     if (!core) return [];
     const cls = core.standings.find((c) => /ocean/i.test(c.cle || c.nom || ''));
     if (!cls) return [];
-    const me = cls.etat.find((b) => /BOURG/i.test(b.n));
+    const me = cls.etat.find((b) => isLaurentName(b.n));
     return cls.etat
       .filter((b) => b !== me)
       .map((b) => ({

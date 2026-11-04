@@ -85,6 +85,9 @@ const info = await page.evaluate(() => ({
   markers: document.querySelectorAll('.boat-marker').length,
   wxReady: window.wxCtl?.ready,
   wxError: window.wxCtl?.error || null,
+  wxUrls: window.wxCtl?.urls,
+  perfRows: Array.from(document.querySelectorAll('#perfBody tr')).map((tr) => tr.textContent.trim().replace(/\s+/g, ' ')),
+  gapRows: Array.from(document.querySelectorAll('#gapBody tr')).map((tr) => tr.textContent.trim().replace(/\s+/g, ' ')),
   officialOk: window.dataStore?.officialOk,
   officialError: window.dataStore?.officialError || null,
   status: document.getElementById('mapStatusTxt')?.textContent,
@@ -111,6 +114,8 @@ check('classements chargés', info.standings === 6, `${info.standings} classes`)
 check('pictogrammes sur la carte', info.markers >= 2, `${info.markers} marqueurs`);
 check('trace dessinée sur le canvas', info.trailCanvasPainted);
 check('météo modèle chargée', info.wxReady === true, info.wxError || '');
+check('performances officielles non nulles', (info.perfRows || []).some((r) => /[1-9]/.test(r)), JSON.stringify(info.perfRows || []).slice(0, 160));
+check('écarts flotte sans doublon Laurent', (info.gapRows || []).every((r) => !/BOURG/i.test(r)), JSON.stringify(info.gapRows || []).slice(0, 160));
 check('API officielle live', info.officialOk === true, info.officialError || '');
 check('rang affiché', /\d/.test(info.rankTxt || ''), info.rankTxt);
 check('vitesse affichée', /\d/.test(info.speedTxt || ''), info.speedTxt);
@@ -263,6 +268,9 @@ await new Promise((r) => setTimeout(r, 5000));
 const partial = await p2.evaluate(() => ({
   markers: document.querySelectorAll('.boat-marker').length,
   status: document.getElementById('mapStatusTxt')?.textContent,
+  wxUrls: window.wxCtl?.urls,
+  perfRows: Array.from(document.querySelectorAll('#perfBody tr')).map((tr) => tr.textContent.trim().replace(/\s+/g, ' ')),
+  gapRows: Array.from(document.querySelectorAll('#gapBody tr')).map((tr) => tr.textContent.trim().replace(/\s+/g, ' ')),
   officialOk: window.dataStore?.officialOk,
   wxReady: window.wxCtl?.ready,
   rank: document.getElementById('sRank')?.textContent?.trim(),

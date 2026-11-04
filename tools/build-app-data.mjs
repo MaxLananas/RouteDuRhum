@@ -98,8 +98,15 @@ for (const [id, t] of Object.entries(tracks.boats || {})) {
 }
 
 /* ------------------------------------------------- 2. reports history */
-// reports.json is newest first; series should read oldest -> newest
-const byDate = [...(reports.reports || [])].reverse();
+// Reports must read oldest -> newest. Detect the order from the payload instead of
+// assuming it: the tracker has published both directions across editions.
+const rawReports = reports.reports || [];
+const ascending = (() => {
+  if (rawReports.length < 2) return true;
+  return Date.parse(rawReports[0].date) < Date.parse(rawReports[rawReports.length - 1].date);
+})();
+const byDate = ascending ? [...rawReports] : [...rawReports].reverse();
+console.log(`reports: ${rawReports.length} entries, payload order ${ascending ? 'ancien→récent' : 'récent→ancien'}`);
 
 function seriesFor(boatId, fields) {
   const out = { dates: [] };

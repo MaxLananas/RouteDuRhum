@@ -156,7 +156,7 @@
         .slice()
         .sort((a, b) => (a.r ?? 99) - (b.r ?? 99))
         .map((b) => {
-          const me = /BOURG/i.test(b.n);
+          const me = dataStore.isLaurentName(b.n);
           const rankCls = b.r === 1 ? 'rank-pill--1' : me ? 'rank-pill--me' : '';
           const retired = b.st && b.st !== 'RAC';
           return `<tr class="${me ? 'is-me' : ''}" data-boat="${util.esc(b.id)}">

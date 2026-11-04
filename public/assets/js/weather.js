@@ -42,6 +42,8 @@
     if (W.loading) return;
     W.loading = true;
     W.error = null;
+    W._retried = false;
+    W.grid = null;
     const lat = GRID.lat.join(',');
     const lon = GRID.lon.join(',');
     const common = `latitude=${lat}&longitude=${lon}&timezone=UTC&forecast_days=3`;
@@ -59,10 +61,11 @@
       'wave_period',
       'sea_surface_temperature',
     ])}`;
+    W.urls = { atmo: atmoUrl, marine: marineUrl };
     try {
       const [a, m] = await Promise.all([
-        fetch(atmoUrl).then((r) => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        fetch(atmoUrl).then(async (r) => {
+          if (!r.ok) throw new Error(`atmo HTTP ${r.status} — ${(await r.text()).slice(0, 160)}`);
           return r.json();
         }),
         fetch(marineUrl)
@@ -78,7 +81,7 @@
       const grid = Array.isArray(a) ? a : [a];
       const mgrid = m ? (Array.isArray(m) ? m : [m]) : [];
       if (!grid.length || !grid[0].hourly) throw new Error('réponse vide');
-      const expected = GRID.lat.length * GRID.lon.length;
+      const expected = (W.grid || GRID).lat.length * (W.grid || GRID).lon.length;
       if (grid.length !== expected) {
         throw new Error(`grille incomplète (${grid.length}/${expected} points)`);
       }
@@ -103,9 +106,59 @@
     } catch (e) {
       W.error = e.message;
       W.ready = false;
+      // last resort: coarser grid on a shorter horizon, still real model data
+      if (!W._retried && /HTTP 4\d\d/.test(e.message || '')) {
+        W._retried = true;
+        W.loading = false;
+        return W.loadFallback();
+      }
       W.emit();
     } finally {
       W.loading = false;
+    }
+  };
+
+  /** Coarse real grid (every other point, 2 days) used if the full grid is refused. */
+  W.loadFallback = async function () {
+    const latArr = GRID.lat.filter((_, i) => i % 2 === 0);
+    const lonArr = GRID.lon.filter((_, i) => i % 2 === 0);
+    const common = `latitude=${latArr.join(',')}&longitude=${lonArr.join(',')}&timezone=UTC&forecast_days=2`;
+    const atmoUrl = `${API_ATMO}?${common}&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn`;
+    const marineUrl = `${API_MARINE}?${common}&hourly=wave_height,wave_direction,wave_period,sea_surface_temperature`;
+    W.grid = { lat: latArr, lon: lonArr };
+    try {
+      const a = await fetch(atmoUrl).then((r) => {
+        if (!r.ok) throw new Error(`atmo HTTP ${r.status}`);
+        return r.json();
+      });
+      const m = await fetch(marineUrl)
+        .then((r) => (r.ok ? r.json() : null))
+        .catch(() => null);
+      const grid = Array.isArray(a) ? a : [a];
+      if (!grid.length || !grid[0].hourly) throw new Error('réponse vide');
+      W.atmo = grid;
+      W.marine = m ? (Array.isArray(m) ? m : [m]) : [];
+      W.times = grid[0].hourly.time;
+      const now = Date.now();
+      let best = 0;
+      let bestD = Infinity;
+      W.times.forEach((t, i) => {
+        const d = Math.abs(Date.parse(t + ':00Z') - now);
+        if (d < bestD) {
+          bestD = d;
+          best = i;
+        }
+      });
+      W.timeIdx = best;
+      W.loadedAt = new Date().toISOString();
+      W.ready = true;
+      W.degraded = true;
+      W.error = null;
+      W.emit();
+    } catch (e) {
+      W.error = e.message;
+      W.ready = false;
+      W.emit();
     }
   };
 
@@ -121,8 +174,12 @@
   };
 
   /* ------------------------------------------------------------ sampling */
+  function activeGrid() {
+    return W.grid || GRID;
+  }
+
   function cellValue(grid, varName, gx, gy, idx) {
-    const i = gy * GRID.lon.length + gx;
+    const i = gy * activeGrid().lon.length + gx;
     const cell = grid[i];
     if (!cell || !cell.hourly || !cell.hourly[varName]) return null;
     const v = cell.hourly[varName][idx];
@@ -131,14 +188,14 @@
 
   /** Bilinear-ish sample of a scalar field at a geographic point (grid space). */
   function sampleField(grid, varName, lat, lon, idx) {
-    const nLon = GRID.lon.length;
-    const nLat = GRID.lat.length;
+    const nLon = activeGrid().lon.length;
+    const nLat = activeGrid().lat.length;
     for (let y = 0; y < nLat - 1; y++) {
       for (let x = 0; x < nLon - 1; x++) {
-        const la0 = GRID.lat[y];
-        const la1 = GRID.lat[y + 1];
-        const lo0 = GRID.lon[x];
-        const lo1 = GRID.lon[x + 1];
+        const la0 = activeGrid().lat[y];
+        const la1 = activeGrid().lat[y + 1];
+        const lo0 = activeGrid().lon[x];
+        const lo1 = activeGrid().lon[x + 1];
         if (lat <= la0 && lat >= la1 && lon >= lo0 && lon <= lo1) {
           const fx = (lon - lo0) / (lo1 - lo0);
           const fy = (la0 - lat) / (la0 - la1);
@@ -452,11 +509,11 @@
 
   W.drawBarbs = function (ctx, map) {
     if (!W.atmo) return;
-    const nLat = GRID.lat.length;
-    const nLon = GRID.lon.length;
+    const nLat = activeGrid().lat.length;
+    const nLon = activeGrid().lon.length;
     for (let y = 0; y < nLat; y++) {
       for (let x = 0; x < nLon; x++) {
-        const ll = [GRID.lat[y], GRID.lon[x]];
+        const ll = [activeGrid().lat[y], activeGrid().lon[x]];
         const p = map.latLngToContainerPoint(ll);
         if (p.x < -40 || p.y < -40 || p.x > W.w + 40 || p.y > W.h + 40) continue;
         const v = W.vectorAt(ll[0], ll[1]);
