@@ -666,7 +666,13 @@ input[type='range']::-moz-range-thumb { width: 14px; height: 14px; border: 0; bo
   /* icons only, but every control keeps a readable tooltip + label */
   .topbar__right .pill { padding: 0 9px; }
   .topbar__right .pill span.lbl { display: none; }
-  .topbar__right .pill--live { padding: 0 12px; }
+  /* the live state is the one control whose colour alone is not enough:
+     a bare red dot reads as an error indicator, so keep the word */
+  .topbar__right .pill--live { padding: 0 11px; }
+  .topbar__right .pill--live span.lbl {
+    display: inline; font-size: 9.5px; letter-spacing: 0.08em;
+  }
+  @media (max-width: 380px) { .topbar__right .pill--live span.lbl { display: none; } }
   .modal__box { padding: 20px; }
 }
 
