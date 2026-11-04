@@ -378,21 +378,47 @@
       mapCtl.updateFleet(core, { showOthers: true });
     }
 
+    /* Freshness has two independent clocks and they must not be confused:
+       · the official ranking API (usually reachable, republished hourly), and
+       · the tracker snapshot this page is built from (the collector's job).
+       A reachable API must never make an eight-hour-old snapshot look "live",
+       which is exactly what happened when the scheduled collector stopped. */
     const when = core.freshness.officialStandings;
+    const snap = core.freshness.lastRun || core.generatedAt;
     const stale = when ? (Date.now() - Date.parse(when)) / 60000 : Infinity;
-    setStatus(
-      stale < 150,
-      stale < 150
-        ? `Direct · pointage officiel ${util.ago(when)}`
-        : `Données du ${util.fmtDate(when)} — pas de pointage plus récent`
-    );
-    if (stale >= 150) {
+    const snapMin = snap ? (Date.now() - Date.parse(snap)) / 60000 : Infinity;
+
+    if (snapMin >= 40) {
+      setStatus(
+        false,
+        `Instantané figé — collecte ${util.ago(snap, false)} · dernières données officielles publiées`
+      );
+      if (snapMin >= 120) {
+        util.toast(
+          `Le collecteur n'a rien publié depuis ${util.ago(snap, false)}. `
+          + 'Les positions et la trace affichées sont les dernières réellement publiées, rien n\'est extrapolé.',
+          'bad'
+        );
+      }
+    } else if (stale >= 150) {
+      setStatus(false, `Données du ${util.fmtDate(when)} — pas de pointage plus récent`);
       util.toast(
         `Aucun nouveau pointage officiel depuis ${util.ago(when, false)}. Les positions affichées sont les dernières publiées.`,
         'bad'
       );
+    } else {
+      setStatus(true, `Direct · pointage officiel ${util.ago(when)}`);
     }
-    document.getElementById('tAge')?.classList.toggle('warn', stale > 120);
+
+    // the live pill is only allowed to look live while the pipeline is alive
+    const livePill = document.getElementById('liveBtn');
+    if (livePill) {
+      livePill.classList.toggle('pill--stale', snapMin >= 40);
+      livePill.title = snapMin >= 40
+        ? `Collecteur silencieux depuis ${util.ago(snap, false)} — données figées`
+        : 'Revenir au direct';
+    }
+    document.getElementById('tAge')?.classList.toggle('warn', stale > 120 || snapMin >= 40);
   }
 
   /** Official speed at a timestamp, from the tracker report history. */
