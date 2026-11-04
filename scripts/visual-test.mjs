@@ -390,32 +390,7 @@ const mobileInfo = await m.evaluate(() => ({
 check('mobile : pas de débordement horizontal', !mobileInfo.overflow, `${mobileInfo.scrollWidth}px / ${mobileInfo.innerWidth}px ${JSON.stringify(mobileInfo.offenders)}`);
 check('mobile : marqueurs présents', mobileInfo.markers >= 2, String(mobileInfo.markers));
 check('mobile : bouton d’ouverture du panneau', mobileInfo.sheetBtn && mobileInfo.mapTab, JSON.stringify({ b: mobileInfo.sheetBtn, t: mobileInfo.mapTab }));
-const mapTab = await page.evaluate(() => {
-  const t = document.querySelector('.tab--map');
-  if (!t) return { found: false };
-  const r = t.getBoundingClientRect();
-  const mid = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-  return {
-    found: true,
-    shown: getComputedStyle(t).display !== 'none',
-    inside: r.left >= -0.5 && r.right <= window.innerWidth + 0.5 && r.width > 24,
-    debug: {
-      display: getComputedStyle(t).display,
-      w: Math.round(r.width), l: Math.round(r.left), rt: Math.round(r.right),
-      vw: window.innerWidth,
-      tabsScroll: (() => { const b = t.parentElement; return [Math.round(b.scrollLeft), Math.round(b.scrollWidth), Math.round(b.clientWidth)]; })(),
-      rules: [...document.styleSheets].flatMap((ss) => { try { return [...ss.cssRules]; } catch { return []; } })
-        .flatMap((r) => (r.cssRules ? [...r.cssRules] : [r]))
-        .filter((r) => r.selectorText && /tab--map/.test(r.selectorText))
-        .map((r) => `${r.selectorText}{${r.style.cssText.slice(0, 60)}}`),
-    },
-    clickable: !!mid && t.contains(mid),
-    label: t.textContent.trim(),
-  };
-});
-check('mobile : onglet Carte visible et cliquable',
-  mapTab.found && mapTab.shown && mapTab.inside && mapTab.clickable,
-  JSON.stringify(mapTab));
+
 const mobileBar = await page.evaluate(() => {
   const name = document.querySelector('.brand__name');
   const live = document.getElementById('liveBtn');
@@ -429,6 +404,23 @@ const mobileBar = await page.evaluate(() => {
 check('mobile : titre lisible et boutons décrits',
   !mobileBar.titleClipped && mobileBar.liveLabel.length > 3 && mobileBar.refreshLabel.length > 3,
   JSON.stringify(mobileBar));
+const mapTab = await m.evaluate(() => {
+  const t = document.querySelector('.tab--map');
+  if (!t) return { found: false };
+  const r = t.getBoundingClientRect();
+  const mid = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+  return {
+    found: true,
+    shown: getComputedStyle(t).display !== 'none',
+    inside: r.left >= -0.5 && r.right <= window.innerWidth + 0.5 && r.width > 24,
+    box: [Math.round(r.left), Math.round(r.right), Math.round(r.width), window.innerWidth],
+    clickable: !!mid && t.contains(mid),
+    label: t.textContent.trim(),
+  };
+});
+check('mobile : onglet Carte visible et cliquable',
+  mapTab.found && mapTab.shown && mapTab.inside && mapTab.clickable,
+  JSON.stringify(mapTab));
 // the hero photo must come from the official CDN
 const hero = await m.evaluate(() => {
   const img = document.getElementById('heroPhoto');
