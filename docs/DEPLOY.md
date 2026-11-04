@@ -67,7 +67,7 @@ Conséquences pratiques :
    Tant que c'est le cas, aucun cron ne peut partir, quelle que soit la branche de
    travail. La fusion de la PR suffit à corriger cela.
 2. Vérifier ensuite, dans cet ordre :
-   - `gh ls-tree`-équivalent : `git ls-tree -r --name-only origin/main | grep workflows`
+   - `git ls-tree -r --name-only origin/main | grep workflows` (doit lister `collect.yml`)
    - `gh run list --workflow=collect.yml --event=schedule` (doit renvoyer des runs)
    - `python3 -c "import json;print(json.load(open('public/data/core.json'))['freshness'])"`
      doit montrer un `lastRun` de quelques minutes.
