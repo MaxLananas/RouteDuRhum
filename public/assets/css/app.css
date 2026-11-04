@@ -253,6 +253,17 @@ p { margin: 0 0 0.75em; }
 }
 .trail-hover b { color: var(--ink); font-size: 9.5px; letter-spacing: .04em; }
 
+.wx-readout {
+  position: absolute; z-index: 555; pointer-events: none;
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 10px; border-radius: 8px;
+  background: rgba(6,14,24,.9); border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow); backdrop-filter: blur(10px);
+  font-family: var(--mono); font-size: 9.5px; color: var(--ink-dim); white-space: nowrap;
+}
+.wx-readout b { color: var(--ink); font-size: 10.5px; }
+.wxdot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 0 3px rgba(255,255,255,.08); flex: none; }
+
 /* ------------------------------------------------------------------- hud */
 .hud { position: absolute; z-index: 500; }
 .hud--tl { top: 14px; left: 14px; display: flex; flex-direction: column; gap: 10px; max-width: min(420px, 46vw); }

@@ -299,6 +299,7 @@
 
   W.setLayer = function (layer) {
     W.layer = layer;
+    if (W.ctx) W.ctx.clearRect(0, 0, W.w || 0, W.h || 0);
     if (layer === 'wind') W.seedParticles();
     W.particlesActive = layer === 'wind';
     W.frame();
@@ -352,6 +353,7 @@
   W.advanceParticles = function (dt) {
     const map = window.mapCtl?.map;
     if (!map || !W.atmo) return;
+    const k = util.clamp(dt / 16.67, 0, 3);
     for (const p of W.particles) {
       p.px = p.x;
       p.py = p.y;
@@ -361,16 +363,17 @@
         p.age = p.life;
         continue;
       }
-      // convert speed to pixels/sec on screen (empirical but consistent)
-      const scale = 1.05;
-      p.x += v.u * scale * (dt / 16.67);
-      p.y -= v.v * scale * (dt / 16.67);
-      p.age += dt / 16.67;
+      const scale = 1.15;
+      p.x += v.u * scale * k;
+      p.y -= v.v * scale * k;
+      p.age += k;
       if (p.age > p.life || p.x < -20 || p.y < -20 || p.x > W.w + 20 || p.y > W.h + 20) {
         p.x = Math.random() * W.w;
         p.y = Math.random() * W.h;
+        p.px = p.x;
+        p.py = p.y;
         p.age = 0;
-        p.life = 55 + Math.random() * 70;
+        p.life = 70 + Math.random() * 90;
       }
     }
   };
@@ -450,12 +453,17 @@
       ctx.globalCompositeOperation = 'lighter';
       ctx.lineCap = 'round';
       for (const p of W.particles) {
+        const dx = p.x - p.px;
+        const dy = p.y - p.py;
+        // a respawned particle has no meaningful previous point: skip that frame
+        if (Math.abs(dx) > 40 || Math.abs(dy) > 40) continue;
         const ll = map.containerPointToLatLng([p.x, p.y]);
         const v = W.vectorAt(ll.lat, ll.lng);
         if (!v) continue;
-        const alpha = Math.max(0, 1 - p.age / p.life) * 0.9;
+        const ageF = p.age / p.life;
+        const alpha = Math.sin(Math.PI * util.clamp(ageF, 0.02, 0.98)) * 0.95;
         ctx.strokeStyle = `rgba(${windRGB(v.speed).join(',')},${alpha.toFixed(3)})`;
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = v.speed > 22 ? 1.7 : v.speed > 12 ? 1.35 : 1.05;
         ctx.beginPath();
         ctx.moveTo(p.px, p.py);
         ctx.lineTo(p.x, p.y);
@@ -709,6 +717,30 @@
       out.waves.push(W.marine && W.marine.length ? sampleField(W.marine, 'wave_height', lat, lon, i) : null);
     }
     return out;
+  };
+
+  /** Value of the active model layer at a geographic point (for the map readout). */
+  W.readoutAt = function (lat, lon) {
+    if (!W.ready || W.layer === 'none') return null;
+    if (W.layer === 'wind') {
+      const v = W.vectorAt(lat, lon);
+      if (!v) return null;
+      return { label: 'Vent modèle', value: `${v.speed.toFixed(1)} nd`, sub: `${Math.round(v.dir)}° ${util.cardinal(v.dir)}`, color: `rgb(${windRGB(v.speed).join(',')})` };
+    }
+    if (W.layer === 'waves') {
+      const h = W.scalarAt(lat, lon, 'waves');
+      if (h === null) return null;
+      const d = W.scalarAt(lat, lon, 'wavedir');
+      const per = W.scalarAt(lat, lon, 'waveperiod');
+      return { label: 'Vagues modèle', value: `${h.toFixed(1)} m`, sub: `${d !== null ? Math.round(d) + '° ' + util.cardinal(d) : ''}${per ? ' · ' + per.toFixed(1) + ' s' : ''}`, color: `rgb(${waveRGBA(h).slice(0, 3).join(',')})` };
+    }
+    if (W.layer === 'pressure') {
+      const p = W.scalarAt(lat, lon, 'pressure');
+      if (p === null) return null;
+      const g = W.scalarAt(lat, lon, 'gust');
+      return { label: 'Pression modèle', value: `${Math.round(p)} hPa`, sub: g !== null ? `rafales ${g.toFixed(1)} nd` : '', color: `rgb(${pressureRGBA(p).slice(0, 3).join(',')})` };
+    }
+    return null;
   };
 
   window.wxCtl = W;

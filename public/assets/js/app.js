@@ -87,11 +87,31 @@
     document.getElementById('btnCenter')?.addEventListener('click', () => mapCtl.centerOnLaurent());
     const stage = document.getElementById('stage');
     stage?.addEventListener('mousemove', (e) => {
+      const chip = document.getElementById('wxReadout');
+      if (wxCtl.layer !== 'none' && mapCtl.map) {
+        const rect = mapCtl.map.getContainer().getBoundingClientRect();
+        const ll = mapCtl.map.containerPointToLatLng([e.clientX - rect.left, e.clientY - rect.top]);
+        const r = wxCtl.readoutAt(ll.lat, ll.lng);
+        if (chip) {
+          if (r) {
+            chip.classList.remove('hide');
+            chip.innerHTML = `<span class="wxdot" style="background:${r.color}"></span><span><b>${util.esc(r.value)}</b> ${util.esc(r.sub)}</span>`;
+            chip.style.left = Math.min(e.clientX - rect.left + 16, rect.width - 190) + 'px';
+            chip.style.top = Math.max(6, e.clientY - rect.top - 46) + 'px';
+          } else chip.classList.add('hide');
+        }
+      } else {
+        chip?.classList.add('hide');
+      }
       if (e.target.closest('.boat-marker')) {
         document.getElementById('trailHover')?.classList.add('hide');
         return;
       }
       mapCtl.hoverTrail(e.clientX, e.clientY);
+    });
+    stage?.addEventListener('mouseleave', () => {
+      document.getElementById('trailHover')?.classList.add('hide');
+      document.getElementById('wxReadout')?.classList.add('hide');
     });
     stage?.addEventListener('mouseleave', () => document.getElementById('trailHover')?.classList.add('hide'));
     document.getElementById('btnZoomIn')?.addEventListener('click', () => mapCtl.zoom(1));

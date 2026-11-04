@@ -157,8 +157,20 @@ const windPainted = await page.evaluate(() => {
   return n;
 });
 check('particules de vent dessinées', windPainted > 1000, `${windPainted} pixels opaques`);
+// hover the wind layer to capture the model readout chip
+const box = await page.$eval('#map', (el) => {
+  const r = el.getBoundingClientRect();
+  return { x: r.x + r.width * 0.45, y: r.y + r.height * 0.5 };
+});
+await page.mouse.move(box.x, box.y);
+await new Promise((r) => setTimeout(r, 900));
+const readout = await page.$eval('#wxReadout', (el) => (el.classList.contains('hide') ? null : el.textContent.trim()));
+check('lecteur météo au survol', !!readout, readout || 'absent');
+await shot(page, '07b-desktop-lecteur-vent');
 await page.click('#tglWaves');
 await new Promise((r) => setTimeout(r, 1800));
+await page.mouse.move(box.x + 40, box.y + 30);
+await new Promise((r) => setTimeout(r, 700));
 await shot(page, '08-desktop-couche-vagues');
 await page.click('#tglPressure');
 await new Promise((r) => setTimeout(r, 1800));
