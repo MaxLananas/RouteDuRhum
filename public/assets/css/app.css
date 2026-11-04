@@ -406,8 +406,19 @@ p { margin: 0 0 0.75em; }
   box-shadow: var(--shadow);
 }
 .hero-card__img {
-  display: block; width: 100%; height: 168px; object-fit: cover; object-position: center 28%;
+  display: block; width: 100%; height: 168px; object-fit: cover; object-position: center 22%;
   filter: saturate(.95) contrast(1.02);
+}
+@media (max-width: 560px) {
+  /* the rail is much wider on a phone than on a narrow desktop rail: give the
+     portrait room, and keep every line of text inside the darkened lower half
+     (the eyebrow used to land on the skipper's face) */
+  .hero-card__img { height: 232px; object-position: center 14%; }
+  .hero-card::after {
+    background: linear-gradient(180deg, rgba(5,10,17,0) 18%, rgba(5,10,17,.62) 46%, rgba(5,10,17,.97) 100%);
+  }
+  .hero-card__body { padding: 14px 16px; }
+  .hero-card__name { font-size: 22px; }
 }
 .hero-card__img.is-missing { display: none; }
 .hero-card::after {
