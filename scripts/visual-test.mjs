@@ -213,7 +213,8 @@ const axis = await page.evaluate(() => {
 });
 check('graphiques : axe de temps réel',
   !!axis && axis.type === 'linear' && axis.uniform && axis.late > axis.early + 4
-  && axis.bounds.leadH < 2 && axis.bounds.tailH < 2,
+  && axis.bounds.leadH < 2 && axis.bounds.tailH < 2
+  && /^0?[13] nov/.test(axis.firstTick) && /^0?4 nov/.test(axis.lastTick),
   JSON.stringify(axis));
 
 /* weather layers */
