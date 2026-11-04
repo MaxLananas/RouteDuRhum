@@ -123,6 +123,23 @@ check('aucune erreur JS', report.console.filter((c) => c.startsWith('[pageerror]
 
 await shot(page, '01-desktop-direct');
 
+/* official race communications live in the Flotte pane */
+await page.click('#tabs .tab[data-pane="fleet"]');
+await new Promise((r) => setTimeout(r, 1200));
+const news = await page.evaluate(() => {
+  const box = document.getElementById('raceNews');
+  const items = [...(box?.querySelectorAll('.news') || [])];
+  return {
+    count: items.length,
+    first: items[0]?.textContent.replace(/\s+/g, ' ').trim().slice(0, 90) || '',
+    links: items.filter((n) => n.querySelector('a[href^="http"]')).length,
+    empty: /Aucun abandon/.test(box?.textContent || ''),
+  };
+});
+check('communiqués de course affichés',
+  news.count > 0 && news.first.length > 12 && !news.empty,
+  JSON.stringify(news));
+
 /* tabs */
 for (const [tab, name] of [
   ['fleet', '02-desktop-flotte'],
