@@ -8,7 +8,7 @@
   "cors": "*",
   "cache": "max-age=86400",
   "server": "Apache",
-  "ms": 228,
+  "ms": 188,
   "head": ""
  },
  {
@@ -20,7 +20,7 @@
   "cors": "*",
   "cache": "max-age=86400",
   "server": "Apache",
-  "ms": 12,
+  "ms": 48,
   "head": ""
  },
  {
@@ -32,7 +32,7 @@
   "cors": "*",
   "cache": "max-age=86400",
   "server": "Apache",
-  "ms": 5,
+  "ms": 18,
   "head": ""
  },
  {
@@ -44,7 +44,7 @@
   "cors": "*",
   "cache": null,
   "server": "ServerTokens ProductOnly",
-  "ms": 87,
+  "ms": 250,
   "head": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <ExceptionReport xmlns=\"http://www.opengis.net/ows/1.1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-i"
  },
  {
@@ -54,9 +54,9 @@
   "type": "text/html; charset=iso-8859-1",
   "bytes": 196,
   "cors": "*",
-  "cache": null,
+  "cache": "max-age=0, no-store, no-cache, must-revalidate",
   "server": "ServerTokens ProductOnly",
-  "ms": 77,
+  "ms": 225,
   "head": "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\"> <html><head> <title>404 Not Found</title> </head><body> <h1>Not Found</h1> <p>The request"
  },
  {
@@ -68,7 +68,7 @@
   "cors": "*",
   "cache": "public, max-age=2592000, immutable",
   "server": "Varnish",
-  "ms": 24,
+  "ms": 108,
   "head": ""
  },
  {
@@ -80,7 +80,7 @@
   "cors": "*",
   "cache": "public, max-age=2592000, immutable",
   "server": "Varnish",
-  "ms": 13,
+  "ms": 64,
   "head": ""
  },
  {
@@ -90,9 +90,9 @@
   "type": "image/png",
   "bytes": 9218,
   "cors": "*",
-  "cache": "max-age=91986, stale-while-revalidate=604800, stale-if-error=604800",
+  "cache": "max-age=90099, stale-while-revalidate=604800, stale-if-error=604800",
   "server": "Apache",
-  "ms": 13,
+  "ms": 50,
   "head": ""
  },
  {
@@ -104,7 +104,7 @@
   "cors": "*",
   "cache": "max-age=604800",
   "server": "nginx/1.24.0 (Ubuntu)",
-  "ms": 876,
+  "ms": 776,
   "head": ""
  },
  {
@@ -116,7 +116,7 @@
   "cors": "*",
   "cache": null,
   "server": "",
-  "ms": 40,
+  "ms": 152,
   "head": "<html lang=\"en\"> <head> <title> Error: Invalid URL</title> <link href=\"/arcgis/rest/static/main.css\" rel=\"stylesheet\" type=\"text/css\"/> </he"
  },
  {
@@ -128,8 +128,8 @@
   "cors": null,
   "cache": null,
   "server": null,
-  "ms": 278,
-  "head": "[{\"latitude\":39.964848,\"longitude\":-39.972046,\"generationtime_ms\":0.06854534149169922,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbr"
+  "ms": 205,
+  "head": "[{\"latitude\":39.964848,\"longitude\":-39.972046,\"generationtime_ms\":0.04839897155761719,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbr"
  },
  {
   "name": "open-meteo-marine-grid",
@@ -140,20 +140,20 @@
   "cors": null,
   "cache": null,
   "server": null,
-  "ms": 633,
-  "head": "[{\"latitude\":40.041664,\"longitude\":-40.041656,\"generationtime_ms\":0.11551380157470703,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbr"
+  "ms": 534,
+  "head": "[{\"latitude\":40.041664,\"longitude\":-40.041656,\"generationtime_ms\":0.17595291137695312,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbr"
  },
  {
   "name": "open-meteo-archive",
   "url": "https://archive-api.open-meteo.com/v1/archive?latitude=45&longitude=-30&start_date=2026-11-01&end_date=2026-11-03&hourly=wind_speed_10m&wind_speed_unit=kn",
   "status": 200,
   "type": "application/json; charset=utf-8",
-  "bytes": 1993,
+  "bytes": 1994,
   "cors": null,
   "cache": null,
   "server": null,
-  "ms": 668,
-  "head": "{\"latitude\":44.956062,\"longitude\":-29.99997,\"generationtime_ms\":0.10001659393310547,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbrev"
+  "ms": 505,
+  "head": "{\"latitude\":44.956062,\"longitude\":-29.99997,\"generationtime_ms\":0.060439109802246094,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbre"
  },
  {
   "name": "rdr-carto-index",
@@ -164,7 +164,7 @@
   "cors": null,
   "cache": null,
   "server": "AmazonS3",
-  "ms": 77,
+  "ms": 419,
   "head": " <!DOCTYPE html> <html> <head> <meta charset=\"utf-8\" /> <title>Route du Rhum 2026</title> <meta name=\"apple-mobile-web-app-capable\" content="
  },
  {
@@ -176,7 +176,7 @@
   "cors": null,
   "cache": null,
   "server": "AmazonS3",
-  "ms": 4,
+  "ms": 16,
   "head": " <!DOCTYPE html> <html> <head> <meta charset=\"utf-8\" /> <title>Route du Rhum 2026</title> <meta name=\"apple-mobile-web-app-capable\" content="
  },
  {
@@ -184,11 +184,11 @@
   "url": "https://www.routedurhum.com/",
   "status": 200,
   "type": "text/html; charset=UTF-8",
-  "bytes": 856812,
+  "bytes": 855108,
   "cors": null,
   "cache": "public,max-age=0,must-revalidate",
   "server": "cloudflare",
-  "ms": 173,
+  "ms": 235,
   "head": "<!DOCTYPE html> <html lang=\"fr\"> <head> <meta charset='utf-8'> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" id=\"wixDe"
  },
  {
@@ -200,7 +200,7 @@
   "cors": "*",
   "cache": "public, max-age=60",
   "server": "cloudflare",
-  "ms": 187,
+  "ms": 212,
   "head": "{\"phase\":\"course\",\"depart\":\"2026-11-01T12:02:00Z\",\"maj\":\"2026-11-04T14:00:24Z\",\"distance\":3542,\"classes\":[{\"id\":\"b859b1f9-39d1-4264-8a19-daf"
  },
  {
@@ -212,7 +212,7 @@
   "cors": null,
   "cache": null,
   "server": "cloudflare",
-  "ms": 210,
+  "ms": 211,
   "head": ""
  },
  {
@@ -224,7 +224,7 @@
   "cors": null,
   "cache": null,
   "server": "AmazonS3",
-  "ms": 479,
+  "ms": 381,
   "head": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Error><Code>AccessDenied</Code><Message>Access Denied</Message></Error>"
  },
  {
@@ -236,7 +236,7 @@
   "cors": null,
   "cache": null,
   "server": "AmazonS3",
-  "ms": 495,
+  "ms": 471,
   "head": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Error><Code>AccessDenied</Code><Message>Access Denied</Message></Error>"
  },
  {
@@ -248,7 +248,7 @@
   "cors": "*",
   "cache": "public, max-age=60",
   "server": "cloudflare",
-  "ms": 194,
+  "ms": 225,
   "head": "{\"phase\":\"course\",\"depart\":\"2026-11-01T12:02:00Z\",\"maj\":\"2026-11-04T14:00:24Z\",\"distance\":3542,\"classes\":[{\"id\":\"b859b1f9-39d1-4264-8a19-daf"
  }
 ]
