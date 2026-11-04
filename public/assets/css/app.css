@@ -73,6 +73,8 @@
 }
 
 * { box-sizing: border-box; }
+html { overflow-x: hidden; }
+body { overflow-x: hidden; }
 html, body { height: 100%; }
 html { -webkit-text-size-adjust: 100%; }
 body {
@@ -533,6 +535,15 @@ input[type='range']::-moz-range-thumb { width: 14px; height: 14px; border: 0; bo
 
 @media (max-width: 900px) {
   :root { --topbar-h: 54px; }
+  /* hard guarantee: nothing may widen the layout viewport on phones */
+  .app, .main, .topbar, .stage, .rail, #map, .rail__body { max-width: 100vw; }
+  .hud--tl { max-width: calc(100vw - 20px); }
+  .layergroup { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .seg { max-width: calc(100vw - 20px); overflow-x: auto; scrollbar-width: none; }
+  .seg::-webkit-scrollbar { display: none; }
+  .boatfig { max-width: 100%; height: auto; }
+  .chartbox canvas, .tbl { max-width: 100%; }
+  .modal__box { max-width: calc(100vw - 24px); }
   .app { grid-template-rows: var(--topbar-h) 1fr; height: 100dvh; }
   .main { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) 0; }
   .stage { height: 100%; }
