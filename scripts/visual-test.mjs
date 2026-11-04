@@ -264,7 +264,17 @@ for (const w of [1024, 1280, 1440, 1920]) {
           return el.getBoundingClientRect().right > r('.topbar__right').left + 1
             || (v && v.scrollWidth > v.clientWidth + 1);
         })
-        .map((el) => el.textContent.trim()),
+        .map((el) => {
+          const v = el.querySelector('.tchip__v');
+          const b = el.getBoundingClientRect();
+          return {
+            t: el.textContent.trim(),
+            w: Math.round(b.width),
+            right: Math.round(b.right),
+            limit: Math.round(r('.topbar__right').left),
+            vw: v ? `${v.scrollWidth}/${v.clientWidth}` : '',
+          };
+        }),
       markers: document.querySelectorAll('.boat-marker').length,
     };
   });

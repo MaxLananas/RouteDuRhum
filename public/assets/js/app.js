@@ -501,7 +501,12 @@
         if (cut !== wasCut[i]) c.classList.toggle('is-cut', cut);
       });
     } finally {
-      if (statsRO) statsRO.observe(strip);
+      // re-attach to the strip *and* the chips: live values change width
+      // ("—" → "42°05′N 27°00′O") and must trigger a new fit
+      if (statsRO) {
+        statsRO.observe(strip);
+        chips.forEach((c) => statsRO.observe(c));
+      }
     }
   }
 
@@ -513,6 +518,7 @@
     if (!strip || typeof ResizeObserver === 'undefined') return;
     statsRO = new ResizeObserver(() => fitTopStats());
     statsRO.observe(strip);
+    [...strip.children].forEach((c) => statsRO.observe(c));
     setInterval(fitTopStats, 15000);
   }
   window.addEventListener('load', () => { fitTopStats(); watchTopStats(); });
