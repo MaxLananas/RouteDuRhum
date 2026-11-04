@@ -231,6 +231,33 @@ const mobileInfo = await m.evaluate(() => ({
   overflow: document.documentElement.scrollWidth > window.innerWidth + 2,
   scrollWidth: document.documentElement.scrollWidth,
   innerWidth: window.innerWidth,
+  debug: (() => {
+    const q = (sel) => {
+      const el = document.querySelector(sel);
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return { w: Math.round(r.width), l: Math.round(r.left), r: Math.round(r.right) };
+    };
+    return {
+      innerWidth: window.innerWidth,
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+      bodyScroll: document.body.scrollWidth,
+      visual: window.visualViewport ? Math.round(window.visualViewport.width) : null,
+      mq900: window.matchMedia('(max-width: 900px)').matches,
+      topbar: q('.topbar'),
+      stage: q('.stage'),
+      rail: q('.rail'),
+      main: q('.main'),
+      huds: q('.hud--tr'),
+      tabs: q('.tabs'),
+      tabStyle: getComputedStyle(document.querySelector('.rail')).position,
+      widest: Array.from(document.querySelectorAll('body *'))
+        .map((el) => ({ t: el.tagName.toLowerCase(), c: (el.className || '').toString().slice(0, 30), w: Math.round(el.getBoundingClientRect().width) }))
+        .sort((a, b) => b.w - a.w)
+        .slice(0, 6),
+    };
+  })(),
   offenders: (() => {
     const vw = window.innerWidth;
     const out = [];
@@ -245,6 +272,7 @@ const mobileInfo = await m.evaluate(() => ({
 }));
 check('mobile : pas de débordement horizontal', !mobileInfo.overflow, `${mobileInfo.scrollWidth}px / ${mobileInfo.innerWidth}px ${JSON.stringify(mobileInfo.offenders)}`);
 check('mobile : marqueurs présents', mobileInfo.markers >= 2, String(mobileInfo.markers));
+console.log('MOBILE DEBUG', JSON.stringify(mobileInfo.debug));
 await m.evaluate(() => document.getElementById('rail')?.classList.add('is-open'));
 await new Promise((r) => setTimeout(r, 900));
 await shot(m, '21-mobile-panneau');
