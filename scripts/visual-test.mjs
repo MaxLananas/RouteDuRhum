@@ -412,6 +412,8 @@ const mobileBar = await page.evaluate(() => {
 check('mobile : titre lisible et boutons décrits',
   !mobileBar.titleClipped && mobileBar.liveLabel.length > 3 && mobileBar.refreshLabel.length > 3,
   JSON.stringify(mobileBar));
+await m.evaluate(() => document.getElementById('rail')?.classList.add('is-open'));
+await new Promise((r) => setTimeout(r, 700));
 const mapTab = await m.evaluate(() => {
   const t = document.querySelector('.tab--map');
   if (!t) return { found: false };
@@ -446,6 +448,16 @@ const noOverlap = await m.evaluate(() => {
 });
 check('mobile : l’onglet Carte ne recouvre rien', noOverlap.length === 0,
   JSON.stringify({ tab: mapTab.box, hits: noOverlap }));
+// and it must actually fold the panel back onto the map
+await m.click('.tab--map');
+await new Promise((r) => setTimeout(r, 700));
+const afterMap = await m.evaluate(() => ({
+  open: document.getElementById('rail')?.classList.contains('is-open'),
+  pane: document.querySelector('.tab[aria-selected="true"]')?.dataset.pane,
+}));
+check('mobile : Carte replie le panneau', afterMap.open === false && afterMap.pane === 'live', JSON.stringify(afterMap));
+await m.evaluate(() => document.getElementById('rail')?.classList.add('is-open'));
+await new Promise((r) => setTimeout(r, 700));
 // the hero photo must come from the official CDN
 const hero = await m.evaluate(() => {
   const img = document.getElementById('heroPhoto');
@@ -453,8 +465,6 @@ const hero = await m.evaluate(() => {
 });
 check('photo officielle du skipper', !!hero && /wixstatic/.test(hero.src || '') && (hero.ok || hero.hidden), JSON.stringify(hero));
 console.log('MOBILE DEBUG', JSON.stringify(mobileInfo.debug));
-await m.evaluate(() => document.getElementById('rail')?.classList.add('is-open'));
-await new Promise((r) => setTimeout(r, 900));
 await shot(m, '21-mobile-panneau');
 await m.click('#tabs .tab[data-pane="charts"]');
 await new Promise((r) => setTimeout(r, 1500));

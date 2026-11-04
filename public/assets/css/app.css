@@ -645,8 +645,16 @@ input[type='range']::-moz-range-thumb { width: 14px; height: 14px; border: 0; bo
     border-left: 0; border-top: 1px solid var(--line-strong); border-radius: 18px 18px 0 0;
     transform: translateY(calc(100% - 58px)); transition: transform 0.38s var(--ease);
     z-index: 700; box-shadow: 0 -20px 60px -20px rgba(0, 0, 0, 0.9);
+    /* closed, only the grab handle is above the map — everything else must be
+       click-through, or an invisible panel edge eats taps meant for the map
+       (the floating "Carte" action used to land on Leaflet's attribution) */
+    pointer-events: none;
   }
+  .rail > * { pointer-events: auto; }
   .rail.is-open { transform: none; }
+  /* when the panel is folded, the bar and Carte button travel with it */
+  .rail:not(.is-open) .mobilebar,
+  .rail:not(.is-open) .tab--float { visibility: hidden; }
   .rail__grab {
     display: grid; place-items: center; height: 22px; padding-top: 4px; cursor: grab;
     touch-action: none; position: relative; z-index: 4; /* above the floating Carte action */
