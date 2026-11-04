@@ -382,13 +382,15 @@ p { margin: 0 0 0.75em; }
     mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 34px), transparent 100%);
   }
   .tab { display: inline-block; }
-  .tab--map {
+  /* floating "back to map" action, moved out of the strip by app.js */
+  .tab--float.tab--map {
     position: absolute; top: 6px; right: 10px; z-index: 3;
     padding: 6px 10px; border-radius: 8px;
     background: rgba(255, 194, 75, 0.14);
     border: 1px solid rgba(255, 194, 75, 0.38);
     color: var(--gold); font-size: 9.5px;
     box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.9);
+    visibility: visible; pointer-events: auto;
   }
   .tabs { padding-right: 78px; } /* keep the strip clear of the floating button */
 }

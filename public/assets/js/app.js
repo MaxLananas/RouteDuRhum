@@ -86,6 +86,18 @@
   }
 
   /* On phones the pills are icon-only: keep an accessible label and a hint. */
+  /* The "Carte ↑" tab lives in the scrolling tab strip on desktop markup, but on
+     a phone that strip scrolls it out of reach. Move the element out to the rail
+     as a floating action instead (CSS alone cannot pin it reliably). */
+  function moveMapTabOutOfStrip() {
+    const tab = document.querySelector('.tab--map');
+    const rail = document.getElementById('rail');
+    if (!tab || !rail) return;
+    if (!window.matchMedia('(max-width: 900px)').matches) return;
+    if (tab.parentElement !== rail) rail.appendChild(tab);
+    tab.classList.add('tab--float');
+  }
+
   function labelMobilePills() {
     const live = document.getElementById('liveBtn');
     const refresh = document.getElementById('refreshBtn');
@@ -425,6 +437,7 @@
     wireTabs();
     wireMobileRail();
     labelMobilePills();
+    moveMapTabOutOfStrip();
     wireModal();
     replayLoop();
 
