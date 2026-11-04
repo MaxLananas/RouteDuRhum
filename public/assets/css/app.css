@@ -371,34 +371,31 @@ p { margin: 0 0 0.75em; }
   border-left: 1px solid var(--line); z-index: 40;
 }
 .tabs { display: flex; gap: 2px; padding: 10px 10px 0; overflow-x: auto; scrollbar-width: none; position: relative; }
-/* On phones the strip scrolls horizontally (six section names do not fit in
-   390 px). The last tab — "Carte ↑", the only way back to the map — must never
-   be the thing that scrolls out of reach: pin it right and fade the scroll edge. */
+/* On phones the section strip scrolls horizontally (six names do not fit in
+   390 px) and fades out at its right edge to say so. "Carte ↑" is therefore NOT
+   a tab in that strip: sticky does not work inside a horizontal scroller, so it
+   is pinned as a floating action over the panel, always in reach. */
 @media (max-width: 900px) {
   .tabs {
-    display: block; white-space: nowrap; overflow-x: auto;
-    -webkit-overflow-scrolling: touch; padding-right: 0;
-    scroll-padding-right: 84px;
-    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 78px), transparent 100%);
+    white-space: nowrap; overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 34px), transparent 100%);
   }
   .tab { display: inline-block; }
   .tab--map {
-    position: sticky; right: 0; z-index: 2;
-    background: linear-gradient(180deg, #0b1626, #08111d);
-    border-left: 1px solid var(--line-strong);
-    box-shadow: -14px 0 18px -6px rgba(3, 8, 14, 0.95);
-    mask-image: none;
-    color: var(--gold);
+    position: absolute; top: 6px; right: 10px; z-index: 3;
+    padding: 6px 10px; border-radius: 8px;
+    background: rgba(255, 194, 75, 0.14);
+    border: 1px solid rgba(255, 194, 75, 0.38);
+    color: var(--gold); font-size: 9.5px;
+    box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.9);
   }
-  .tab--map[aria-selected='true'] { color: var(--gold); background: rgba(255, 194, 75, 0.12); }
+  .tabs { padding-right: 78px; } /* keep the strip clear of the floating button */
 }
 /* desktop: the panel is docked next to the map, so the "back to map" tab is moot */
 .tab--map { display: none; }
 #btnSheet { display: none; }
-@media (max-width: 900px) {
-  .tab--map { display: inline-block; }
-  #btnSheet { display: grid; }
-}
+@media (max-width: 900px) { #btnSheet { display: grid; } }
 .tabs::-webkit-scrollbar { display: none; }
 .tab {
   position: relative; padding: 8px 11px 10px; border-radius: 9px 9px 0 0;
