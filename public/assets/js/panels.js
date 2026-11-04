@@ -31,6 +31,8 @@
     const when = core.freshness.officialStandings;
     set('tAge', `${util.ago(when, false)}`);
     document.getElementById('tAge')?.setAttribute('title', when ? `Classement officiel : ${util.fmtDate(when)}` : '');
+    // the KPI values just changed width → let the topbar refit itself
+    window.dispatchEvent(new CustomEvent('topstats:changed'));
 
     // live card
     set('lcSpeed', `${util.kn(L.speed)}<small>nd</small>`);

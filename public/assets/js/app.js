@@ -502,6 +502,7 @@
     });
   }
   window.addEventListener('load', fitTopStats);
+  window.addEventListener('topstats:changed', () => requestAnimationFrame(fitTopStats));
   window.addEventListener('resize', util.debounce(fitTopStats, 120));
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTopStats);
   // values are live ("49 min" one minute, "1 h 26" the next)
