@@ -33,6 +33,9 @@ jobs:
           echo '--- exact browser-emulated requests ---' | tee -a probe.log
           rm -f headers.log
           { node tools/probe-openmeteo-headers.mjs 2>&1 || true; } > headers.log
+          { node tools/probe-pred.mjs 2>&1 || true; } > pred.log
+          echo '--- predicted track probe ---' >> probe.log
+          cat pred.log >> probe.log
           ls -la headers.log
           echo '--- header probe ---' >> probe.log
           cat headers.log >> probe.log
