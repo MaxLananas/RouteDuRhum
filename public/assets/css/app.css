@@ -482,6 +482,9 @@ p { margin: 0 0 0.75em; }
 .stat__v small { font-size: 11px; font-weight: 500; color: var(--ink-dim); margin-left: 2px; letter-spacing: 0; }
 .stat__d { font-family: var(--mono); font-size: 9.5px; color: var(--ink-faint); margin-top: 2px; }
 .up { color: var(--mint); } .down { color: var(--coral); } .flat { color: var(--ink-faint); }
+/* gap to Laurent: ahead of him is the bad news, behind him the good news */
+.ahead { color: var(--coral); }
+.behind { color: var(--mint); }
 
 .badge {
   display: inline-flex; align-items: center; gap: 4px; height: 16px; padding: 0 6px;

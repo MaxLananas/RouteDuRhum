@@ -116,6 +116,26 @@ check('trace dessinée sur le canvas', info.trailCanvasPainted);
 check('météo modèle chargée', info.wxReady === true, info.wxError || '');
 check('performances officielles non nulles', (info.perfRows || []).some((r) => /[1-9]/.test(r)), JSON.stringify(info.perfRows || []).slice(0, 160));
 check('écarts flotte sans doublon Laurent', (info.gapRows || []).every((r) => !/BOURG/i.test(r)), JSON.stringify(info.gapRows || []).slice(0, 160));
+// the colour of a gap must follow the sailor's interest: red if the rival is
+// ahead of Laurent, mint if he is ahead of them
+const gapColour = await page.evaluate(() => {
+  const me = window.dataStore?.core?.laurent;
+  const rows = [...document.querySelectorAll('#gapBody tr[data-boat]')];
+  if (!me || !rows.length) return null;
+  const cls = window.dataStore.core.standings
+    .flatMap((c) => c.etat || [])
+    .reduce((m, b) => { m[String(b.id)] = b; return m; }, {});
+  return rows.map((tr) => {
+    const b = cls[tr.dataset.boat];
+    const cell = tr.querySelector('td.num');
+    const dd = b && Number.isFinite(b.dtf) && Number.isFinite(me.dtf) ? b.dtf - me.dtf : null;
+    return { dd: dd != null ? Math.round(dd) : null, cls: cell?.className.replace('num', '').trim() || '' };
+  });
+});
+check('écarts flotte : couleur cohérente avec la position',
+  !!gapColour && gapColour.every((g) => g.dd == null || (g.dd > 0 ? g.cls === 'behind' : g.cls === 'ahead')),
+  JSON.stringify(gapColour));
+
 check('API officielle live', info.officialOk === true, info.officialError || '');
 check('rang affiché', /\d/.test(info.rankTxt || ''), info.rankTxt);
 check('vitesse affichée', /\d/.test(info.speedTxt || ''), info.speedTxt);

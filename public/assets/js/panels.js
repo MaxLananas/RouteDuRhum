@@ -138,7 +138,7 @@
         gbody.innerHTML = sorted
           .map(
             (r) => `<tr data-boat="${util.esc(r.id)}"><td><div class="who"><span class="who__n">${util.esc(r.n)}</span></div></td>
-            <td class="num ${r.dd < 0 ? 'down' : 'up'}">${r.dd != null ? (r.dd > 0 ? '+' : '−') + util.one(Math.abs(r.dd)) + ' mi' : '—'}</td>
+            <td class="num ${r.dd < 0 ? 'ahead' : r.dd > 0 ? 'behind' : ''}" title="${r.dd != null ? (r.dd > 0 ? 'Laurent est en avance sur ce bateau' : 'Laurent est en retard sur ce bateau') : ''}">${r.dd != null ? (r.dd > 0 ? '+' : '−') + util.one(Math.abs(r.dd)) + ' mi' : '—'}</td>
             <td class="num">${util.one(r.vmg)}</td></tr>`
           )
           .join('');
@@ -302,9 +302,20 @@
     // live card weather (2 stats)
     const wn = document.getElementById('wxNow');
     if (wn) {
-      wn.innerHTML =
-        `<div class="stat"><div class="stat__k">Vent</div><div class="stat__v" style="font-size:21px">${cond ? util.one(cond.wind) : '—'}<small>nd</small></div><div class="stat__d">${cond ? util.cardinal(cond.windDir) + ' · rafales ' + util.one(cond.gust) : 'modèle indisponible'}</div></div>` +
-        `<div class="stat"><div class="stat__k">Vagues</div><div class="stat__v" style="font-size:21px">${cond && Number.isFinite(cond.waves) ? util.one(cond.waves) : '—'}<small>m</small></div><div class="stat__d">${cond ? 'hauteur significative' : '—'}</div></div>`;
+      if (!cond) {
+        // say why, rather than showing a dash that looks like a measurement
+        wn.innerHTML = `<div class="stat" style="grid-column:1/-1">
+          <div class="stat__k">Modèle météo</div>
+          <div class="stat__d" style="font-size:11px;line-height:1.5">${
+            w.ready === false && w.error
+              ? 'Open-Meteo indisponible (' + util.esc(String(w.error).slice(0, 60)) + ') — aucune valeur inventée.'
+              : 'Chargement du modèle…'
+          }</div></div>`;
+      } else {
+        wn.innerHTML =
+          `<div class="stat"><div class="stat__k">Vent</div><div class="stat__v" style="font-size:21px">${Number.isFinite(cond.wind) ? util.one(cond.wind) : 'n.d.'}<small>nd</small></div><div class="stat__d">${Number.isFinite(cond.windDir) ? util.cardinal(cond.windDir) : 'direction n.d.'} · rafales ${Number.isFinite(cond.gust) ? util.one(cond.gust) : 'n.d.'}</div></div>` +
+          `<div class="stat"><div class="stat__k">Vagues</div><div class="stat__v" style="font-size:21px">${Number.isFinite(cond.waves) ? util.one(cond.waves) : 'n.d.'}<small>m</small></div><div class="stat__d">${Number.isFinite(cond.waves) ? 'hauteur significative' : 'hors couverture marine'}</div></div>`;
+      }
     }
 
     if (cond) {
