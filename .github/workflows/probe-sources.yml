@@ -29,7 +29,9 @@ jobs:
           node tools/probe-tiles.mjs 2>&1 | tee probe.log
           node tools/probe-carto.mjs 2>&1 | tee -a probe.log || true
           node tools/probe-bundles.mjs 2>&1 | tee -a probe.log || true
-          node tools/probe-openmeteo.mjs 2>&1 | tee -a probe.log || true
+          { node tools/probe-openmeteo.mjs 2>&1 || true; } > openmeteo.log
+          echo '--- open-meteo grid ---' >> probe.log
+          cat openmeteo.log >> probe.log
           echo '--- exact browser-emulated requests ---' | tee -a probe.log
           rm -f headers.log
           { node tools/probe-openmeteo-headers.mjs 2>&1 || true; } > headers.log
