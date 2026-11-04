@@ -196,6 +196,7 @@ const axis = await page.evaluate(() => {
     early: Math.round(px(pts[3].x) - px(pts[1].x)),
     late: Math.round(px(pts[pts.length - 1].x) - px(pts[pts.length - 3].x)),
     tick: String(sc.ticks?.[1]?.label || ''),
+    geom: { left: sc.left, right: sc.right, width: sc.width, cw: c.clientWidth, min: sc.min, max: sc.max },
     // the axis must not invent hours before the start or after the last report
     bounds: (() => {
       const first = sc.min;
