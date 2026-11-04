@@ -454,6 +454,19 @@
     return [c[0], c[1], c[2], 66];
   }
 
+  /** Fade the model grid out at its edge instead of stopping on a hard line. */
+  function edgeMask(lat, lon) {
+    const g = activeGrid();
+    const latTop = g.lat[0];
+    const latBot = g.lat[g.lat.length - 1];
+    const lonW = g.lon[0];
+    const lonE = g.lon[g.lon.length - 1];
+    const band = 2.5; // degrees of feather, ~ 1 grid cell
+    const d = Math.min(latTop - lat, lat - latBot, lon - lonW, lonE - lon);
+    if (d < 0) return 0;
+    return util.clamp(d / band, 0, 1);
+  }
+
   /** Cloud cover: model opacity, the base map stays visible underneath. */
   function cloudRGBA(pct) {
     if (!Number.isFinite(pct)) return 'rgba(0,0,0,0)';
@@ -562,7 +575,7 @@
         data[i] = c[0];
         data[i + 1] = c[1];
         data[i + 2] = c[2];
-        data[i + 3] = c[3];
+        data[i + 3] = Math.round(c[3] * edgeMask(ll.lat, ll.lng));
       }
     }
     sctx.putImageData(img, 0, 0);
@@ -701,6 +714,19 @@
     ctx.strokeRect(W.w - w - 14, W.h - 34, w, 22);
     ctx.fillStyle = W.ready ? '#9fb3c8' : '#ffb3b3';
     ctx.fillText(msg, W.w - w - 14 + pad, W.h - 19);
+  };
+
+  /**
+   * Atmospheric field for a future hour at one point (48 h forecast).
+   * Deliberately separate from the map layers so the 7-day model window can be
+   * reused without pretending we have an analysis there.
+   */
+  W.forecastAt = function (lat, lon, iso, field) {
+    if (!W.ready || !W.atmo) return null;
+    let idx = -1;
+    W.times.forEach((tt, i) => { if (tt.slice(0, 13) === iso.slice(0, 13)) idx = i; });
+    if (idx < 0) return null;
+    return sampleField(W.atmo, field, lat, lon, idx);
   };
 
   /* --------------------------------------------------- per-boat conditions */
