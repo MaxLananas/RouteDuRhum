@@ -77,6 +77,27 @@ variante KV décrite dans `DEPLOY.md` (§5) est prête à être implémentée.
         └─ parseLive()     ──▶ dernier pointage + points frais
 ```
 
+## Fraîcheur : deux horloges distinctes
+
+Le site distingue explicitement deux choses que l'on confond vite :
+
+| Horloge | Champ | Signification |
+| --- | --- | --- |
+| Pipeline | `freshness.lastRun` | date de la dernière collecte réussie (le snapshot servi) |
+| Source | `freshness.officialStandings` | date de publication du classement officiel |
+
+Une API de classement joignable ne doit **jamais** faire passer un instantané figé
+pour du direct : c'est exactement ce qui s'est produit le 4 novembre (collecte
+muette depuis 7 h, badge « Direct » toujours vert). Désormais :
+
+- `lastRun` > 40 min → bandeau « Instantané figé — collecte il y a X », pastille
+  ambre, point rouge, infobulle explicite ;
+- `lastRun` > 2 h → message d'avertissement, en précisant qu'aucune position n'est
+  extrapolée ;
+- `officialStandings` > 2 h 30 → « pas de pointage plus récent » + avertissement.
+
+Le cas est couvert par un test dédié (`instantané figé`, 6 h simulées).
+
 ## Résilience
 
 | Panne | Comportement |

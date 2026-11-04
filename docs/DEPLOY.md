@@ -74,6 +74,33 @@ Conséquences pratiques :
 > parfois retardés de 5 à 15 min aux heures de pointe, et **désactivation automatique
 > après 60 jours** sans activité sur le dépôt (ici les commits du collecteur l'évitent).
 
+### Deux pannes réelles trouvées le 4 novembre 2026 (corrigées)
+
+1. **Le collecteur ne publiait rien de neuf.** `collect.yml` committait `data/`
+   (snapshots bruts) mais ne lançait **pas** `tools/build-app-data.mjs`, donc
+   `public/data/` — ce que Cloudflare Pages sert réellement — n'était jamais
+   régénéré. Chaque run affichait « success » alors que le site restait sur le
+   build manuel précédent, vieux de 7 h 30. Le workflow construit désormais le
+   payload et **échoue** si `lastRun` a plus de 30 minutes.
+
+2. **Un classement frais était jeté au profit de l'ancien.** Dans
+   `build-app-data.mjs`, le garde-fou « garder le classement précédent si le
+   collecteur n'en a pas » testait si le build **précédent** avait un classement —
+   toujours vrai. Résultat : l'API officielle répondait bien à 22:00, mais le
+   payload conservait le classement de 14:00 (DTF 2 094,9 au lieu de 1 947,8).
+   La condition exige maintenant que le build courant n'ait réellement aucune
+   ligne de classement.
+
+Leçon retenue pour la suite : « le job est vert » ne veut pas dire « le site est à
+jour ». La vérification utile est cette commande, à lancer avant de se fier au site :
+
+```bash
+python3 -c "import json;c=json.load(open('public/data/core.json'));print(c['freshness'])"
+```
+
+Elle doit afficher un `lastRun` de quelques minutes et un `officialStandings` de
+moins d'une heure en course.
+
 ### Quotas à connaître
 
 - GitHub Actions : cron minimum **5 minutes** ; 2 000 min/mois gratuites sur un dépôt
