@@ -460,9 +460,12 @@
      ("42°05′N 27°00′…") reads as broken, and nothing may slide under the action
      buttons. Chips go least-important-first — the exact position is on the map
      and in the live card, whereas freshness ("dernier pointage") is precisely
-     what tells the reader whether the numbers can be trusted. */
+     what tells the reader whether the numbers can be trusted.
+
+     Deliberately not a ResizeObserver: measuring requires un-hiding the chips,
+     which would re-fire the observer and can loop forever (it did — it froze
+     the page). A plain schedule is deterministic instead. */
   const CHIP_PRIORITY = ['tRank', 'tSpeed', 'tDtf', 'tAge', 'tDtl', 'tPos'];
-  let statsRO = null;
 
   function fitTopStats() {
     const strip = document.getElementById('topStats');
@@ -471,59 +474,38 @@
     const chips = [...strip.querySelectorAll('.tchip')];
     if (!chips.length) return;
 
-    // Never let our own changes re-enter the observer below.
-    if (statsRO) statsRO.disconnect();
-    try {
-      const prio = (el) => {
-        const i = CHIP_PRIORITY.indexOf(el.querySelector('.tchip__v')?.id);
-        return i < 0 ? CHIP_PRIORITY.length : i; // unknown chips go last
-      };
-      const wasCut = chips.map((c) => c.classList.contains('is-cut'));
-      const width = new Map();
-      chips.forEach((c, i) => {
-        if (wasCut[i]) c.classList.remove('is-cut'); // measure the full value
-        width.set(c, Math.ceil(c.getBoundingClientRect().width));
-      });
+    const prio = (el) => {
+      const i = CHIP_PRIORITY.indexOf(el.querySelector('.tchip__v')?.id);
+      return i < 0 ? CHIP_PRIORITY.length : i; // unknown chips go last
+    };
+    const wasCut = chips.map((c) => c.classList.contains('is-cut'));
+    const width = new Map();
+    chips.forEach((c, i) => {
+      if (wasCut[i]) c.classList.remove('is-cut'); // measure the full value
+      width.set(c, Math.ceil(c.getBoundingClientRect().width));
+    });
 
-      // Real room = up to the action buttons; flexbox clips anything past it.
-      const edge = right.getBoundingClientRect().left - strip.getBoundingClientRect().left;
-      const avail = Math.floor(Math.min(strip.getBoundingClientRect().width, edge));
+    // Real room = up to the action buttons; flexbox clips anything past it.
+    const edge = right.getBoundingClientRect().left - strip.getBoundingClientRect().left;
+    const avail = Math.floor(Math.min(strip.getBoundingClientRect().width, edge));
 
-      const hide = new Set();
-      let used = chips.reduce((n, c) => n + (width.get(c) || 0), 0);
-      for (const chip of [...chips].sort((a, b) => prio(b) - prio(a))) {
-        if (used <= avail - 1) break; // 1px slack for fractional layout
-        hide.add(chip);
-        used -= width.get(chip) || 0;
-      }
-      chips.forEach((c, i) => {
-        const cut = hide.has(c);
-        if (cut !== wasCut[i]) c.classList.toggle('is-cut', cut);
-      });
-    } finally {
-      // re-attach to the strip *and* the chips: live values change width
-      // ("—" → "42°05′N 27°00′O") and must trigger a new fit
-      if (statsRO) {
-        statsRO.observe(strip);
-        chips.forEach((c) => statsRO.observe(c));
-      }
+    const hide = new Set();
+    let used = chips.reduce((n, c) => n + (width.get(c) || 0), 0);
+    for (const chip of [...chips].sort((a, b) => prio(b) - prio(a))) {
+      if (used <= avail - 1) break; // 1px slack for fractional layout
+      hide.add(chip);
+      used -= width.get(chip) || 0;
     }
+    chips.forEach((c, i) => {
+      const cut = hide.has(c);
+      if (cut !== wasCut[i]) c.classList.toggle('is-cut', cut);
+    });
   }
-
-  /* Values are live ("39 min" becomes "1 h 26"), so a single pass at load goes
-     stale and clips a number. The strip's own width is set by the grid, not by
-     its contents, so watching it cannot loop; a slow timer covers value growth. */
-  function watchTopStats() {
-    const strip = document.getElementById('topStats');
-    if (!strip || typeof ResizeObserver === 'undefined') return;
-    statsRO = new ResizeObserver(() => fitTopStats());
-    statsRO.observe(strip);
-    [...strip.children].forEach((c) => statsRO.observe(c));
-    setInterval(fitTopStats, 15000);
-  }
-  window.addEventListener('load', () => { fitTopStats(); watchTopStats(); });
+  window.addEventListener('load', fitTopStats);
   window.addEventListener('resize', util.debounce(fitTopStats, 120));
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTopStats);
+  // values are live ("49 min" one minute, "1 h 26" the next)
+  setInterval(fitTopStats, 5000);
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
