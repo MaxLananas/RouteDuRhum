@@ -1,5 +1,5 @@
 {
- "startedAt": "2026-11-04T15:25:24.210Z",
+ "startedAt": "2026-11-04T15:28:22.310Z",
  "shots": [
   "01-desktop-direct",
   "02-desktop-flotte",
@@ -53,7 +53,8 @@
   "[error] Failed to load resource: net::ERR_FAILED",
   "[error] Failed to load resource: net::ERR_FAILED",
   "[error] Failed to load resource: net::ERR_FAILED",
-  "[error] Failed to load resource: net::ERR_FAILED"
+  "[error] Failed to load resource: net::ERR_FAILED",
+  "[error] Failed to load resource: the server responded with a status of 429 (Too Many Requests)"
  ],
  "network": [
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/5 — net::ERR_ABORTED",
@@ -80,34 +81,15 @@
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/8 — net::ERR_ABORTED",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/3 — net::ERR_ABORTED",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/24/25 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/24/28 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/25/27 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/21/26 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/24/29 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/21/25 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/21/28 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/22/24 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/22/29 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/25/24 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/25/29 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/26/28 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/23/30 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/24/23 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/24/30 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/26/29 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/21/30 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/26/23 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/9 — net::ERR_ABORTED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/9 — net::ERR_ABORTED",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/9 — net::ERR_ABORTED",
+  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/9 — net::ERR_ABORTED",
   "FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED",
   "FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED",
-  "HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793806013904",
+  "HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793806183164",
   "FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED",
   "FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED",
-  "FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793806019266 — net::ERR_FAILED",
-  "HTTP 404 http://127.0.0.1:8099/api/classement?_=1793806019266",
+  "FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793806188470 — net::ERR_FAILED",
+  "HTTP 404 http://127.0.0.1:8099/api/classement?_=1793806188470",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/6 — net::ERR_FAILED",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/6 — net::ERR_FAILED",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/5 — net::ERR_FAILED",
@@ -127,7 +109,8 @@
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/4 — net::ERR_FAILED",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/8 — net::ERR_FAILED",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/4 — net::ERR_FAILED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_FAILED"
+  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_FAILED",
+  "HTTP 429 https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,"
  ],
  "checks": [
   {
@@ -210,7 +193,7 @@
   {
    "name": "particules de vent visibles",
    "ok": true,
-   "detail": "39317 pixels visibles"
+   "detail": "37894 pixels visibles"
   },
   {
    "name": "lecteur météo au survol",
@@ -220,7 +203,7 @@
   {
    "name": "replay actif",
    "ok": true,
-   "detail": "{\"active\":true,\"playing\":true,\"t\":1793516699.9880006,\"timelineOpen\":true,\"ghost\":true}"
+   "detail": "{\"active\":true,\"playing\":true,\"t\":1793516699.9999998,\"timelineOpen\":true,\"ghost\":true}"
   },
   {
    "name": "replay : direct mis en retrait",
@@ -230,7 +213,7 @@
   {
    "name": "desktop 1024px : rail entièrement visible",
    "ok": true,
-   "detail": "{\"iw\":1024,\"rail\":360,\"railRight\":1024,\"barRight\":1024,\"stage\":664,\"outside\":0,\"markers\":11}"
+   "detail": "{\"iw\":1024,\"rail\":360,\"railRight\":1024,\"barRight\":1024,\"stage\":664,\"outside\":0,\"chipsOn\":3,\"chipsClipped\":0,\"markers\":11}"
   },
   {
    "name": "desktop 1024px : aucun élément hors écran",
@@ -238,9 +221,14 @@
    "detail": "0 éléments"
   },
   {
+   "name": "desktop 1024px : indicateurs du bandeau non tronqués",
+   "ok": true,
+   "detail": "3 indicateurs, 0 tronqués"
+  },
+  {
    "name": "desktop 1280px : rail entièrement visible",
    "ok": true,
-   "detail": "{\"iw\":1280,\"rail\":412,\"railRight\":1280,\"barRight\":1280,\"stage\":868,\"outside\":0,\"markers\":11}"
+   "detail": "{\"iw\":1280,\"rail\":412,\"railRight\":1280,\"barRight\":1280,\"stage\":868,\"outside\":0,\"chipsOn\":5,\"chipsClipped\":0,\"markers\":11}"
   },
   {
    "name": "desktop 1280px : aucun élément hors écran",
@@ -248,9 +236,14 @@
    "detail": "0 éléments"
   },
   {
+   "name": "desktop 1280px : indicateurs du bandeau non tronqués",
+   "ok": true,
+   "detail": "5 indicateurs, 0 tronqués"
+  },
+  {
    "name": "desktop 1440px : rail entièrement visible",
    "ok": true,
-   "detail": "{\"iw\":1440,\"rail\":412,\"railRight\":1440,\"barRight\":1440,\"stage\":1028,\"outside\":0,\"markers\":11}"
+   "detail": "{\"iw\":1440,\"rail\":412,\"railRight\":1440,\"barRight\":1440,\"stage\":1028,\"outside\":0,\"chipsOn\":6,\"chipsClipped\":0,\"markers\":11}"
   },
   {
    "name": "desktop 1440px : aucun élément hors écran",
@@ -258,14 +251,24 @@
    "detail": "0 éléments"
   },
   {
+   "name": "desktop 1440px : indicateurs du bandeau non tronqués",
+   "ok": true,
+   "detail": "6 indicateurs, 0 tronqués"
+  },
+  {
    "name": "desktop 1920px : rail entièrement visible",
    "ok": true,
-   "detail": "{\"iw\":1920,\"rail\":412,\"railRight\":1920,\"barRight\":1920,\"stage\":1508,\"outside\":0,\"markers\":11}"
+   "detail": "{\"iw\":1920,\"rail\":412,\"railRight\":1920,\"barRight\":1920,\"stage\":1508,\"outside\":0,\"chipsOn\":6,\"chipsClipped\":0,\"markers\":11}"
   },
   {
    "name": "desktop 1920px : aucun élément hors écran",
    "ok": true,
    "detail": "0 éléments"
+  },
+  {
+   "name": "desktop 1920px : indicateurs du bandeau non tronqués",
+   "ok": true,
+   "detail": "6 indicateurs, 0 tronqués"
   },
   {
    "name": "mobile : pas de débordement horizontal",
@@ -300,7 +303,7 @@
   {
    "name": "API live bloquée : snapshot conservé",
    "ok": true,
-   "detail": "{\"markers\":11,\"status\":\"Direct · pointage officiel il y a 1 h 27\",\"wxUrls\":{\"atmo\":\"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn\",\"marine\":\"https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wave_height,wave_direction,wave_period,sea_surface_temperature\"},\"perfRows\":[\"4 heures37,2 mi8,7 nd12,6 nd\",\"24 heures259 mi8,9 nd20,2 nd\",\"48 heures—14,8 nd25,4 nd\",\"Depuis le départ1 284 mi15,0 nd25,4 nd\"],\"gapRows\":[\"Anne-Claire LE BERRE +19,5 mi 13,0\",\"Erwan LE DRAOULEC −75,0 mi 12,7\",\"Luke BERRY −104,8 mi 14,2\",\"Thibaut VAUCHEL-CAMUS −162,4 mi 16,9\",\"Baptiste HULIN −262,7 mi 17,6\"],\"officialOk\":false,\"wxReady\":false,\"rank\":\"8 / 10\"}"
+   "detail": "{\"markers\":11,\"status\":\"Direct · pointage officiel il y a 1 h 29\",\"wxUrls\":{\"atmo\":\"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn\",\"marine\":\"https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wave_height,wave_direction,wave_period,sea_surface_temperature\"},\"perfRows\":[\"4 heures37,2 mi8,7 nd12,6 nd\",\"24 heures259 mi8,9 nd20,2 nd\",\"48 heures—14,8 nd25,4 nd\",\"Depuis le départ1 284 mi15,0 nd25,4 nd\"],\"gapRows\":[\"Anne-Claire LE BERRE +19,5 mi 13,0\",\"Erwan LE DRAOULEC −75,0 mi 12,7\",\"Luke BERRY −104,8 mi 14,2\",\"Thibaut VAUCHEL-CAMUS −162,4 mi 16,9\",\"Baptiste HULIN −262,7 mi 17,6\"],\"officialOk\":false,\"wxReady\":false,\"rank\":\"8 / 10\"}"
   },
   {
    "name": "sans tuiles : mode schématique annoncé",
@@ -349,7 +352,7 @@
   ],
   "officialOk": true,
   "officialError": null,
-  "status": "Direct · pointage officiel il y a 1 h 25",
+  "status": "Direct · pointage officiel il y a 1 h 28",
   "rankTxt": "8 / 10",
   "speedTxt": "12,6nd",
   "charts": [],
@@ -529,7 +532,7 @@
    "visible": false
   }
  ],
- "finishedAt": "2026-11-04T15:27:12.581Z",
- "passed": 37,
+ "finishedAt": "2026-11-04T15:30:01.743Z",
+ "passed": 41,
  "failed": 0
 }
