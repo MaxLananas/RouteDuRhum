@@ -62,6 +62,7 @@
     <section class="stage" id="stage" aria-label="Carte de la course">
       <div id="map"></div>
       <div class="map-canvas" id="mapCanvas"><canvas id="trailCanvas"></canvas><canvas id="windCanvas"></canvas></div>
+      <div class="trail-hover hide" id="trailHover"></div>
 
       <!-- top-left HUD -->
       <div class="hud hud--tl">
@@ -124,6 +125,12 @@
       <div class="hud hud--bl">
         <div class="legend" id="mapStatus">
           <span class="dot dot--ok"></span><span id="mapStatusTxt">Chargement du tracker…</span>
+        </div>
+        <div class="legend legend--trail" id="legendTrail">
+          <span>Trace</span>
+          <div><div class="legend__bar" style="background:linear-gradient(90deg,#5a78a0,#3896dc,#3ee6b0,#ffd45e,#ff8a3d,#ff4d4d)"></div>
+          <div class="legend__scale"><span>0</span><span>12</span><span>24+</span></div></div>
+          <span class="faint">nd</span>
         </div>
       </div>
 
@@ -195,8 +202,8 @@
             <div class="sec__head"><h3 class="sec__title">Cap et progression</h3><span class="sec__note" id="liveTimeNote">—</span></div>
             <div class="kv"><span class="kv__k">Cap fond (COG)</span><span class="kv__v" id="kCap">—</span></div>
             <div class="kv"><span class="kv__k">VMG officielle (vers l'arrivée)</span><span class="kv__v" id="kVmg">—</span></div>
-            <div class="kv"><span class="kv__k">Distance parcourue depuis le départ</span><span class="kv__v" id="kDog">—</span></div>
-            <div class="kv"><span class="kv__k">Vitesse moyenne depuis le départ</span><span class="kv__v" id="kAvg">—</span></div>
+            <div class="kv"><span class="kv__k">Distance parcourue depuis le départ <span class="badge badge--official">off.</span></span><span class="kv__v" id="kDog">—</span></div>
+            <div class="kv"><span class="kv__k">Vitesse moyenne depuis le départ (trace) <span class="badge badge--calc">calc.</span></span><span class="kv__v" id="kAvg">—</span></div>
             <div class="kv"><span class="kv__k">Position (WGS 84)</span><span class="kv__v" id="kPos">—</span></div>
           </div>
 

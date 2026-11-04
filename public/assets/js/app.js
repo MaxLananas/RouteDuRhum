@@ -85,6 +85,15 @@
 
   function wireMapButtons() {
     document.getElementById('btnCenter')?.addEventListener('click', () => mapCtl.centerOnLaurent());
+    const stage = document.getElementById('stage');
+    stage?.addEventListener('mousemove', (e) => {
+      if (e.target.closest('.boat-marker')) {
+        document.getElementById('trailHover')?.classList.add('hide');
+        return;
+      }
+      mapCtl.hoverTrail(e.clientX, e.clientY);
+    });
+    stage?.addEventListener('mouseleave', () => document.getElementById('trailHover')?.classList.add('hide'));
     document.getElementById('btnZoomIn')?.addEventListener('click', () => mapCtl.zoom(1));
     document.getElementById('btnZoomOut')?.addEventListener('click', () => mapCtl.zoom(-1));
     document.getElementById('btnFs')?.addEventListener('click', toggleFullscreen);

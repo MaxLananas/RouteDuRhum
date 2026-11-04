@@ -71,14 +71,16 @@
 
   function boatIcon(boat, opts = {}) {
     const color = opts.color || CLASS_COLORS[boat.cls] || '#cbd6e2';
-    const size = opts.size || (opts.lead ? 32 : 27);
+    const zoom = M.map ? M.map.getZoom() : 5;
+    const scale = util.isMobile() ? 0.82 : 1;
+    const size = (opts.size || (opts.lead ? 32 : 24)) * scale * (zoom < 4 ? 0.82 : 1);
     const html = `
       <div class="boat-marker ${opts.lead ? 'boat-marker--lead' : ''} ${opts.me ? 'boat-marker--laurent' : ''}" style="position:relative;width:${size}px;height:${size}px">
         ${opts.me ? '<span class="pulse-ring"></span>' : ''}
         <div class="boat-marker__rot" style="width:${size}px;height:${size}px;transform:rotate(${boat.heading || 0}deg)">
           ${trimaranSvg(color, { size, glow: color })}
         </div>
-        ${opts.label ? `<span class="boat-marker__label">${util.esc(opts.label)}</span>` : ''}
+        ${opts.label ? `<span class="boat-marker__label" style="${opts.me ? '' : 'font-size:8px;opacity:.72'}">${util.esc(opts.label)}</span>` : ''}
       </div>`;
     return L.divIcon({
       html,
@@ -111,6 +113,11 @@
     M.trailCtx = M.trailCanvas.getContext('2d');
 
     map.on('move zoom resize viewreset', () => M.scheduleTrail());
+    map.on('zoomend', () => {
+      if (dataStore.core) M.updateFleet(dataStore.core, { showOthers: true });
+    });
+    // stop the browser's context menu so the map feels like a native app
+    map.on('contextmenu', (e) => L.DomEvent.preventDefault(e));
     window.addEventListener('resize', () => M.scheduleTrail());
 
     // click on empty map: dismiss focus
@@ -184,58 +191,74 @@
   };
 
   /* ------------------------------------------------------- Laurent trail */
-  /** Real track since the start, gradient-coloured by measured speed. */
-  M.drawLaurentTrail = function (track, speedAt) {
-    if (M.laurentTrail) {
-      M.map.removeLayer(M.laurentTrail);
-      M.laurentTrail = null;
+  /** The trail itself is painted on the overlay canvas (speed coloured).
+   *  Here we only add a wide invisible polyline that acts as a click target so a
+   *  click on any point of the trace can show the data recorded at that time. */
+  M.drawLaurentTrail = function (track) {
+    if (M.trailHit) {
+      M.map.removeLayer(M.trailHit);
+      M.trailHit = null;
     }
     if (!track || track.t.length < 2) return;
-    // speed per segment from official reports when available, otherwise computed
-    const segs = [];
     const pts = track.t.map((t, i) => [track.lat[i], track.lon[i]]);
+    M.trailHit = L.polyline(pts, {
+      color: '#000',
+      weight: 16,
+      opacity: 0,
+      interactive: true,
+      lineCap: 'round',
+    }).addTo(M.map);
+    M.trailHit.on('click', (e) => {
+      L.DomEvent.stopPropagation(e);
+      const p = nearestTrackPoint(e.latlng.lat, e.latlng.lng);
+      if (p) M.showTrackPoint(p);
+      else M.map.openPopup(L.popup().setLatLng(e.latlng).setContent('<div style="font-size:11.5px">Point hors de la trace de La French Fab.</div>'));
+    });
+    M.trailHit.on('mouseover', () => M.map.getContainer().style.cursor = 'crosshair');
+    M.trailHit.on('mouseout', () => M.map.getContainer().style.cursor = '');
+  };
 
-    // base line (soft) then coloured segments
-    for (let i = 1; i < pts.length; i++) {
-      const dt = (track.t[i] - track.t[i - 1]) / 3600;
-      const d = util.haversine(pts[i - 1][0], pts[i - 1][1], pts[i][0], pts[i][1]);
-      let v = dt > 0 ? d / dt : null;
-      if (speedAt) {
-        const official = speedAt(track.t[i]);
-        if (Number.isFinite(official) && official > 0) v = official;
-      }
-      segs.push({ a: pts[i - 1], b: pts[i], v });
-    }
-    const group = L.layerGroup();
-    // Decimate: group consecutive segments of similar colour
-    let batch = [];
-    let curColor = null;
-    const flush = () => {
-      if (batch.length < 2) return;
-      L.polyline(batch, {
-        color: curColor,
-        weight: 3,
-        opacity: 0.95,
-        lineJoin: 'round',
-        lineCap: 'round',
-        interactive: false,
-      }).addTo(group);
-    };
-    for (const s of segs) {
-      const c = util.speedColor(s.v);
-      if (c !== curColor) {
-        flush();
-        batch = [s.a, s.b];
-        curColor = c;
-      } else {
-        batch.push(s.b);
+  /** Nearest real track sample to a clicked position (never interpolated). */
+  function nearestTrackPoint(lat, lon) {
+    const tr = dataStore.track;
+    if (!tr) return null;
+    let best = null;
+    let bestD = Infinity;
+    for (let i = 0; i < tr.t.length; i++) {
+      const d = util.haversine(lat, lon, tr.lat[i], tr.lon[i]);
+      if (d < bestD) {
+        bestD = d;
+        best = { i, t: tr.t[i], lat: tr.lat[i], lon: tr.lon[i], d: bestD };
       }
     }
-    flush();
-    // halo underlay
-    L.polyline(pts, { color: 'rgba(120,190,255,.16)', weight: 9, opacity: 1, interactive: false, lineCap: 'round' }).addTo(group);
-    group.addTo(M.map);
-    M.laurentTrail = group;
+    if (!best || bestD > 40) return null;
+    return best;
+  }
+
+  M.showTrackPoint = function (p) {
+    const h = dataStore.history;
+    let speed = null;
+    let heading = null;
+    let dtf = null;
+    if (h && h.dates && h.dates.length) {
+      const times = h.dates.map((d) => Date.parse(d) / 1000);
+      const idx = util.idxAt(times, p.t);
+      speed = h.speed[idx];
+      heading = h.heading[idx];
+      dtf = h.dtf[idx];
+    }
+    const rows = [
+      ['Date', util.fmtFull(p.t * 1000)],
+      ['Position', `${p.lat.toFixed(4)}°, ${p.lon.toFixed(4)}°`],
+      ['Vitesse fond', Number.isFinite(speed) ? `${util.one(speed)} nd` : 'non publiée à cet instant'],
+      ['Cap', Number.isFinite(heading) ? `${Math.round(heading)}° ${util.cardinal(heading)}` : '—'],
+      ['Distance à l\'arrivée', Number.isFinite(dtf) ? `${util.int(dtf)} mi` : '—'],
+    ];
+    const html = `<div class="eyebrow">Trace officielle · point ${p.i + 1}</div>
+      <div style="font-weight:700;font-size:12.5px;margin:3px 0 8px">La French Fab</div>
+      ${rows.map(([k, v]) => `<div class="kv"><span class="kv__k">${k}</span><span class="kv__v">${v}</span></div>`).join('')}
+      <div style="font-family:var(--mono);font-size:8.5px;color:var(--ink-faint);margin-top:7px">position officielle · vitesse du pointage horaire le plus proche</div>`;
+    L.popup({ maxWidth: 280 }).setLatLng([p.lat, p.lon]).setContent(html).openOn(M.map);
   };
 
   /* --------------------------------------------------------- fleet layer */
@@ -284,7 +307,8 @@
       const lon = isMe ? core.laurent.lon : cls.etat.find((x) => String(x.id) === id).lon;
       if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
       const lead = rank === 1 && !isMe;
-      const icon = boatIcon(boat, { me: isMe, lead, label, size: isMe ? 40 : 26 });
+      const showLabel = isMe || lead;
+      const icon = boatIcon(boat, { me: isMe, lead, label: showLabel ? label : '', size: isMe ? 38 : 24 });
       const existing = M.boatMarkers.get(id);
       if (existing) {
         existing.marker.setLatLng([lat, lon]);
@@ -451,56 +475,126 @@
     const ctx = M.trailCtx;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, rect.width, rect.height);
+    M.trailScreen = null;
 
     const tr = dataStore.track;
     if (!tr || tr.t.length < 2) return;
-
     const map = M.map;
-    const size = map.getSize();
     const limitT = M.replay.active ? M.replay.t : Infinity;
+    const reveal = M.replay.active && M.replay.end > M.replay.start ? (M.replay.t - M.replay.start) / (M.replay.end - M.replay.start) : 1;
 
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
     const pts = [];
     for (let i = 0; i < tr.t.length; i++) {
       if (tr.t[i] > limitT) break;
-      const p = map.latLngToContainerPoint([tr.lat[i], tr.lon[i]]);
-      pts.push(p);
+      pts.push(map.latLngToContainerPoint([tr.lat[i], tr.lon[i]]));
     }
-    if (pts.length < 2) {
-      ctx.restore();
-      return;
-    }
-    // glow line
+    if (pts.length < 2) return;
+    M.trailScreen = { pts, count: pts.length, reveal };
+
+    const h2 = dataStore.history;
+    const times = h2 && h2.dates ? h2.dates.map((d) => Date.parse(d) / 1000) : null;
+
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.strokeStyle = 'rgba(90,170,255,0.10)';
-    ctx.lineWidth = 9;
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
-    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
-    ctx.stroke();
-    ctx.strokeStyle = 'rgba(160,220,255,0.55)';
-    ctx.lineWidth = 2;
+
+    // 1. soft ocean-blue underlay for legibility on satellite imagery
+    ctx.strokeStyle = 'rgba(8,22,40,0.55)';
+    ctx.lineWidth = 7;
     ctx.beginPath();
     ctx.moveTo(pts[0].x, pts[0].y);
     for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
     ctx.stroke();
 
-    // position dots every ~1h
-    ctx.globalCompositeOperation = 'source-over';
-    let lastT = 0;
-    for (let i = 0; i < tr.t.length; i++) {
-      if (tr.t[i] > limitT) break;
-      if (tr.t[i] - lastT < 3600) continue;
-      lastT = tr.t[i];
-      const p = map.latLngToContainerPoint([tr.lat[i], tr.lon[i]]);
+    // 2. speed-graded segments (official hourly speed when available)
+    ctx.lineWidth = 3;
+    for (let i = 1; i < pts.length; i++) {
+      if (i / pts.length > reveal) break;
+      let v = null;
+      if (times && times.length) {
+        const idx = util.idxAt(times, tr.t[i]);
+        if (Number.isFinite(h2.speed[idx])) v = h2.speed[idx];
+      }
+      if (v === null) {
+        const dtH = (tr.t[i] - tr.t[i - 1]) / 3600;
+        const d = util.haversine(tr.lat[i - 1], tr.lon[i - 1], tr.lat[i], tr.lon[i]);
+        v = dtH > 0 ? d / dtH : null;
+      }
+      ctx.strokeStyle = util.speedColor(v);
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(220,240,255,0.85)';
+      ctx.moveTo(pts[i - 1].x, pts[i - 1].y);
+      ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.stroke();
+    }
+
+    // 3. hour markers, thinning out when zoomed out
+    const stepH = map.getZoom() < 5 ? 4 : map.getZoom() < 7 ? 2 : 1;
+    let lastT = -Infinity;
+    for (let i = 0; i < tr.t.length && i < pts.length; i++) {
+      if (tr.t[i] - lastT < stepH * 3600) continue;
+      lastT = tr.t[i];
+      ctx.beginPath();
+      ctx.arc(pts[i].x, pts[i].y, 2.4, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(6,16,28,.85)';
+      ctx.fill();
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = 'rgba(226,240,255,.9)';
+      ctx.stroke();
+    }
+
+    // 4. live head glow
+    if (!M.replay.active) {
+      const last = pts[pts.length - 1];
+      const g = ctx.createRadialGradient(last.x, last.y, 0, last.x, last.y, 26);
+      g.addColorStop(0, 'rgba(47,123,255,.42)');
+      g.addColorStop(1, 'rgba(47,123,255,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(last.x, last.y, 26, 0, Math.PI * 2);
       ctx.fill();
     }
-    ctx.restore();
+  };
+
+  /** Hover readout over the trace (called from the stage mousemove handler). */
+  M.hoverTrail = function (clientX, clientY) {
+    const out = document.getElementById('trailHover');
+    const tr = dataStore.track;
+    if (!out || !tr || !M.trailScreen) {
+      if (out) out.classList.add('hide');
+      return;
+    }
+    const cv = M.trailCanvas;
+    const r = cv.getBoundingClientRect();
+    const x = clientX - r.left;
+    const y = clientY - r.top;
+    let best = -1;
+    let bestD = 18 * 18;
+    for (let i = 0; i < M.trailScreen.count; i++) {
+      const p = M.trailScreen.pts[i];
+      const d = (p.x - x) ** 2 + (p.y - y) ** 2;
+      if (d < bestD) {
+        bestD = d;
+        best = i;
+      }
+    }
+    if (best < 0) {
+      out.classList.add('hide');
+      return;
+    }
+    const ts = tr.t[best];
+    const h2 = dataStore.history;
+    let v = null;
+    let dtf = null;
+    if (h2 && h2.dates) {
+      const idx = util.idxAt(h2.dates.map((d) => Date.parse(d) / 1000), ts);
+      v = h2.speed[idx];
+      dtf = h2.dtf[idx];
+    }
+    out.innerHTML = `<b>${util.fmtFull(ts * 1000)}</b><span>${util.esc(tr.lat[best].toFixed(3))}°, ${util.esc(tr.lon[best].toFixed(3))}°</span>` +
+      (Number.isFinite(v) ? `<span>${util.one(v)} nd</span>` : '') +
+      (Number.isFinite(dtf) ? `<span>${util.int(dtf)} mi de l'arrivée</span>` : '');
+    out.style.left = Math.min(x + 16, r.width - 220) + 'px';
+    out.style.top = Math.max(4, y - 54) + 'px';
+    out.classList.remove('hide');
   };
 
   /* --------------------------------------------------------------- misc */
@@ -510,10 +604,22 @@
       M.map.setView([38, -38], 4);
       return;
     }
+    // frame the fleet and the course, keeping Laurent's trail in view
     const b = L.latLngBounds(tr.t.map((t, i) => [tr.lat[i], tr.lon[i]]));
+    const cls = core.standings.find((c) => /ocean/i.test(c.cle || c.nom || ''));
+    const me = core.laurent;
+    if (Number.isFinite(me.lat)) b.extend([me.lat, me.lon]);
+    if (cls) {
+      cls.etat.forEach((x) => {
+        if (Number.isFinite(x.lat) && Number.isFinite(x.lon)) b.extend([x.lat, x.lon]);
+      });
+    }
     const leg = core.route?.leg;
-    if (leg?.route) leg.route.forEach(([la, lo]) => b.extend([la, lo]));
-    M.map.fitBounds(b, { padding: [60, 60], maxZoom: 7 });
+    if (leg?.route) {
+      b.extend([leg.route[0][0], leg.route[0][1]]);
+      b.extend([leg.route[leg.route.length - 1][0], leg.route[leg.route.length - 1][1]]);
+    }
+    M.map.fitBounds(b, { padding: util.isMobile() ? [26, 26] : [70, 70], maxZoom: 6.5 });
   };
 
   M.zoom = function (d) {

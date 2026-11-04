@@ -242,6 +242,17 @@ p { margin: 0 0 0.75em; }
 /* replay ghost marker */
 .ghost { filter: drop-shadow(0 0 10px rgba(255, 194, 75, 0.8)); }
 
+.trail-hover {
+  position: absolute; z-index: 560; pointer-events: none;
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 7px 10px; border-radius: 8px; max-width: 220px;
+  background: rgba(6,14,24,.92); border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow); backdrop-filter: blur(10px);
+  font-family: var(--mono); font-size: 9px; color: var(--ink-dim); letter-spacing: .02em;
+  transition: opacity .12s;
+}
+.trail-hover b { color: var(--ink); font-size: 9.5px; letter-spacing: .04em; }
+
 /* ------------------------------------------------------------------- hud */
 .hud { position: absolute; z-index: 500; }
 .hud--tl { top: 14px; left: 14px; display: flex; flex-direction: column; gap: 10px; max-width: min(420px, 46vw); }
@@ -305,6 +316,7 @@ p { margin: 0 0 0.75em; }
 }
 .legend__bar { height: 5px; width: 92px; border-radius: 3px; }
 .legend__scale { display: flex; justify-content: space-between; width: 92px; font-size: 8.5px; color: var(--ink-faint); }
+.legend--trail { opacity: .92; }
 
 /* ------------------------------------------------------------------- rail */
 .rail {
@@ -533,7 +545,13 @@ input[type='range']::-moz-range-thumb { width: 14px; height: 14px; border: 0; bo
   .hud--tl { max-width: none; right: 14px; }
   .hud--tl .livecard { display: none; }
   .livecard { width: 100%; }
-  .hud--tr { top: auto; bottom: 92px; right: 12px; }
+  .hud--tr { top: auto; bottom: 92px; right: 10px; left: auto; max-width: calc(100vw - 20px); }
+  .hud--tr > div:first-child { flex-wrap: wrap; justify-content: flex-end; }
+  .iconbtn { width: 32px; height: 32px; }
+  .hud--tl { left: 10px; right: 10px; top: 10px; }
+  .seg { padding: 2px; }
+  .seg button { height: 24px; padding: 0 8px; font-size: 9px; }
+  .legend--trail { display: none; }
   .hud--bl { bottom: 78px; left: 12px; }
   .legend { font-size: 9px; }
   .timeline { left: 8px; right: 8px; bottom: 8px; padding: 8px 10px 10px; }
