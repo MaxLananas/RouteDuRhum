@@ -1,15 +1,20 @@
 name: Collect Route du Rhum data
 
+# The collector needs no secrets: it reads the official public tracker files and the
+# official standings API, then commits a normalised snapshot to the repository.
+#
+# DATA_BRANCH is the branch the snapshot is committed to. During development it is the
+# working branch; after the pull request is merged, set it to `main` (or delete the line
+# to fall back to the branch that triggered the run).
+
 on:
-  push:
-    branches: ['arena/e3d3aa8e-routedurhum', main]
-    paths:
-      - 'tools/**'
-      - '.github/workflows/collect.yml'
-      - 'data/**'
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
+  push:
+    paths:
+      - 'tools/**'
+      - '.github/workflows/collect.yml'
 
 concurrency:
   group: rdr-collect
@@ -18,6 +23,9 @@ concurrency:
 permissions:
   contents: write
 
+env:
+  DATA_BRANCH: arena/e3d3aa8e-routedurhum
+
 jobs:
   collect:
     runs-on: ubuntu-latest
@@ -25,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.repository.default_branch == 'main' && 'main' || github.ref_name }}
+          ref: ${{ env.DATA_BRANCH }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -34,34 +42,31 @@ jobs:
         env:
           GITHUB_RUN_ID: ${{ github.run_id }}
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
-        run: node tools/collect.mjs --inspect 2>&1 | tee collect.log
+        run: |
+          set -o pipefail
+          node tools/collect.mjs --inspect 2>&1 | tee collect.log
 
-      - name: Upload log
+      - name: Keep the log in the repo (no artifact download needed)
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: collect-log
-          path: collect.log
-          retention-days: 3
-          if-no-files-found: ignore
+        run: |
+          mkdir -p data/diagnostics
+          { echo "# Collect run ${{ github.run_number }} — $(date -u +%FT%TZ)"; echo; echo '```'; tail -c 120000 collect.log; echo '```'; } > data/diagnostics/collect-latest.md
 
       - name: Commit data
         if: always()
         run: |
-          set -e
           git config user.name 'rdr-bot'
           git config user.email 'rdr-bot@users.noreply.github.com'
-          # never commit the decoded cache
           rm -f data/.cache_*
           git add -A data
           if git diff --cached --quiet; then
             echo "no data change"
-          else
-            git commit -m "data: tracker update $(date -u +%FT%TZ) [skip ci]"
-            # a scheduled run can overlap a push: rebase and retry a few times
-            for i in 1 2 3 4 5; do
-              if git push; then echo pushed; break; fi
-              sleep 5
-              git pull --rebase --autostash || true
-            done
+            exit 0
           fi
+          git commit -m "data: tracker update $(date -u +%FT%TZ) [skip ci]"
+          for i in 1 2 3 4 5; do
+            if git push origin "HEAD:${DATA_BRANCH}"; then echo pushed; exit 0; fi
+            sleep 5
+            git pull --rebase --autostash origin "${DATA_BRANCH}" || true
+          done
+          echo "could not push data"; exit 1
