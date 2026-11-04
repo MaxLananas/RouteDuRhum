@@ -6,8 +6,9 @@
 (function () {
   'use strict';
 
-  // Open-Meteo accepts multi-coordinate grids but caps the number of cells per request:
-  // 140 points x 3 days with 6 variables is validated (HTTP 200, ~540 kB).
+  // Open-Meteo multi-coordinate requests pair latitude[i] with longitude[i]: the two
+  // lists must have the SAME length (they are points, not a cartesian product).
+  // 140 points x 3 days x 6 variables is validated (HTTP 200, ~540 kB).
   const GRID = {
     lat: [52, 48, 44, 40, 36, 32, 28, 24, 20, 16],
     lon: [-68, -64, -60, -56, -52, -48, -44, -40, -36, -32, -28, -24, -20, -16],
@@ -38,14 +39,28 @@
     return list.join(',');
   }
 
+  /** Expand a {lat[], lon[]} grid into paired coordinate lists (lat-major order). */
+  function gridPairs(grid) {
+    const lat = [];
+    const lon = [];
+    for (let y = 0; y < grid.lat.length; y++) {
+      for (let x = 0; x < grid.lon.length; x++) {
+        lat.push(grid.lat[y]);
+        lon.push(grid.lon[x]);
+      }
+    }
+    return { lat, lon, n: lat.length };
+  }
+
   W.load = async function () {
     if (W.loading) return;
     W.loading = true;
     W.error = null;
     W._retried = false;
     W.grid = null;
-    const lat = GRID.lat.join(',');
-    const lon = GRID.lon.join(',');
+    const pairs = gridPairs(GRID);
+    const lat = pairs.lat.join(',');
+    const lon = pairs.lon.join(',');
     const common = `latitude=${lat}&longitude=${lon}&timezone=UTC&forecast_days=3`;
     const atmoUrl = `${API_ATMO}?${common}&hourly=${qs([
       'wind_speed_10m',
@@ -120,12 +135,15 @@
 
   /** Coarse real grid (every other point, 2 days) used if the full grid is refused. */
   W.loadFallback = async function () {
-    const latArr = GRID.lat.filter((_, i) => i % 2 === 0);
-    const lonArr = GRID.lon.filter((_, i) => i % 2 === 0);
-    const common = `latitude=${latArr.join(',')}&longitude=${lonArr.join(',')}&timezone=UTC&forecast_days=2`;
+    const coarse = {
+      lat: GRID.lat.filter((_, i) => i % 2 === 0),
+      lon: GRID.lon.filter((_, i) => i % 2 === 0),
+    };
+    W.grid = coarse;
+    const pairs = gridPairs(coarse);
+    const common = `latitude=${pairs.lat.join(',')}&longitude=${pairs.lon.join(',')}&timezone=UTC&forecast_days=2`;
     const atmoUrl = `${API_ATMO}?${common}&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn`;
     const marineUrl = `${API_MARINE}?${common}&hourly=wave_height,wave_direction,wave_period,sea_surface_temperature`;
-    W.grid = { lat: latArr, lon: lonArr };
     try {
       const a = await fetch(atmoUrl).then((r) => {
         if (!r.ok) throw new Error(`atmo HTTP ${r.status}`);

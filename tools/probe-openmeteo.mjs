@@ -9,8 +9,14 @@ const variables = 'wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl
 const lat = [];
 const lon = [];
 for (let la = 52; la >= 16; la -= 4) for (let lo = -68; lo <= -16; lo += 4) { lat.push(la); lon.push(lo); }
-const n = lat.length;
-console.log('grid points:', n);
+// Open-Meteo multi-point requests are PAIRS: latitude[i] with longitude[i].
+const pLat = [];
+const pLon = [];
+for (let i = 0; i < 140; i++) {
+  pLat.push(52 - (i % 10) * 4);
+  pLon.push(-68 + Math.floor(i / 10) * 4);
+}
+console.log('grid points:', pLat.length);
 
 const variants = [
   ['full grid', `${BASE}?latitude=${lat.join(',')}&longitude=${lon.join(',')}&hourly=${variables}&wind_speed_unit=kn&timezone=UTC&forecast_days=3`],
@@ -57,7 +63,7 @@ for (const [name, url] of mVariants) {
 }
 
 // ---- reproduce the browser request exactly (headers matter) ----
-const exact = 'https://api.open-meteo.com/v1/forecast?latitude=52,48,44,40,36,32,28,24,20,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn';
+const exact = `https://api.open-meteo.com/v1/forecast?latitude=${pLat.join(',')}&longitude=${pLon.join(',')}&timezone=UTC&forecast_days=3&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn`;
 const headerSets = [
   ['plain', {}],
   ['browser-ish', {

@@ -1,5 +1,10 @@
 /** Does Open-Meteo refuse the exact URL the browser sends? Test header variants. */
-const exact = 'https://api.open-meteo.com/v1/forecast?latitude=52,48,44,40,36,32,28,24,20,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn';
+// paired grid: 10 lats x 14 lons = 140 points, lat-major
+const PL = [];
+const PN = [];
+for (let y = 0; y < 10; y++) for (let x = 0; x < 14; x++) { PL.push(52 - y * 4); PN.push(-68 + x * 4); }
+const exact = `https://api.open-meteo.com/v1/forecast?latitude=${PL.join(',')}&longitude=${PN.join(',')}&timezone=UTC&forecast_days=3&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn&cell_selection=sea`;
+const marineExact = `https://marine-api.open-meteo.com/v1/marine?latitude=${PL.join(',')}&longitude=${PN.join(',')}&timezone=UTC&forecast_days=3&hourly=wave_height,wave_direction,wave_period,sea_surface_temperature`;
 const sets = [
   ['plain', {}],
   ['browser', {
@@ -21,6 +26,10 @@ for (const [n, h] of sets) {
   } catch (e) {
     console.log(`EXACT ${n.padEnd(10)} ERROR ${e.message}`);
   }
+}
+{
+  const r = await fetch(marineExact);
+  console.log(`MARINE grid    HTTP ${r.status} ${(await r.text()).length}B`);
 }
 for (const days of ['2', '3']) {
   const u = exact.replace('forecast_days=3', `forecast_days=${days}`);
