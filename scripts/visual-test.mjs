@@ -231,8 +231,19 @@ const mobileInfo = await m.evaluate(() => ({
   overflow: document.documentElement.scrollWidth > window.innerWidth + 2,
   scrollWidth: document.documentElement.scrollWidth,
   innerWidth: window.innerWidth,
+  offenders: (() => {
+    const vw = window.innerWidth;
+    const out = [];
+    document.querySelectorAll('body *').forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.width > 0 && r.right > vw + 1 && r.width < 3000) {
+        out.push({ tag: el.tagName.toLowerCase(), cls: (el.className || '').toString().slice(0, 40), right: Math.round(r.right), w: Math.round(r.width) });
+      }
+    });
+    return out.slice(0, 12);
+  })(),
 }));
-check('mobile : pas de débordement horizontal', !mobileInfo.overflow, `${mobileInfo.scrollWidth}px / ${mobileInfo.innerWidth}px`);
+check('mobile : pas de débordement horizontal', !mobileInfo.overflow, `${mobileInfo.scrollWidth}px / ${mobileInfo.innerWidth}px ${JSON.stringify(mobileInfo.offenders)}`);
 check('mobile : marqueurs présents', mobileInfo.markers >= 2, String(mobileInfo.markers));
 await m.evaluate(() => document.getElementById('rail')?.classList.add('is-open'));
 await new Promise((r) => setTimeout(r, 900));
