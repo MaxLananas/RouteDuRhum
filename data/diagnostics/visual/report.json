@@ -1,0 +1,199 @@
+{
+ "startedAt": "2026-11-04T14:16:52.599Z",
+ "shots": [
+  "01-desktop-direct",
+  "02-desktop-flotte",
+  "03-desktop-analyses",
+  "04-desktop-meteo",
+  "05-desktop-bateau",
+  "06-desktop-sources",
+  "07-desktop-couche-vent",
+  "08-desktop-couche-vagues",
+  "09-desktop-couche-pression",
+  "10-desktop-replay",
+  "11-desktop-replay-curseur",
+  "12-desktop-fond-nuit",
+  "13-desktop-flotte-focus",
+  "20-mobile-carte",
+  "21-mobile-panneau",
+  "22-mobile-analyses",
+  "23-mobile-meteo",
+  "30-panne-source",
+  "31-panne-api-live",
+  "32-panne-meteo"
+ ],
+ "console": [
+  "[error] Failed to load resource: the server responded with a status of 404 (File not found)",
+  "[error] Failed to load resource: the server responded with a status of 404 (File not found)",
+  "[error] Failed to load resource: the server responded with a status of 404 (File not found)",
+  "[pageerror] L is not defined",
+  "[pageerror] L is not defined",
+  "[pageerror] L is not defined",
+  "[error] Failed to load resource: the server responded with a status of 404 (File not found)",
+  "[error] Failed to load resource: the server responded with a status of 404 (File not found)",
+  "[error] Failed to load resource: the server responded with a status of 404 (File not found)",
+  "[pageerror] L is not defined",
+  "[error] Failed to load resource: the server responded with a status of 404 (File not found)",
+  "[error] Failed to load resource: the server responded with a status of 404 (File not found)",
+  "[error] Failed to load resource: the server responded with a status of 404 (File not found)",
+  "[pageerror] L is not defined",
+  "[error] Failed to load resource: the server responded with a status of 404 (File not found)",
+  "[error] Failed to load resource: the server responded with a status of 404 (File not found)",
+  "[error] Failed to load resource: the server responded with a status of 404 (File not found)",
+  "[pageerror] L is not defined"
+ ],
+ "network": [
+  "HTTP 404 http://127.0.0.1:8099/vendor/leaflet/leaflet.css",
+  "FAILED http://127.0.0.1:8099/vendor/leaflet/leaflet.css — net::ERR_ABORTED",
+  "HTTP 404 http://127.0.0.1:8099/vendor/leaflet/leaflet.js",
+  "FAILED http://127.0.0.1:8099/vendor/leaflet/leaflet.js — net::ERR_ABORTED",
+  "HTTP 404 http://127.0.0.1:8099/vendor/chartjs/chart.umd.js",
+  "FAILED http://127.0.0.1:8099/vendor/chartjs/chart.umd.js — net::ERR_ABORTED",
+  "HTTP 404 http://127.0.0.1:8099/vendor/leaflet/leaflet.css",
+  "FAILED http://127.0.0.1:8099/vendor/leaflet/leaflet.css — net::ERR_ABORTED",
+  "HTTP 404 http://127.0.0.1:8099/vendor/chartjs/chart.umd.js",
+  "FAILED http://127.0.0.1:8099/vendor/chartjs/chart.umd.js — net::ERR_ABORTED",
+  "HTTP 404 http://127.0.0.1:8099/vendor/leaflet/leaflet.js",
+  "FAILED http://127.0.0.1:8099/vendor/leaflet/leaflet.js — net::ERR_ABORTED",
+  "HTTP 404 http://127.0.0.1:8099/vendor/leaflet/leaflet.css",
+  "FAILED http://127.0.0.1:8099/vendor/leaflet/leaflet.css — net::ERR_ABORTED",
+  "HTTP 404 http://127.0.0.1:8099/vendor/leaflet/leaflet.js",
+  "FAILED http://127.0.0.1:8099/vendor/leaflet/leaflet.js — net::ERR_ABORTED",
+  "HTTP 404 http://127.0.0.1:8099/vendor/chartjs/chart.umd.js",
+  "FAILED http://127.0.0.1:8099/vendor/chartjs/chart.umd.js — net::ERR_ABORTED",
+  "HTTP 404 http://127.0.0.1:8099/vendor/leaflet/leaflet.css",
+  "FAILED http://127.0.0.1:8099/vendor/leaflet/leaflet.css — net::ERR_ABORTED",
+  "HTTP 404 http://127.0.0.1:8099/vendor/leaflet/leaflet.js",
+  "FAILED http://127.0.0.1:8099/vendor/leaflet/leaflet.js — net::ERR_ABORTED",
+  "HTTP 404 http://127.0.0.1:8099/vendor/chartjs/chart.umd.js",
+  "FAILED http://127.0.0.1:8099/vendor/chartjs/chart.umd.js — net::ERR_ABORTED"
+ ],
+ "checks": [
+  {
+   "name": "core chargé",
+   "ok": false
+  },
+  {
+   "name": "identifier Laurent",
+   "ok": false,
+   "detail": "undefined (tracker undefined)"
+  },
+  {
+   "name": "trace Laurent décodée",
+   "ok": false,
+   "detail": "0 points"
+  },
+  {
+   "name": "flotte configurée",
+   "ok": false,
+   "detail": "0 bateaux"
+  },
+  {
+   "name": "classements chargés",
+   "ok": false,
+   "detail": "0 classes"
+  },
+  {
+   "name": "pictogrammes sur la carte",
+   "ok": false,
+   "detail": "0 marqueurs"
+  },
+  {
+   "name": "trace dessinée sur le canvas",
+   "ok": false
+  },
+  {
+   "name": "météo modèle chargée",
+   "ok": false,
+   "detail": ""
+  },
+  {
+   "name": "API officielle live",
+   "ok": false,
+   "detail": ""
+  },
+  {
+   "name": "rang affiché",
+   "ok": false,
+   "detail": "—"
+  },
+  {
+   "name": "vitesse affichée",
+   "ok": false,
+   "detail": "—nd"
+  },
+  {
+   "name": "aucune erreur JS",
+   "ok": false
+  },
+  {
+   "name": "graphiques rendus",
+   "ok": false,
+   "detail": "[]"
+  },
+  {
+   "name": "particules de vent dessinées",
+   "ok": false,
+   "detail": "0 pixels opaques"
+  },
+  {
+   "name": "replay actif",
+   "ok": false,
+   "detail": "{\"active\":false,\"playing\":false,\"t\":0,\"timelineOpen\":false,\"ghost\":false}"
+  },
+  {
+   "name": "mobile : pas de débordement horizontal",
+   "ok": true,
+   "detail": "463px / 463px"
+  },
+  {
+   "name": "mobile : marqueurs présents",
+   "ok": false,
+   "detail": "0"
+  },
+  {
+   "name": "panne de source : message explicite",
+   "ok": false,
+   "detail": ""
+  },
+  {
+   "name": "panne de source : aucune fausse position",
+   "ok": true,
+   "detail": "0 marqueurs"
+  },
+  {
+   "name": "API live bloquée : snapshot conservé",
+   "ok": false,
+   "detail": "{\"markers\":0,\"status\":\"Chargement du tracker…\",\"officialOk\":null,\"rank\":\"—\"}"
+  }
+ ],
+ "errors": [],
+ "info": {
+  "core": false,
+  "laurent": null,
+  "trackPoints": 0,
+  "boats": 0,
+  "standings": 0,
+  "markers": 0,
+  "wxError": null,
+  "officialOk": null,
+  "officialError": null,
+  "status": "Chargement du tracker…",
+  "rankTxt": "—",
+  "speedTxt": "—nd",
+  "charts": [],
+  "trailCanvasPainted": false
+ },
+ "mobileInfo": {
+  "railOpen": false,
+  "markers": 0,
+  "topbarH": 54,
+  "overflow": false,
+  "scrollWidth": 463,
+  "innerWidth": 463
+ },
+ "charts": [],
+ "finishedAt": "2026-11-04T14:18:00.220Z",
+ "passed": 2,
+ "failed": 18
+}
