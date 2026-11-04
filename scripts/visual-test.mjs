@@ -411,7 +411,7 @@ const mapTab = await m.evaluate(() => {
   const mid = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
   return {
     found: true,
-    shown: getComputedStyle(t).display !== 'none',
+    shown: getComputedStyle(t).visibility !== 'hidden' && getComputedStyle(t).display !== 'none',
     inside: r.left >= -0.5 && r.right <= window.innerWidth + 0.5 && r.width > 24,
     box: [Math.round(r.left), Math.round(r.right), Math.round(r.width), window.innerWidth],
     clickable: !!mid && t.contains(mid),

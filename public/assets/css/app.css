@@ -393,7 +393,7 @@ p { margin: 0 0 0.75em; }
   .tabs { padding-right: 78px; } /* keep the strip clear of the floating button */
 }
 /* desktop: the panel is docked next to the map, so the "back to map" tab is moot */
-.tab--map { display: none; }
+.tab--map { visibility: hidden; pointer-events: none; }
 #btnSheet { display: none; }
 @media (max-width: 900px) { #btnSheet { display: grid; } }
 .tabs::-webkit-scrollbar { display: none; }
