@@ -481,7 +481,11 @@
       if (wasCut[i]) c.classList.remove('is-cut');
       width.set(c, Math.ceil(c.getBoundingClientRect().width));
     });
-    const avail = Math.floor(strip.getBoundingClientRect().width);
+    // What is really available is the space left before the action buttons —
+    // flexbox clips whatever pokes out of the strip, clientWidth lies about it.
+    const right = document.querySelector('.topbar__right');
+    const edge = right ? right.getBoundingClientRect().left - strip.getBoundingClientRect().left : strip.clientWidth;
+    const avail = Math.floor(Math.min(strip.getBoundingClientRect().width, edge));
 
     const hide = new Set();
     let used = chips.reduce((n, c) => n + (width.get(c) || 0), 0);
