@@ -414,7 +414,7 @@
     }
     // dim the live pictograms so the replay ghost is unambiguous
     for (const rec of M.boatMarkers.values()) {
-      const el = rec.marker.getElement();
+      const el = rec.marker.getElement()?.querySelector('.boat-marker') || rec.marker.getElement();
       if (el) {
         el.style.transition = 'opacity .3s';
         el.style.opacity = '0.28';
@@ -432,7 +432,7 @@
       M.ghost = null;
     }
     for (const rec of M.boatMarkers.values()) {
-      const el = rec.marker.getElement();
+      const el = rec.marker.getElement()?.querySelector('.boat-marker') || rec.marker.getElement();
       if (el) el.style.opacity = '1';
     }
     document.getElementById('liveCard')?.classList.remove('is-replay');
