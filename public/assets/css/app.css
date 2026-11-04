@@ -384,7 +384,7 @@ p { margin: 0 0 0.75em; }
   .tab { display: inline-block; }
   /* floating "back to map" action, moved out of the strip by app.js */
   .tab--float.tab--map {
-    position: absolute; top: 6px; right: 10px; z-index: 3;
+    position: absolute; top: 4px; right: 10px; z-index: 3;
     padding: 6px 10px; border-radius: 8px;
     background: rgba(255, 194, 75, 0.14);
     border: 1px solid rgba(255, 194, 75, 0.38);
@@ -651,8 +651,9 @@ input[type='range']::-moz-range-thumb { width: 14px; height: 14px; border: 0; bo
   }
   .rail__grab i { width: 38px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.28); display: block; }
   .mobilebar {
-    display: flex; align-items: center; gap: 8px; padding: 0 12px 8px;
+    display: flex; align-items: center; gap: 8px; padding: 0 88px 8px 12px;
     font-family: var(--mono); font-size: 10px; color: var(--ink-dim);
+    min-height: 30px;
   }
   .mobilebar b { color: var(--ink); }
   .hud--tl { max-width: none; right: 14px; }

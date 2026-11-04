@@ -421,6 +421,16 @@ const mapTab = await m.evaluate(() => {
 check('mobile : onglet Carte visible et cliquable',
   mapTab.found && mapTab.shown && mapTab.inside && mapTab.clickable,
   JSON.stringify(mapTab));
+const noOverlap = await m.evaluate(() => {
+  const t = document.querySelector('.tab--map').getBoundingClientRect();
+  const hits = [...document.querySelectorAll('#mobileBar span, #tabs .tab, .rail__grab')]
+    .map((el) => ({ el, r: el.getBoundingClientRect() }))
+    .filter(({ el, r }) => el !== document.querySelector('.tab--map') && r.width > 0 && r.height > 0
+      && !(r.right <= t.left || r.left >= t.right || r.bottom <= t.top || r.top >= t.bottom))
+    .map(({ el }) => el.textContent.trim().slice(0, 24));
+  return hits;
+});
+check('mobile : l’onglet Carte ne recouvre rien', noOverlap.length === 0, JSON.stringify(noOverlap));
 // the hero photo must come from the official CDN
 const hero = await m.evaluate(() => {
   const img = document.getElementById('heroPhoto');
