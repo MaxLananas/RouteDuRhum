@@ -401,7 +401,7 @@ const mobileBar = await page.evaluate(() => {
   };
 });
 check('mobile : titre lisible et boutons décrits',
-  !mobileBar.titleClipped && /aria-label/.test(mobileBar.liveLabel + mobileBar.refreshLabel) && mobileBar.liveLabel.length > 3,
+  !mobileBar.titleClipped && mobileBar.liveLabel.length > 3 && mobileBar.refreshLabel.length > 3,
   JSON.stringify(mobileBar));
 // the hero photo must come from the official CDN
 const hero = await m.evaluate(() => {
