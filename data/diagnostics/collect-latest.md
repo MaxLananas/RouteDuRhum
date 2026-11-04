@@ -1,11 +1,11 @@
-# Collect run 4 — 2026-11-04T14:04:26Z
+# Collect run 5 — 2026-11-04T14:05:35Z
 
 ```
-versions {config:20261104114533,tracks:20261104132844,reports:20261104132842,live:20261104132842,geoblog:0}
+versions {config:20261104114533,tracks:20261104140442,reports:20261104140439,live:20261104140439,geoblog:0}
 config: downloaded 18673B -> 64274B decoded (v=20261104114533)
-tracks: downloaded 220226B -> 622537B decoded (v=20261104132844)
+tracks: downloaded 222633B -> 629853B decoded (v=20261104140442)
 tracks failed: Cannot access 'LAURENT' before initialization
-reports: downloaded 678893B -> 1934870B decoded (v=20261104132842)
-live: downloaded 10944B -> 24038B decoded (v=20261104132842)
-done in 1.5s — boats=115 laurent=Laurent BOURGUES
+reports: downloaded 687254B -> 1953838B decoded (v=20261104140439)
+live: downloaded 10933B -> 24062B decoded (v=20261104140439)
+done in 1.8s — boats=115 laurent=Laurent BOURGUES
 ```
