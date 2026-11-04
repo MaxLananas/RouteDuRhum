@@ -46,6 +46,21 @@ jobs:
           set -o pipefail
           node tools/collect.mjs --inspect 2>&1 | tee collect.log
 
+      - name: Build the browser payload
+        run: |
+          set -o pipefail
+          node tools/build-app-data.mjs 2>&1 | tee -a collect.log
+          # fail loudly if the payload the site reads was not refreshed
+          node -e '
+            const c = require("./public/data/core.json");
+            const age = Date.now() - Date.parse(c.freshness.lastRun || 0);
+            if (!(age < 30 * 60 * 1000)) {
+              console.error(`stale payload: lastRun is ${Math.round(age / 60000)} min old`);
+              process.exit(1);
+            }
+            console.log(`payload fresh: lastRun ${c.freshness.lastRun}`);
+          '
+
       - name: Keep the log in the repo (no artifact download needed)
         if: always()
         run: |
@@ -58,7 +73,10 @@ jobs:
           git config user.name 'rdr-bot'
           git config user.email 'rdr-bot@users.noreply.github.com'
           rm -f data/.cache_*
-          git add -A data
+          # public/data is what Cloudflare Pages actually serves: without it the
+          # site kept showing the snapshot from the last manual build (7 h stale
+          # on 4 Nov while every collector run reported success).
+          git add -A data public/data
           if git diff --cached --quiet; then
             echo "no data change"
             exit 0
