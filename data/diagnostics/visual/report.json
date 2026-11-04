@@ -1,5 +1,5 @@
 {
- "startedAt": "2026-11-04T18:32:06.297Z",
+ "startedAt": "2026-11-04T18:35:12.331Z",
  "shots": [
   "01-desktop-direct",
   "02-desktop-flotte",
@@ -84,11 +84,11 @@
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_ABORTED",
   "FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED",
   "FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED",
-  "HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793817226012",
+  "HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793817408220",
   "FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED",
   "FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED",
-  "FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793817231409 — net::ERR_FAILED",
-  "HTTP 404 http://127.0.0.1:8099/api/classement?_=1793817231409",
+  "FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793817413562 — net::ERR_FAILED",
+  "HTTP 404 http://127.0.0.1:8099/api/classement?_=1793817413562",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/6 — net::ERR_FAILED",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/6 — net::ERR_FAILED",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/5 — net::ERR_FAILED",
@@ -180,6 +180,11 @@
    "ok": true
   },
   {
+   "name": "communiqués de course affichés",
+   "ok": true,
+   "detail": "{\"count\":7,\"first\":\"Matthieu PERRAUT · ELVEST RET · Abandon Chavirage le 3 novembre au soir, à 400 milles au n\",\"links\":7,\"empty\":false}"
+  },
+  {
    "name": "comparaison avec la flotte",
    "ok": true,
    "detail": "10 courbes"
@@ -192,7 +197,7 @@
   {
    "name": "particules de vent visibles",
    "ok": true,
-   "detail": "36136 pixels visibles"
+   "detail": "39777 pixels visibles"
   },
   {
    "name": "lecteur météo au survol",
@@ -217,7 +222,7 @@
   {
    "name": "replay actif",
    "ok": true,
-   "detail": "{\"active\":true,\"playing\":true,\"t\":1793516701.9919999,\"timelineOpen\":true,\"ghost\":true}"
+   "detail": "{\"active\":true,\"playing\":true,\"t\":1793516701.98,\"timelineOpen\":true,\"ghost\":true}"
   },
   {
    "name": "replay : direct mis en retrait",
@@ -337,7 +342,7 @@
   {
    "name": "API live bloquée : snapshot conservé",
    "ok": true,
-   "detail": "{\"markers\":11,\"status\":\"Direct · pointage officiel il y a 4 h 33\",\"wxUrls\":{\"atmo\":\"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn\",\"marine\":\"https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wave_height,wave_direction,wave_period,sea_surface_temperature\"},\"perfRows\":[\"4 heures37,2 mi8,7 nd12,6 nd\",\"24 heures259 mi8,9 nd20,2 nd\",\"48 heures—14,8 nd25,4 nd\",\"Depuis le départ1 284 mi15,0 nd25,4 nd\"],\"gapRows\":[\"Anne-Claire LE BERRE +19,5 mi 13,0\",\"Erwan LE DRAOULEC −75,0 mi 12,7\",\"Luke BERRY −104,8 mi 14,2\",\"Thibaut VAUCHEL-CAMUS −162,4 mi 16,9\",\"Baptiste HULIN −262,7 mi 17,6\"],\"officialOk\":false,\"wxReady\":false,\"rank\":\"8 / 10\"}"
+   "detail": "{\"markers\":11,\"status\":\"Direct · pointage officiel il y a 4 h 36\",\"wxUrls\":{\"atmo\":\"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn\",\"marine\":\"https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wave_height,wave_direction,wave_period,sea_surface_temperature\"},\"perfRows\":[\"4 heures37,2 mi8,7 nd12,6 nd\",\"24 heures259 mi8,9 nd20,2 nd\",\"48 heures—14,8 nd25,4 nd\",\"Depuis le départ1 284 mi15,0 nd25,4 nd\"],\"gapRows\":[\"Anne-Claire LE BERRE +19,5 mi 13,0\",\"Erwan LE DRAOULEC −75,0 mi 12,7\",\"Luke BERRY −104,8 mi 14,2\",\"Thibaut VAUCHEL-CAMUS −162,4 mi 16,9\",\"Baptiste HULIN −262,7 mi 17,6\"],\"officialOk\":false,\"wxReady\":false,\"rank\":\"8 / 10\"}"
   },
   {
    "name": "sans tuiles : mode schématique annoncé",
@@ -386,7 +391,7 @@
   ],
   "officialOk": true,
   "officialError": null,
-  "status": "Direct · pointage officiel il y a 4 h 32",
+  "status": "Direct · pointage officiel il y a 4 h 35",
   "rankTxt": "8 / 10",
   "speedTxt": "12,5nd",
   "charts": [],
@@ -567,7 +572,7 @@
    "visible": false
   }
  ],
- "finishedAt": "2026-11-04T18:34:04.964Z",
- "passed": 48,
+ "finishedAt": "2026-11-04T18:37:06.913Z",
+ "passed": 49,
  "failed": 0
 }
