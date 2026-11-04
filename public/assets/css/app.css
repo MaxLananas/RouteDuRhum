@@ -480,6 +480,7 @@ p { margin: 0 0 0.75em; }
   display: inline-flex; align-items: center; gap: 4px; height: 16px; padding: 0 6px;
   border-radius: 4px; font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.08em;
   text-transform: uppercase; border: 1px solid var(--line-strong); color: var(--ink-dim);
+  white-space: nowrap;
 }
 .badge--official { color: #a9e6c8; border-color: rgba(62, 230, 176, 0.35); background: rgba(62, 230, 176, 0.08); }
 .badge--calc { color: #bdd4ff; border-color: rgba(120, 170, 255, 0.35); background: rgba(120, 170, 255, 0.08); }
