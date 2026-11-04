@@ -1,6 +1,6 @@
-# Rapport de test — 2026-11-04T18:25:44.763Z
+# Rapport de test — 2026-11-04T18:28:50.472Z
 
-**46 tests OK / 1 en échec**
+**48 tests OK / 0 en échec**
 
 | Test | Résultat | Détail |
 | --- | --- | --- |
@@ -20,7 +20,7 @@
 | aucune erreur JS | ✅ |  |
 | comparaison avec la flotte | ✅ | 10 courbes |
 | graphiques rendus | ✅ | [{"key":"chartSpeed","points":109,"w":379,"h":176,"visible":true},{"key":"chartRank","points":109,"w":379,"h":132,"visible":true},{"key":"chartDtf","points":109 |
-| particules de vent visibles | ✅ | 36670 pixels visibles |
+| particules de vent visibles | ✅ | 33175 pixels visibles |
 | lecteur météo au survol | ✅ | 15.4 nd 276° O |
 | couche nuages : voile dessiné | ✅ | {"layer":"clouds","painted":16466,"legend":true,"otherLegends":[],"readout":"14 % partiellement couvert","hasValue":true} |
 | calque météo : couvre toute la carte | ✅ | {"stage":[1188,938],"css":[1188,938],"backing":[1188,938],"internal":[1188,938],"dpr":1} |
@@ -43,14 +43,15 @@
 | mobile : marqueurs présents | ✅ | 4 |
 | mobile : boutons carte ⇄ panneau | ✅ | {"sheet":true,"carte":true} |
 | mobile : titre lisible et boutons décrits | ✅ | {"title":"La French Fab · Route du Rhum 2026","titleClipped":false,"liveLabel":"Revenir au direct","refreshLabel":"Actualiser les données"} |
-| mobile : onglet Carte visible et cliquable | ❌ | {"found":true,"shown":true,"inside":true,"box":[311,380,69,390],"clickable":false,"at":"leaflet-control-attribution leaflet-control","label":"Carte ↑"} |
+| mobile : onglet Carte visible et cliquable | ✅ | {"found":true,"shown":true,"inside":true,"box":[311,380,69,390],"clickable":true,"at":"tab tab--map tab--float","label":"Carte ↑"} |
 | mobile : l’onglet Carte ne recouvre rien | ✅ | {"tab":[311,380,69,390],"hits":[]} |
+| mobile : Carte replie le panneau | ✅ | {"open":false,"pane":"live"} |
 | photo officielle du skipper | ✅ | {"src":"https://static.wixstatic.com/media/547c0f_875ec65a36e246a7a69418d05054dadb~mv2.avif","ok":true,"hidden":false} |
 | panne de source : message explicite | ✅ | 
           Les données sont momentanément indisponibles.
           HTTP 503 sur /data/core |
 | panne de source : aucune fausse position | ✅ | 0 marqueurs |
-| API live bloquée : snapshot conservé | ✅ | {"markers":11,"status":"Direct · pointage officiel il y a 4 h 27","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,5 |
+| API live bloquée : snapshot conservé | ✅ | {"markers":11,"status":"Direct · pointage officiel il y a 4 h 30","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,5 |
 | sans tuiles : mode schématique annoncé | ✅ | {"cls":true,"badge":true,"markers":11,"trail":3566} |
 | sans tuiles : trace et bateaux toujours lisibles | ✅ | {"cls":true,"badge":true,"markers":11,"trail":3566} |
 
@@ -89,11 +90,11 @@
 ```
 FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED
 FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED
-HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793816830880
+HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793817015312
 FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED
 FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED
-FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793816836248 — net::ERR_FAILED
-HTTP 404 http://127.0.0.1:8099/api/classement?_=1793816836248
+FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793817020557 — net::ERR_FAILED
+HTTP 404 http://127.0.0.1:8099/api/classement?_=1793817020557
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/6 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/6 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/5 — net::ERR_FAILED
