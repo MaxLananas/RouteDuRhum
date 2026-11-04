@@ -14,56 +14,45 @@ environnements ont donc été utilisés, chacun pour ce qu'il peut faire :
 
 ## Tests automatisés (51 vérifications, `scripts/visual-test.mjs`)
 
-Lancés à chaque modification de `public/` et de `tools/build-app-data.mjs`, ils
-produisent `data/diagnostics/visual/report.md` + captures PNG. Les tests de largeur
-tournent en boucle sur quatre tailles d'écran, d'où le nombre total plus élevé que
-le nombre de lignes ci-dessous.
+Le script contient **42 assertions**, dont cinq exécutées dans une boucle sur quatre
+largeurs d'écran (1024, 1280, 1440, 1920 px) et une sur chaque onglet : d'où
+**51 vérifications** au total dans le rapport. Lancé à chaque modification de
+`public/`, de `scripts/visual-test.mjs` ou de `tools/build-app-data.mjs`, il produit
+`data/diagnostics/visual-test-latest.md` + les captures PNG.
 
 | # | Test | Ce qu'il prouve |
 | --- | --- | --- |
 | 1 | core chargé | `core.json` valide et parsé |
-| 2 | identification de Laurent | on trouve bien Laurent Bourguès (et pas un homonyme : le bug « Bourgnon » est couvert) |
+| 2 | identification de Laurent | on trouve bien Laurent Bourguès (et pas « Bourgnon », ni un homonyme) |
 | 3 | trace décodée | > 100 points décodés depuis le delta-encoding |
-| 4 | flotte | 115 bateaux présents dans la config |
+| 4 | flotte | 115 bateaux présents |
 | 5 | classements | 6 classes |
 | 6 | pictogrammes | marqueurs réellement posés sur la carte |
 | 7 | trace peinte | le canvas de trace contient des pixels non transparents |
-| 8 | météo modèle | la grille Open-Meteo est chargée (paires lat/lon valides) |
-| 9 | performances officielles | les colonnes 4 h / 24 h / course ne sont pas nulles (couvre le bug d'ordre des pointages) |
+| 8 | météo modèle | la grille Open-Meteo est chargée |
+| 9 | performances officielles | colonnes 4 h / 24 h / course non nulles (couvre un bug d'ordre des pointages) |
 | 10 | écarts flotte | Laurent n'apparaît pas dans sa propre liste de concurrents |
-| 11 | API officielle | l'appel navigateur au classement fonctionne (direct ou via le proxy `/api/classement`) |
-| 12-13 | rang / vitesse | les valeurs sont affichées |
-| 14 | aucune erreur JS | pas d'exception pendant le chargement et les interactions |
-| 15 | graphiques | 5 graphiques rendus avec des données |
-| 16 | particules de vent | le canvas météo contient > 20 000 pixels visibles |
-| 17 | lecteur météo | le survol d'une couche affiche valeur + direction |
-| 18 | **couche nuages** | le voile de couverture nuageuse est réellement peint (pixels non transparents) |
-| 19 | **calque météo plein cadre** | la taille interne du canvas = celle de la scène (couvre un vrai bug : calque limité à une partie de la carte) |
-| 20 | **légende et lecteur nuages** | la bonne légende est affichée, les autres masquées, le lecteur donne un pourcentage |
-| 21 | replay | lecture active, curseur ouvert, bateau fantôme présent |
-| 22 | **replay : direct en retrait** | en replay, les marqueurs du direct passent à `opacity ≤ 0.5` et la carte live est marquée `is-replay` |
-| 23-25 | **desktop 1024 / 1280 / 1440 / 1920 px** | trois contrôles par largeur : le rail tient entièrement dans la fenêtre, aucun élément du panneau ou du bandeau ne dépasse, les indicateurs du bandeau sont soit complets soit masqués (jamais tronqués) |
-| 26 | mobile sans débordement | `scrollWidth == viewport` (couvre un vrai bug : 463 px au lieu de 390 px) |
-| 27 | mobile marqueurs | la carte mobile affiche des bateaux |
-| 28 | **bouton mobile** | le bouton d'ouverture du panneau et l'onglet Carte existent et sont visibles |
-| 29 | **photo du skipper** | la photo officielle (CDN du site de la course) est chargée et visible |
-| 30-31 | panne totale de source | message explicite, **zéro marqueur** (aucune fausse position) |
-| 32 | API live bloquée | le snapshot reste affiché, le rang reste correct |
-| 33 | météo indisponible | gérée sans casser la page |
-| 34-35 | **sans tuiles** | après 6 échecs de tuiles sans succès, le mode schématique est annoncé et la trace + les bateaux restent lisibles |
-| 36 | **instantané figé** | avec un `lastRun` vieux de 6 h (API de classement toujours joignable), la page cesse de dire « direct » : bandeau « Instantané figé », pastille ambre, point rouge, message explicite, et **aucune** extrapolation — reproduction exacte de la panne de collecte du 4 novembre |
-| 37 | **communiqués de course** | les abandons officiels s'affichent avec le texte de la direction de course et le lien vers l'article officiel |
-| 38 | **graphiques : axe de temps réel** | l'axe des abscisses est un axe de temps linéaire : 1 h occupe la même largeur partout, la cadence 5 min → 60 min n'est plus déformée, et l'axe ne déborde pas avant le départ ni après le dernier pointage |
-| 39-41 | **desktop 1024 → 1920 : indicateurs du bandeau** | les indicateurs sont soit complets, soit masqués — jamais tronqués, et jamais sous les boutons |
-| 42-43 | **mobile : titre et boutons décrits** | le titre s'affiche sur deux lignes au lieu d'être coupé ; les boutons icônes ont un libellé accessible |
-| 44-46 | **mobile : carte ⇄ panneau** | le bouton du panneau est réellement rendu, l'action « Carte ↑ » est visible, cliquable, ne recouvre rien, et replie effectivement le panneau |
-| 47 | **couche nuages** | le voile de couverture nuageuse est peint, la bonne légende est affichée, le lecteur donne un pourcentage |
-| 48 | **calque météo plein cadre** | la taille interne du canvas correspond à la scène (couvre un vrai bug : calque limité à une partie de la carte) |
-
-Les tests 18 à 25 et 28 à 29, 34 à 35 sont ceux ajoutés après la première version
-du site ; le test 19 a été écrit parce que la couche météo ne couvrait qu'une partie
-de la carte — un défaut invisible dans les captures précédentes, où le calque
-s'arrêtait pile sur une côte.
+| 11 | API officielle | l'appel navigateur au classement fonctionne (direct ou proxy) |
+| 12-13 | rang / vitesse | valeurs affichées |
+| 14 | aucune erreur JS | pas d'exception pendant le chargement ni les interactions |
+| 15 | **communiqués de course** | les abandons officiels s'affichent avec le texte de la direction de course et le lien vers l'article |
+| 16 | comparaison flotte | 10 courbes (Laurent + 9 concurrents) |
+| 17 | graphiques rendus | au moins 4 graphiques avec des données |
+| 18 | **axe de temps réel** | abscisses linéaires : 1 h occupe la même largeur partout (la cadence 5 min → 60 min n'est plus déformée), et l'axe ne déborde ni avant le départ ni après le dernier pointage |
+| 19 | particules de vent | canvas météo > 20 000 pixels visibles |
+| 20 | lecteur météo | le survol d'une couche affiche valeur + direction |
+| 21-23 | **couche nuages** | voile réellement peint, légende dédiée, lecteur en %, et **calque couvrant toute la carte** (taille interne du canvas = scène : couvre un vrai bug où la couche s'arrêtait à mi-carte) |
+| 24 | replay | lecture active, curseur ouvert, bateau fantôme présent |
+| 25 | **replay : direct en retrait** | les marqueurs du direct passent à `opacity ≤ 0.5` et la carte est marquée `is-replay` |
+| 26-28 | **desktop 1024 / 1280 / 1440 / 1920 px** | trois contrôles par largeur : le rail tient entièrement dans la fenêtre, aucun élément ne dépasse, les indicateurs du bandeau sont soit complets soit masqués (jamais tronqués, jamais sous les boutons) |
+| 29 | mobile sans débordement | `scrollWidth == viewport` (couvre un vrai bug : 463 px au lieu de 390 px) |
+| 30 | mobile marqueurs | la carte mobile affiche des bateaux |
+| 31-35 | **mobile : carte ⇄ panneau** | le bouton du panneau est réellement rendu, le titre tient sur deux lignes, les boutons icônes ont un libellé accessible, l'action « Carte ↑ » est visible, cliquable, ne recouvre rien et **replie effectivement le panneau** |
+| 36 | photo du skipper | photo officielle (CDN du site de la course) chargée et visible |
+| 37-38 | panne totale de source | message explicite, **zéro marqueur** (aucune fausse position) |
+| 39 | API live bloquée | le snapshot reste affiché, le rang reste correct |
+| 40 | **instantané figé** | avec un `lastRun` vieux de 6 h et une API de classement toujours joignable, la page cesse de dire « direct » : bandeau « Instantané figé », pastille ambre, point rouge, message explicite. Reproduction exacte de la panne de collecte observée le 4 novembre |
+| 41-42 | **sans tuiles** | après 6 échecs de tuiles sans succès, le mode schématique est annoncé et la trace + les bateaux restent lisibles |
 
 ### Tests manuels complémentaires (visuels)
 
