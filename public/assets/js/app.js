@@ -473,13 +473,14 @@
       return i < 0 ? CHIP_PRIORITY.length : i; // unknown chips go last
     };
     chips.forEach((c) => c.classList.remove('is-cut'));
-    // measure every chip while all of them are still rendered
-    const width = new Map(chips.map((c) => [c, c.offsetWidth]));
-    const avail = strip.clientWidth;
+    // measure every chip while all of them are still rendered; ceil() so a
+    // fractional width can never end up a hair wider than the room available
+    const width = new Map(chips.map((c) => [c, Math.ceil(c.getBoundingClientRect().width)]));
+    const avail = Math.floor(strip.getBoundingClientRect().width);
     let used = chips.reduce((n, c) => n + (width.get(c) || 0), 0);
     const drop = [...chips].sort((a, b) => prio(b) - prio(a));
     for (const chip of drop) {
-      if (used <= avail) break;
+      if (used <= avail - 1) break; // 1px slack
       chip.classList.add('is-cut');
       used -= width.get(chip) || 0;
     }
