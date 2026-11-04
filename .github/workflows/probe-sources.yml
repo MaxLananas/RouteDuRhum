@@ -31,7 +31,9 @@ jobs:
           node tools/probe-bundles.mjs 2>&1 | tee -a probe.log || true
           node tools/probe-openmeteo.mjs 2>&1 | tee -a probe.log || true
           echo '--- exact browser-emulated requests ---' | tee -a probe.log
+          rm -f headers.log
           { node tools/probe-openmeteo-headers.mjs 2>&1 || true; } > headers.log
+          ls -la headers.log
           echo '--- header probe ---' >> probe.log
           cat headers.log >> probe.log
           echo '--- end probe ---' >> probe.log
