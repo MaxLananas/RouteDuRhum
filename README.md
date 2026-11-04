@@ -60,7 +60,7 @@ Cloudflare Pages redéploie automatiquement, sans action manuelle.
 
 ## Tests
 
-`scripts/visual-test.mjs` (**51 vérifications**) pilote un vrai Chrome : données,
+`scripts/visual-test.mjs` (**53 vérifications**) pilote un vrai Chrome : données,
 carte, replay, couches météo, quatre largeurs d'écran, mobile, pannes de source.
 Les captures sont dans `data/diagnostics/visual/`. Détail dans
 [`docs/TESTING.md`](docs/TESTING.md).

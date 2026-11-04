@@ -12,11 +12,11 @@ environnements ont donc été utilisés, chacun pour ce qu'il peut faire :
 | GitHub Actions (`visual-test.yml`) | rendu et comportements dans un vrai Chrome (headless), captures d'écran |
 | Local (sandbox) | syntaxe, build des données hors ligne, serveur de dev, proxy Pages |
 
-## Tests automatisés (51 vérifications, `scripts/visual-test.mjs`)
+## Tests automatisés (53 vérifications, `scripts/visual-test.mjs`)
 
-Le script contient **42 assertions**, dont cinq exécutées dans une boucle sur quatre
+Le script contient **44 assertions**, dont cinq exécutées dans une boucle sur quatre
 largeurs d'écran (1024, 1280, 1440, 1920 px) et une sur chaque onglet : d'où
-**51 vérifications** au total dans le rapport. Lancé à chaque modification de
+**53 vérifications** au total dans le rapport. Lancé à chaque modification de
 `public/`, de `scripts/visual-test.mjs` ou de `tools/build-app-data.mjs`, il produit
 `data/diagnostics/visual-test-latest.md` + les captures PNG.
 
@@ -52,7 +52,9 @@ largeurs d'écran (1024, 1280, 1440, 1920 px) et une sur chaque onglet : d'où
 | 37-38 | panne totale de source | message explicite, **zéro marqueur** (aucune fausse position) |
 | 39 | API live bloquée | le snapshot reste affiché, le rang reste correct |
 | 40 | **instantané figé** | avec un `lastRun` vieux de 6 h et une API de classement toujours joignable, la page cesse de dire « direct » : bandeau « Instantané figé », pastille ambre, point rouge, message explicite. Reproduction exacte de la panne de collecte observée le 4 novembre |
-| 41-42 | **sans tuiles** | après 6 échecs de tuiles sans succès, le mode schématique est annoncé et la trace + les bateaux restent lisibles |
+| 41 | **écarts flotte : couleur cohérente** | un rival devant Laurent s'affiche en rouge, un rival derrière en vert (couvre une inversion de signe trouvée en relecture) |
+| 42 | **conditions à sa position** | les deux cartes du panneau Direct viennent du modèle réel — jamais un tiret qui ressemble à une mesure ; si le modèle manque, la raison est écrite |
+| 43-44 | **sans tuiles** | après 6 échecs de tuiles sans succès, le mode schématique est annoncé et la trace + les bateaux restent lisibles |
 
 ### Tests manuels complémentaires (visuels)
 
