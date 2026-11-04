@@ -1,0 +1,64 @@
+name: Visual & functional tests
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'public/**'
+      - 'scripts/visual-test.mjs'
+      - 'tools/build-app-data.mjs'
+      - '.github/workflows/visual-test.yml'
+
+permissions:
+  contents: write
+
+env:
+  DATA_BRANCH: arena/e3d3aa8e-routedurhum
+
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DATA_BRANCH }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser driver
+        run: npm install --no-audit --no-fund --silent
+
+      - name: Build app data from the latest snapshot
+        run: node tools/build-app-data.mjs
+
+      - name: Run visual tests
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: node scripts/visual-test.mjs 2>&1 | tee visual-test.log
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: data/diagnostics/visual/*.png
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Publish report in the repo
+        if: always()
+        run: |
+          mkdir -p data/diagnostics
+          { echo '# Visual test run ${{ github.run_number }} — '$(date -u +%FT%TZ); echo; echo '```'; tail -c 60000 visual-test.log; echo '```'; } > data/diagnostics/visual-test-latest.md
+          rm -rf data/diagnostics/visual/tmp
+          git config user.name 'rdr-bot'
+          git config user.email 'rdr-bot@users.noreply.github.com'
+          git add -A data/diagnostics public/data
+          git commit -m 'test: visual run ${{ github.run_number }} [skip ci]' || true
+          for i in 1 2 3; do
+            git push origin "HEAD:${DATA_BRANCH}" && break
+            git pull --rebase --autostash origin "${DATA_BRANCH}" || true
+          done

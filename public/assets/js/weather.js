@@ -1,0 +1,552 @@
+/* ============================================================================
+   Weather — Atlantic model grid (Open-Meteo) + wind particles, wave field,
+   isobars and wind barbs rendered on a canvas above the map.
+   Data: Open-Meteo (ECMWF/GFS/WAM). Always labelled "modèle".
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  const GRID = {
+    lat: [52, 48, 44, 40, 36, 32, 28, 24, 20, 16, 12],
+    lon: [-68, -63, -58, -53, -48, -43, -38, -33, -28, -23, -18, -13, -8],
+  };
+
+  const W = {
+    atmo: null, // grid payload
+    marine: null,
+    timeIdx: 0,
+    times: [],
+    layer: 'none',
+    barbs: false,
+    particles: [],
+    raf: null,
+    lastFrame: 0,
+    loadedAt: null,
+    loading: false,
+    error: null,
+    canvas: null,
+    ctx: null,
+    dpr: 1,
+  };
+
+  const API_ATMO = 'https://api.open-meteo.com/v1/forecast';
+  const API_MARINE = 'https://marine-api.open-meteo.com/v1/marine';
+
+  function qs(list) {
+    return list.join(',');
+  }
+
+  W.load = async function () {
+    if (W.loading) return;
+    W.loading = true;
+    W.error = null;
+    const lat = GRID.lat.join(',');
+    const lon = GRID.lon.join(',');
+    const common = `latitude=${lat}&longitude=${lon}&timezone=UTC&forecast_days=5&cell_selection=sea`;
+    const atmoUrl = `${API_ATMO}?${common}&hourly=${qs([
+      'wind_speed_10m',
+      'wind_direction_10m',
+      'wind_gusts_10m',
+      'pressure_msl',
+      'cloud_cover',
+      'temperature_2m',
+    ])}&wind_speed_unit=kn`;
+    const marineUrl = `${API_MARINE}?${common}&hourly=${qs([
+      'wave_height',
+      'wave_direction',
+      'wave_period',
+      'sea_surface_temperature',
+    ])}`;
+    try {
+      const [a, m] = await Promise.all([
+        fetch(atmoUrl).then((r) => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.json();
+        }),
+        fetch(marineUrl)
+          .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.json();
+          })
+          .catch((e) => {
+            W.warn = `Vagues indisponibles (${e.message})`;
+            return null;
+          }),
+      ]);
+      const grid = Array.isArray(a) ? a : [a];
+      const mgrid = m ? (Array.isArray(m) ? m : [m]) : [];
+      if (!grid.length || !grid[0].hourly) throw new Error('réponse vide');
+      W.atmo = grid;
+      W.marine = mgrid;
+      W.times = grid[0].hourly.time;
+      // pick the hour closest to now
+      const now = Date.now();
+      let best = 0;
+      let bestD = Infinity;
+      W.times.forEach((t, i) => {
+        const d = Math.abs(Date.parse(t + ':00Z') - now);
+        if (d < bestD) {
+          bestD = d;
+          best = i;
+        }
+      });
+      W.timeIdx = best;
+      W.loadedAt = new Date().toISOString();
+      W.ready = true;
+      W.emit();
+    } catch (e) {
+      W.error = e.message;
+      W.ready = false;
+      W.emit();
+    } finally {
+      W.loading = false;
+    }
+  };
+
+  W.onChange = [];
+  W.emit = function () {
+    W.onChange.forEach((f) => {
+      try {
+        f(W);
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  };
+
+  /* ------------------------------------------------------------ sampling */
+  function cellValue(grid, varName, gx, gy, idx) {
+    const i = gy * GRID.lon.length + gx;
+    const cell = grid[i];
+    if (!cell || !cell.hourly || !cell.hourly[varName]) return null;
+    const v = cell.hourly[varName][idx];
+    return Number.isFinite(v) ? v : null;
+  }
+
+  /** Bilinear-ish sample of a scalar field at a geographic point (grid space). */
+  function sampleField(grid, varName, lat, lon, idx) {
+    const nLon = GRID.lon.length;
+    const nLat = GRID.lat.length;
+    for (let y = 0; y < nLat - 1; y++) {
+      for (let x = 0; x < nLon - 1; x++) {
+        const la0 = GRID.lat[y];
+        const la1 = GRID.lat[y + 1];
+        const lo0 = GRID.lon[x];
+        const lo1 = GRID.lon[x + 1];
+        if (lat <= la0 && lat >= la1 && lon >= lo0 && lon <= lo1) {
+          const fx = (lon - lo0) / (lo1 - lo0);
+          const fy = (la0 - lat) / (la0 - la1);
+          const v00 = cellValue(grid, varName, x, y, idx);
+          const v10 = cellValue(grid, varName, x + 1, y, idx);
+          const v01 = cellValue(grid, varName, x, y + 1, idx);
+          const v11 = cellValue(grid, varName, x + 1, y + 1, idx);
+          if ([v00, v10, v01, v11].some((v) => v === null)) return v00 ?? v10 ?? v01 ?? v11;
+          return (
+            v00 * (1 - fx) * (1 - fy) + v10 * fx * (1 - fy) + v01 * (1 - fx) * fy + v11 * fx * fy
+          );
+        }
+      }
+    }
+    return null;
+  }
+
+  /** Wind vector (km/h-ish units for animation) at lat/lon: returns {u,v,speed,dir} */
+  W.vectorAt = function (lat, lon) {
+    if (!W.atmo) return null;
+    const i = W.timeIdx;
+    const sp = sampleField(W.atmo, 'wind_speed_10m', lat, lon, i);
+    const dir = sampleField(W.atmo, 'wind_direction_10m', lat, lon, i);
+    if (sp === null || dir === null) return null;
+    // meteorological direction = where the wind comes FROM
+    const rad = (dir * Math.PI) / 180;
+    return { speed: sp, dir, u: -Math.sin(rad) * sp, v: Math.cos(rad) * sp };
+  };
+
+  W.scalarAt = function (lat, lon, which) {
+    if (!W.atmo) return null;
+    const i = W.timeIdx;
+    if (which === 'pressure') return sampleField(W.atmo, 'pressure_msl', lat, lon, i);
+    if (which === 'gust') return sampleField(W.atmo, 'wind_gusts_10m', lat, lon, i);
+    if (which === 'cloud') return sampleField(W.atmo, 'cloud_cover', lat, lon, i);
+    if (which === 'temp') return sampleField(W.atmo, 'temperature_2m', lat, lon, i);
+    if (which === 'waves' && W.marine && W.marine.length) return sampleField(W.marine, 'wave_height', lat, lon, i);
+    if (which === 'wavedir' && W.marine && W.marine.length) return sampleField(W.marine, 'wave_direction', lat, lon, i);
+    if (which === 'waveperiod' && W.marine && W.marine.length) return sampleField(W.marine, 'wave_period', lat, lon, i);
+    if (which === 'sst' && W.marine && W.marine.length) return sampleField(W.marine, 'sea_surface_temperature', lat, lon, i);
+    return null;
+  };
+
+  /* --------------------------------------------------------------- canvas */
+  W.init = function (canvas) {
+    W.canvas = canvas;
+    W.ctx = canvas.getContext('2d');
+    W.resize();
+    window.addEventListener('resize', () => W.resize());
+    if (window.mapCtl && window.mapCtl.map) {
+      window.mapCtl.map.on('move zoom resize viewreset', () => W.schedule());
+    }
+    W.load();
+    // refresh the model every 30 minutes
+    setInterval(() => W.load(), 30 * 60 * 1000);
+  };
+
+  W.resize = function () {
+    if (!W.canvas) return;
+    const rect = W.canvas.getBoundingClientRect();
+    W.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W.canvas.width = Math.max(1, Math.round(rect.width * W.dpr));
+    W.canvas.height = Math.max(1, Math.round(rect.height * W.dpr));
+    W.w = rect.width;
+    W.h = rect.height;
+    W.schedule();
+  };
+
+  W.schedule = function () {
+    if (W.raf) return;
+    W.raf = requestAnimationFrame(() => {
+      W.raf = null;
+      W.frame();
+    });
+  };
+
+  W.setLayer = function (layer) {
+    W.layer = layer;
+    if (layer === 'wind') W.seedParticles();
+    W.particlesActive = layer === 'wind';
+    W.frame();
+    W.loop();
+  };
+
+  W.setBarbs = function (on) {
+    W.barbs = on;
+    W.frame();
+  };
+
+  /* ---------------------------------------------------------- particles */
+  W.seedParticles = function () {
+    const map = window.mapCtl?.map;
+    if (!map) return;
+    const n = util.isMobile() ? 320 : 900;
+    W.particles = new Array(n).fill(0).map(() => ({
+      x: Math.random() * (W.w || 800),
+      y: Math.random() * (W.h || 600),
+      age: Math.random() * 90,
+      life: 55 + Math.random() * 70,
+    }));
+  };
+
+  W.loop = function () {
+    if (W.looping) return;
+    W.looping = true;
+    let last = performance.now();
+    const tick = (now) => {
+      const dt = Math.min(80, now - last);
+      last = now;
+      if (W.particlesActive) {
+        W.advanceParticles(dt);
+        W.frame();
+      }
+      if (W.particlesActive) W.rafLoop = requestAnimationFrame(tick);
+      else {
+        W.looping = false;
+        W.rafLoop = null;
+      }
+    };
+    W.rafLoop = requestAnimationFrame(tick);
+  };
+
+  W.advanceParticles = function (dt) {
+    const map = window.mapCtl?.map;
+    if (!map || !W.atmo) return;
+    for (const p of W.particles) {
+      const ll = map.containerPointToLatLng([p.x, p.y]);
+      const v = W.vectorAt(ll.lat, ll.lng);
+      if (!v) {
+        p.age = p.life;
+        continue;
+      }
+      // convert speed to pixels/sec on screen (empirical but consistent)
+      const scale = 0.55;
+      p.x += v.u * scale * (dt / 16.67);
+      p.y -= v.v * scale * (dt / 16.67);
+      p.age += dt / 16.67;
+      if (p.age > p.life || p.x < -20 || p.y < -20 || p.x > W.w + 20 || p.y > W.h + 20) {
+        p.x = Math.random() * W.w;
+        p.y = Math.random() * W.h;
+        p.age = 0;
+        p.life = 55 + Math.random() * 70;
+      }
+    }
+  };
+
+  /* ------------------------------------------------------------ painting */
+  const PRESSURE_STOPS = [
+    [980, [120, 80, 220]],
+    [995, [70, 110, 225]],
+    [1005, [60, 160, 220]],
+    [1012, [80, 210, 200]],
+    [1018, [120, 220, 170]],
+    [1024, [220, 220, 140]],
+    [1030, [250, 170, 110]],
+    [1040, [240, 110, 90]],
+  ];
+
+  function pressureColor(hpa) {
+    if (!Number.isFinite(hpa)) return 'rgba(0,0,0,0)';
+    let a = PRESSURE_STOPS[0];
+    let b = PRESSURE_STOPS[PRESSURE_STOPS.length - 1];
+    for (let i = 1; i < PRESSURE_STOPS.length; i++) {
+      if (hpa <= PRESSURE_STOPS[i][0]) {
+        a = PRESSURE_STOPS[i - 1];
+        b = PRESSURE_STOPS[i];
+        break;
+      }
+    }
+    const t = util.clamp((hpa - a[0]) / (b[0] - a[0] || 1), 0, 1);
+    const c = a[1].map((x, i) => Math.round(x + (b[1][i] - x) * t));
+    return `rgba(${c[0]},${c[1]},${c[2]},0.20)`;
+  }
+
+  function waveColor(h) {
+    if (!Number.isFinite(h)) return 'rgba(0,0,0,0)';
+    const stops = [
+      [0, [18, 45, 80]],
+      [1, [38, 95, 150]],
+      [2, [59, 143, 191]],
+      [3, [90, 190, 200]],
+      [5, [160, 220, 160]],
+      [7, [255, 212, 94]],
+      [9, [255, 138, 61]],
+    ];
+    let a = stops[0];
+    let b = stops[stops.length - 1];
+    for (let i = 1; i < stops.length; i++) {
+      if (h <= stops[i][0]) {
+        a = stops[i - 1];
+        b = stops[i];
+        break;
+      }
+    }
+    const t = util.clamp((h - a[0]) / (b[0] - a[0] || 1), 0, 1);
+    const c = a[1].map((x, i) => Math.round(x + (b[1][i] - x) * t));
+    return `rgba(${c[0]},${c[1]},${c[2]},0.26)`;
+  }
+
+  W.frame = function () {
+    const cv = W.canvas;
+    if (!cv || !W.ctx) return;
+    const ctx = W.ctx;
+    const map = window.mapCtl?.map;
+    ctx.setTransform(W.dpr, 0, 0, W.dpr, 0, 0);
+    ctx.clearRect(0, 0, W.w, W.h);
+    if (!map || W.layer === 'none' || !W.ready) {
+      if (W.layer !== 'none') W.drawStatus(ctx);
+      return;
+    }
+
+    if (W.layer === 'waves' || W.layer === 'pressure') W.drawScalarField(ctx, map);
+
+    if (W.layer === 'wind') {
+      // particle trails with additive blending
+      ctx.globalCompositeOperation = 'lighter';
+      for (const p of W.particles) {
+        const ll = map.containerPointToLatLng([p.x, p.y]);
+        const v = W.vectorAt(ll.lat, ll.lng);
+        if (!v) continue;
+        const alpha = Math.max(0, 1 - p.age / p.life) * 0.85;
+        ctx.strokeStyle = `rgba(${windRGB(v.speed).join(',')},${alpha.toFixed(3)})`;
+        ctx.lineWidth = 1.35;
+        ctx.beginPath();
+        const scale = 0.55;
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x - v.u * scale * 0.65, p.y + v.v * scale * 0.65);
+        ctx.stroke();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    if (W.barbs) W.drawBarbs(ctx, map);
+    W.drawStatus(ctx);
+  };
+
+  function windRGB(sp) {
+    const stops = [
+      [0, [90, 140, 220]],
+      [8, [70, 200, 220]],
+      [15, [62, 230, 176]],
+      [22, [255, 212, 94]],
+      [30, [255, 138, 61]],
+      [38, [255, 77, 77]],
+    ];
+    let a = stops[0];
+    let b = stops[stops.length - 1];
+    for (let i = 1; i < stops.length; i++) {
+      if (sp <= stops[i][0]) {
+        a = stops[i - 1];
+        b = stops[i];
+        break;
+      }
+    }
+    const t = util.clamp((sp - a[0]) / (b[0] - a[0] || 1), 0, 1);
+    return a[1].map((x, i) => Math.round(x + (b[1][i] - x) * t));
+  }
+
+  W.drawScalarField = function (ctx, map) {
+    const step = 26;
+    const isWave = W.layer === 'waves';
+    for (let x = 0; x < W.w; x += step) {
+      for (let y = 0; y < W.h; y += step) {
+        const ll = map.containerPointToLatLng([x, y]);
+        const v = isWave ? W.scalarAt(ll.lat, ll.lng, 'waves') : W.scalarAt(ll.lat, ll.lng, 'pressure');
+        if (v === null) continue;
+        ctx.fillStyle = isWave ? waveColor(v) : pressureColor(v);
+        ctx.fillRect(x, y, step + 1, step + 1);
+      }
+    }
+    if (!isWave) W.drawIsobars(ctx, map);
+  };
+
+  W.drawIsobars = function (ctx, map) {
+    const levels = [980, 988, 996, 1004, 1012, 1020, 1028, 1036];
+    const xs = [];
+    const ys = [];
+    const step = 18;
+    for (let x = 0; x < W.w + step; x += step) xs.push(x);
+    for (let y = 0; y < W.h + step; y += step) ys.push(y);
+    // marching squares per level (simplified: draw segments where levels are crossed)
+    for (const L of levels) {
+      ctx.beginPath();
+      for (let y = 0; y < W.h; y += step) {
+        for (let x = 0; x < W.w; x += step) {
+          const p1 = map.containerPointToLatLng([x, y]);
+          const p2 = map.containerPointToLatLng([x + step, y]);
+          const p3 = map.containerPointToLatLng([x, y + step]);
+          const a = W.scalarAt(p1.lat, p1.lng, 'pressure');
+          const b = W.scalarAt(p2.lat, p2.lng, 'pressure');
+          const c = W.scalarAt(p3.lat, p3.lng, 'pressure');
+          if (a === null || b === null || c === null) continue;
+          const cross = (v1, v2) => (v1 - L) * (v2 - L) < 0;
+          if (cross(a, b)) {
+            const t = (L - a) / (b - a);
+            ctx.moveTo(x + t * step, y);
+            ctx.lineTo(x + t * step, y + 1.5);
+          }
+          if (cross(a, c)) {
+            const t = (L - a) / (c - a);
+            ctx.moveTo(x, y + t * step);
+            ctx.lineTo(x + 1.5, y + t * step);
+          }
+        }
+      }
+      ctx.strokeStyle = `rgba(255,255,255,${L % 16 === 4 ? 0.5 : 0.26})`;
+      ctx.lineWidth = L % 16 === 4 ? 1.2 : 0.7;
+      ctx.stroke();
+    }
+  };
+
+  W.drawBarbs = function (ctx, map) {
+    if (!W.atmo) return;
+    const nLat = GRID.lat.length;
+    const nLon = GRID.lon.length;
+    for (let y = 0; y < nLat; y++) {
+      for (let x = 0; x < nLon; x++) {
+        const ll = [GRID.lat[y], GRID.lon[x]];
+        const p = map.latLngToContainerPoint(ll);
+        if (p.x < -40 || p.y < -40 || p.x > W.w + 40 || p.y > W.h + 40) continue;
+        const v = W.vectorAt(ll[0], ll[1]);
+        if (!v) continue;
+        const color = windRGB(v.speed);
+        ctx.strokeStyle = `rgba(${color.join(',')},0.9)`;
+        ctx.fillStyle = `rgba(${color.join(',')},0.9)`;
+        ctx.lineWidth = 1.2;
+        const len = 16;
+        const scale = util.clamp(v.speed / 30, 0.35, 1.4);
+        const dx = v.u * 2.2;
+        const dy = -v.v * 2.2;
+        const norm = Math.hypot(dx, dy) || 1;
+        const ex = (dx / norm) * len * scale;
+        const ey = (dy / norm) * len * scale;
+        ctx.beginPath();
+        ctx.moveTo(p.x - ex / 2, p.y - ey / 2);
+        ctx.lineTo(p.x + ex / 2, p.y + ey / 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(p.x + ex / 2, p.y + ey / 2, 1.7, 0, Math.PI * 2);
+        ctx.fill();
+        // speed label every other column
+        if ((x + y) % 2 === 0) {
+          ctx.font = '8px "JetBrains Mono", monospace';
+          ctx.fillText(Math.round(v.speed), p.x + 5, p.y - 4);
+        }
+      }
+    }
+  };
+
+  W.drawStatus = function (ctx) {
+    if (!W.ready && W.loading) return;
+    const msg = !W.ready
+      ? `Couche météo indisponible${W.error ? ' — ' + W.error : ''}`
+      : `Modèle Open-Meteo · ${W.times[W.timeIdx]?.replace('T', ' ')} UTC`;
+    ctx.font = '10px "JetBrains Mono", monospace';
+    const pad = 8;
+    const w = ctx.measureText(msg).width + pad * 2;
+    ctx.fillStyle = 'rgba(5,10,17,0.72)';
+    ctx.fillRect(W.w - w - 14, W.h - 34, w, 22);
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.strokeRect(W.w - w - 14, W.h - 34, w, 22);
+    ctx.fillStyle = W.ready ? '#9fb3c8' : '#ffb3b3';
+    ctx.fillText(msg, W.w - w - 14 + pad, W.h - 19);
+  };
+
+  /* --------------------------------------------------- per-boat conditions */
+  /** Model conditions at a position for a given ISO time (nearest hour). */
+  W.at = function (lat, lon, iso) {
+    if (!W.ready) return null;
+    let idx = W.timeIdx;
+    if (iso) {
+      const t = Date.parse(iso);
+      let bestD = Infinity;
+      W.times.forEach((tt, i) => {
+        const d = Math.abs(Date.parse(tt + ':00Z') - t);
+        if (d < bestD) {
+          bestD = d;
+          idx = i;
+        }
+      });
+    }
+    const i = idx;
+    const out = {
+      time: W.times[i],
+      wind: sampleField(W.atmo, 'wind_speed_10m', lat, lon, i),
+      windDir: sampleField(W.atmo, 'wind_direction_10m', lat, lon, i),
+      gust: sampleField(W.atmo, 'wind_gusts_10m', lat, lon, i),
+      pressure: sampleField(W.atmo, 'pressure_msl', lat, lon, i),
+      cloud: sampleField(W.atmo, 'cloud_cover', lat, lon, i),
+      temp: sampleField(W.atmo, 'temperature_2m', lat, lon, i),
+      waves: W.marine && W.marine.length ? sampleField(W.marine, 'wave_height', lat, lon, i) : null,
+      waveDir: W.marine && W.marine.length ? sampleField(W.marine, 'wave_direction', lat, lon, i) : null,
+      wavePeriod: W.marine && W.marine.length ? sampleField(W.marine, 'wave_period', lat, lon, i) : null,
+      sst: W.marine && W.marine.length ? sampleField(W.marine, 'sea_surface_temperature', lat, lon, i) : null,
+    };
+    return out;
+  };
+
+  /** Hourly series at a position, for charts. */
+  W.seriesAt = function (lat, lon, fromIso, hours) {
+    if (!W.ready) return null;
+    const start = fromIso ? Math.max(0, util.idxAt(W.times.map((t) => Date.parse(t + ':00Z')), Date.parse(fromIso))) : W.timeIdx;
+    const n = Math.min(hours || 48, W.times.length - start);
+    const out = { time: [], wind: [], gust: [], waves: [], pressure: [], dir: [] };
+    for (let i = start; i < start + n; i++) {
+      out.time.push(W.times[i]);
+      out.wind.push(sampleField(W.atmo, 'wind_speed_10m', lat, lon, i));
+      out.gust.push(sampleField(W.atmo, 'wind_gusts_10m', lat, lon, i));
+      out.dir.push(sampleField(W.atmo, 'wind_direction_10m', lat, lon, i));
+      out.pressure.push(sampleField(W.atmo, 'pressure_msl', lat, lon, i));
+      out.waves.push(W.marine && W.marine.length ? sampleField(W.marine, 'wave_height', lat, lon, i) : null);
+    }
+    return out;
+  };
+
+  window.wxCtl = W;
+})();

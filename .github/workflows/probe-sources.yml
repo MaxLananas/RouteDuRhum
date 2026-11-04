@@ -34,6 +34,7 @@ jobs:
         run: |
           mkdir -p data/diagnostics
           cp -f tiles-probe.json data/diagnostics/tiles-probe.json || true
+          { echo '# Probe sources'; echo '```'; cat probe.log; echo '```'; } > data/diagnostics/probe-sources-latest.md
           rm -f data/diagnostics/bundle-*.js data/diagnostics/bundles/*.js
           echo '```json' >> $GITHUB_STEP_SUMMARY
           cat tiles-probe.json >> $GITHUB_STEP_SUMMARY || true
