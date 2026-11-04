@@ -264,7 +264,14 @@
     W.resize();
     window.addEventListener('resize', () => W.resize());
     if (window.mapCtl && window.mapCtl.map) {
-      window.mapCtl.map.on('move zoom resize viewreset', () => W.schedule());
+      window.mapCtl.map.on('zoom resize viewreset', () => W.schedule());
+      window.mapCtl.map.on('moveend', () => {
+        if (W.layer === 'wind') {
+          W.seedParticles();
+          W.ctx.clearRect(0, 0, W.w, W.h);
+        }
+        W.schedule();
+      });
     }
     W.load();
     // refresh the model every 30 minutes
@@ -307,13 +314,19 @@
   W.seedParticles = function () {
     const map = window.mapCtl?.map;
     if (!map) return;
-    const n = util.isMobile() ? 320 : 900;
-    W.particles = new Array(n).fill(0).map(() => ({
-      x: Math.random() * (W.w || 800),
-      y: Math.random() * (W.h || 600),
-      age: Math.random() * 90,
-      life: 55 + Math.random() * 70,
-    }));
+    const n = util.isMobile() ? 420 : 1400;
+    W.particles = new Array(n).fill(0).map(() => {
+      const p = {
+        x: Math.random() * (W.w || 800),
+        y: Math.random() * (W.h || 600),
+        age: Math.random() * 110,
+        life: 70 + Math.random() * 90,
+      };
+      p.px = p.x;
+      p.py = p.y;
+      return p;
+    });
+    W.fadeFill = null;
   };
 
   W.loop = function () {
@@ -340,6 +353,8 @@
     const map = window.mapCtl?.map;
     if (!map || !W.atmo) return;
     for (const p of W.particles) {
+      p.px = p.x;
+      p.py = p.y;
       const ll = map.containerPointToLatLng([p.x, p.y]);
       const v = W.vectorAt(ll.lat, ll.lng);
       if (!v) {
@@ -347,7 +362,7 @@
         continue;
       }
       // convert speed to pixels/sec on screen (empirical but consistent)
-      const scale = 0.55;
+      const scale = 1.05;
       p.x += v.u * scale * (dt / 16.67);
       p.y -= v.v * scale * (dt / 16.67);
       p.age += dt / 16.67;
@@ -372,7 +387,7 @@
     [1040, [240, 110, 90]],
   ];
 
-  function pressureColor(hpa) {
+  function pressureRGBA(hpa) {
     if (!Number.isFinite(hpa)) return 'rgba(0,0,0,0)';
     let a = PRESSURE_STOPS[0];
     let b = PRESSURE_STOPS[PRESSURE_STOPS.length - 1];
@@ -385,10 +400,10 @@
     }
     const t = util.clamp((hpa - a[0]) / (b[0] - a[0] || 1), 0, 1);
     const c = a[1].map((x, i) => Math.round(x + (b[1][i] - x) * t));
-    return `rgba(${c[0]},${c[1]},${c[2]},0.20)`;
+    return [c[0], c[1], c[2], 52];
   }
 
-  function waveColor(h) {
+  function waveRGBA(h) {
     if (!Number.isFinite(h)) return 'rgba(0,0,0,0)';
     const stops = [
       [0, [18, 45, 80]],
@@ -410,7 +425,7 @@
     }
     const t = util.clamp((h - a[0]) / (b[0] - a[0] || 1), 0, 1);
     const c = a[1].map((x, i) => Math.round(x + (b[1][i] - x) * t));
-    return `rgba(${c[0]},${c[1]},${c[2]},0.26)`;
+    return [c[0], c[1], c[2], 66];
   }
 
   W.frame = function () {
@@ -419,31 +434,37 @@
     const ctx = W.ctx;
     const map = window.mapCtl?.map;
     ctx.setTransform(W.dpr, 0, 0, W.dpr, 0, 0);
-    ctx.clearRect(0, 0, W.w, W.h);
+
     if (!map || W.layer === 'none' || !W.ready) {
+      ctx.clearRect(0, 0, W.w, W.h);
       if (W.layer !== 'none') W.drawStatus(ctx);
       return;
     }
 
-    if (W.layer === 'waves' || W.layer === 'pressure') W.drawScalarField(ctx, map);
-
     if (W.layer === 'wind') {
-      // particle trails with additive blending
+      // Real flowing trails: fade the previous frame instead of clearing it, so each
+      // particle leaves a streak whose colour is the local model wind speed.
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0,0,0,0.085)';
+      ctx.fillRect(0, 0, W.w, W.h);
       ctx.globalCompositeOperation = 'lighter';
+      ctx.lineCap = 'round';
       for (const p of W.particles) {
         const ll = map.containerPointToLatLng([p.x, p.y]);
         const v = W.vectorAt(ll.lat, ll.lng);
         if (!v) continue;
-        const alpha = Math.max(0, 1 - p.age / p.life) * 0.85;
+        const alpha = Math.max(0, 1 - p.age / p.life) * 0.9;
         ctx.strokeStyle = `rgba(${windRGB(v.speed).join(',')},${alpha.toFixed(3)})`;
-        ctx.lineWidth = 1.35;
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        const scale = 0.55;
-        ctx.moveTo(p.x, p.y);
-        ctx.lineTo(p.x - v.u * scale * 0.65, p.y + v.v * scale * 0.65);
+        ctx.moveTo(p.px, p.py);
+        ctx.lineTo(p.x, p.y);
         ctx.stroke();
       }
       ctx.globalCompositeOperation = 'source-over';
+    } else {
+      ctx.clearRect(0, 0, W.w, W.h);
+      W.drawScalarField(ctx, map);
     }
 
     if (W.barbs) W.drawBarbs(ctx, map);
@@ -472,56 +493,117 @@
     return a[1].map((x, i) => Math.round(x + (b[1][i] - x) * t));
   }
 
+  /** Smooth scalar field: sampled small then upscaled with interpolation. */
   W.drawScalarField = function (ctx, map) {
-    const step = 26;
     const isWave = W.layer === 'waves';
-    for (let x = 0; x < W.w; x += step) {
-      for (let y = 0; y < W.h; y += step) {
-        const ll = map.containerPointToLatLng([x, y]);
+    const block = 5;
+    const sw = Math.ceil(W.w / block);
+    const sh = Math.ceil(W.h / block);
+    if (!W.small) W.small = document.createElement('canvas');
+    if (W.small.width !== sw || W.small.height !== sh) {
+      W.small.width = sw;
+      W.small.height = sh;
+    }
+    const sctx = W.small.getContext('2d');
+    const img = sctx.createImageData(sw, sh);
+    const data = img.data;
+    for (let y = 0; y < sh; y++) {
+      for (let x = 0; x < sw; x++) {
+        const ll = map.containerPointToLatLng([x * block + block / 2, y * block + block / 2]);
         const v = isWave ? W.scalarAt(ll.lat, ll.lng, 'waves') : W.scalarAt(ll.lat, ll.lng, 'pressure');
-        if (v === null) continue;
-        ctx.fillStyle = isWave ? waveColor(v) : pressureColor(v);
-        ctx.fillRect(x, y, step + 1, step + 1);
+        const i = (y * sw + x) * 4;
+        if (v === null) {
+          data[i + 3] = 0;
+          continue;
+        }
+        const c = isWave ? waveRGBA(v) : pressureRGBA(v);
+        data[i] = c[0];
+        data[i + 1] = c[1];
+        data[i + 2] = c[2];
+        data[i + 3] = c[3];
       }
     }
+    sctx.putImageData(img, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.drawImage(W.small, 0, 0, W.w, W.h);
     if (!isWave) W.drawIsobars(ctx, map);
   };
 
+  /** Marching squares: contiguous isobars with interpolated crossings. */
   W.drawIsobars = function (ctx, map) {
-    const levels = [980, 988, 996, 1004, 1012, 1020, 1028, 1036];
-    const xs = [];
-    const ys = [];
-    const step = 18;
-    for (let x = 0; x < W.w + step; x += step) xs.push(x);
-    for (let y = 0; y < W.h + step; y += step) ys.push(y);
-    // marching squares per level (simplified: draw segments where levels are crossed)
+    const levels = [984, 992, 1000, 1008, 1016, 1024, 1032, 1040];
+    const step = 22;
+    const cols = Math.ceil(W.w / step) + 1;
+    const rows = Math.ceil(W.h / step) + 1;
+    const field = new Float32Array(cols * rows);
+    let min = Infinity;
+    let max = -Infinity;
+    for (let j = 0; j < rows; j++) {
+      for (let i = 0; i < cols; i++) {
+        const ll = map.containerPointToLatLng([i * step, j * step]);
+        const v = W.scalarAt(ll.lat, ll.lng, 'pressure');
+        const idx = j * cols + i;
+        field[idx] = v === null ? NaN : v;
+        if (v !== null) {
+          if (v < min) min = v;
+          if (v > max) max = v;
+        }
+      }
+    }
+    if (!Number.isFinite(min)) return;
     for (const L of levels) {
+      if (L < min - 2 || L > max + 2) continue;
       ctx.beginPath();
-      for (let y = 0; y < W.h; y += step) {
-        for (let x = 0; x < W.w; x += step) {
-          const p1 = map.containerPointToLatLng([x, y]);
-          const p2 = map.containerPointToLatLng([x + step, y]);
-          const p3 = map.containerPointToLatLng([x, y + step]);
-          const a = W.scalarAt(p1.lat, p1.lng, 'pressure');
-          const b = W.scalarAt(p2.lat, p2.lng, 'pressure');
-          const c = W.scalarAt(p3.lat, p3.lng, 'pressure');
-          if (a === null || b === null || c === null) continue;
-          const cross = (v1, v2) => (v1 - L) * (v2 - L) < 0;
-          if (cross(a, b)) {
-            const t = (L - a) / (b - a);
-            ctx.moveTo(x + t * step, y);
-            ctx.lineTo(x + t * step, y + 1.5);
-          }
-          if (cross(a, c)) {
-            const t = (L - a) / (c - a);
-            ctx.moveTo(x, y + t * step);
-            ctx.lineTo(x + 1.5, y + t * step);
+      for (let j = 0; j < rows - 1; j++) {
+        for (let i = 0; i < cols - 1; i++) {
+          const a = field[j * cols + i];
+          const b = field[j * cols + i + 1];
+          const c = field[(j + 1) * cols + i + 1];
+          const d = field[(j + 1) * cols + i];
+          if ([a, b, c, d].some((v) => Number.isNaN(v))) continue;
+          const pts = [];
+          const lerp = (v1, v2) => (L - v1) / (v2 - v1);
+          if ((a < L) !== (b < L)) pts.push([i * step + lerp(a, b) * step, j * step]);
+          if ((b < L) !== (c < L)) pts.push([(i + 1) * step, j * step + lerp(b, c) * step]);
+          if ((c < L) !== (d < L)) pts.push([i * step + lerp(d, c) * step, (j + 1) * step]);
+          if ((d < L) !== (a < L)) pts.push([i * step, j * step + lerp(a, d) * step]);
+          if (pts.length === 2) {
+            ctx.moveTo(pts[0][0], pts[0][1]);
+            ctx.lineTo(pts[1][0], pts[1][1]);
+          } else if (pts.length === 4) {
+            ctx.moveTo(pts[0][0], pts[0][1]);
+            ctx.lineTo(pts[1][0], pts[1][1]);
+            ctx.moveTo(pts[2][0], pts[2][1]);
+            ctx.lineTo(pts[3][0], pts[3][1]);
           }
         }
       }
-      ctx.strokeStyle = `rgba(255,255,255,${L % 16 === 4 ? 0.5 : 0.26})`;
-      ctx.lineWidth = L % 16 === 4 ? 1.2 : 0.7;
+      const major = L % 16 === 0;
+      ctx.strokeStyle = major ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.26)';
+      ctx.lineWidth = major ? 1.25 : 0.8;
       ctx.stroke();
+      // label one segment per level
+      ctx.font = '8.5px "JetBrains Mono", monospace';
+      ctx.fillStyle = 'rgba(255,255,255,0.75)';
+      let labelled = false;
+      for (let j = 0; j < rows - 1 && !labelled; j++) {
+        for (let i = 0; i < cols - 1; i++) {
+          const a = field[j * cols + i];
+          const b = field[j * cols + i + 1];
+          if (Number.isNaN(a) || Number.isNaN(b)) continue;
+          if ((a < L) !== (b < L)) {
+            const x = i * step + ((L - a) / (b - a)) * step;
+            const y = j * step;
+            if (x > 30 && x < W.w - 60 && y > 20 && y < W.h - 20) {
+              ctx.fillText(String(L), x + 3, y - 3);
+              labelled = true;
+              break;
+            }
+          }
+        }
+      }
     }
   };
 

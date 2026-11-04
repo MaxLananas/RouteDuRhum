@@ -526,12 +526,26 @@
       ctx.stroke();
     }
 
-    // 3. hour markers, thinning out when zoomed out
-    const stepH = map.getZoom() < 5 ? 4 : map.getZoom() < 7 ? 2 : 1;
+    // 3. hour markers, thinning out when zoomed out, kept away from the boats
+    const stepH = map.getZoom() < 5 ? 6 : map.getZoom() < 7 ? 3 : 1;
+    const boatPts = [];
+    if (dataStore.core) {
+      for (const rec of M.boatMarkers.values()) {
+        const ll = rec.marker.getLatLng();
+        boatPts.push(map.latLngToContainerPoint(ll));
+      }
+    }
     let lastT = -Infinity;
     for (let i = 0; i < tr.t.length && i < pts.length; i++) {
       if (tr.t[i] - lastT < stepH * 3600) continue;
+      const p = pts[i];
+      let clash = false;
+      for (const b of boatPts) {
+        if ((b.x - p.x) ** 2 + (b.y - p.y) ** 2 < 26 * 26) { clash = true; break; }
+      }
+      if (clash) continue;
       lastT = tr.t[i];
+      if (i / pts.length > reveal) break;
       ctx.beginPath();
       ctx.arc(pts[i].x, pts[i].y, 2.4, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(6,16,28,.85)';

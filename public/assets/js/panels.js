@@ -80,9 +80,8 @@
     set('kVmg', `${util.kn(L.vmg)} nd`);
     const h = dataStore.history;
     const lastIdx = h ? h.dates.length - 1 : -1;
-    const dog = h && lastIdx >= 0 ? h.dog[lastIdx] : null;
-    const dogNote = document.getElementById('kDogNote');
-    if (dogNote) dogNote.textContent = 'officiel';
+    const dog = h && lastIdx >= 0 && Array.isArray(h.dog) ? h.dog[lastIdx] : null;
+    set('kDog', Number.isFinite(dog) ? `${util.int(dog)} mi` : '—');
     const computed = dataStore.computed();
     set('kAvg', computed && computed.avgSinceStart ? `${util.one(computed.avgSinceStart)} nd` : h && lastIdx >= 0 ? `${util.one(h.vit_moy_depart[lastIdx])} nd` : '—');
     set('kPos', L.lat ? `${L.lat.toFixed(4)}° / ${L.lon.toFixed(4)}°` : '—');
