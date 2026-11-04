@@ -12,7 +12,7 @@ environnements ont donc été utilisés, chacun pour ce qu'il peut faire :
 | GitHub Actions (`visual-test.yml`) | rendu et comportements dans un vrai Chrome (headless), captures d'écran |
 | Local (sandbox) | syntaxe, build des données hors ligne, serveur de dev, proxy Pages |
 
-## Tests automatisés (44 vérifications, `scripts/visual-test.mjs`)
+## Tests automatisés (51 vérifications, `scripts/visual-test.mjs`)
 
 Lancés à chaque modification de `public/` et de `tools/build-app-data.mjs`, ils
 produisent `data/diagnostics/visual/report.md` + captures PNG. Les tests de largeur
@@ -51,6 +51,14 @@ le nombre de lignes ci-dessous.
 | 32 | API live bloquée | le snapshot reste affiché, le rang reste correct |
 | 33 | météo indisponible | gérée sans casser la page |
 | 34-35 | **sans tuiles** | après 6 échecs de tuiles sans succès, le mode schématique est annoncé et la trace + les bateaux restent lisibles |
+| 36 | **instantané figé** | avec un `lastRun` vieux de 6 h (API de classement toujours joignable), la page cesse de dire « direct » : bandeau « Instantané figé », pastille ambre, point rouge, message explicite, et **aucune** extrapolation — reproduction exacte de la panne de collecte du 4 novembre |
+| 37 | **communiqués de course** | les abandons officiels s'affichent avec le texte de la direction de course et le lien vers l'article officiel |
+| 38 | **graphiques : axe de temps réel** | l'axe des abscisses est un axe de temps linéaire : 1 h occupe la même largeur partout, la cadence 5 min → 60 min n'est plus déformée, et l'axe ne déborde pas avant le départ ni après le dernier pointage |
+| 39-41 | **desktop 1024 → 1920 : indicateurs du bandeau** | les indicateurs sont soit complets, soit masqués — jamais tronqués, et jamais sous les boutons |
+| 42-43 | **mobile : titre et boutons décrits** | le titre s'affiche sur deux lignes au lieu d'être coupé ; les boutons icônes ont un libellé accessible |
+| 44-46 | **mobile : carte ⇄ panneau** | le bouton du panneau est réellement rendu, l'action « Carte ↑ » est visible, cliquable, ne recouvre rien, et replie effectivement le panneau |
+| 47 | **couche nuages** | le voile de couverture nuageuse est peint, la bonne légende est affichée, le lecteur donne un pourcentage |
+| 48 | **calque météo plein cadre** | la taille interne du canvas correspond à la scène (couvre un vrai bug : calque limité à une partie de la carte) |
 
 Les tests 18 à 25 et 28 à 29, 34 à 35 sont ceux ajoutés après la première version
 du site ; le test 19 a été écrit parce que la couche météo ne couvrait qu'une partie

@@ -33,7 +33,8 @@ npx wrangler pages deploy public --project-name la-french-fab
 
 ## 3. Mise à jour des données sans redéploiement
 
-Le workflow `.github/workflows/collect.yml` tourne **toutes les 5 minutes** :
+Le workflow `.github/workflows/collect.yml` est prévu pour tourner **toutes les
+5 minutes** (voir l'avertissement plus bas : il ne le fait qu'une fois sur `main`) :
 
 1. télécharge et décode les fichiers officiels ;
 2. écrit `data/` (snapshot brut) et `public/data/` (payload navigateur) ;
@@ -48,11 +49,30 @@ propagation est celui d'un déploiement Pages (quelques secondes à une minute).
 > valeur). Sans cela, le collecteur continuerait d'écrire sur la branche de
 > développement.
 
-### Vérifier que le cron tourne
+### Vérifier que le cron tourne — et le piège vérifié en conditions réelles
 
-- GitHub → onglet **Actions** → *Collect Route du Rhum data*.
-- Attention : GitHub désactive les crons d'un dépôt **sans activité depuis 60 jours**.
-  Le collecteur commitant toutes les 5 minutes, ce n'est pas un risque en course.
+- GitHub → onglet **Actions** → *Collect Route du Rhum data* → filtrer `schedule`.
+
+**Constat du 4 novembre 2026 (à lire avant de mettre en ligne) :** sur les 129 runs du
+dépôt, **aucun** n'avait été déclenché par `schedule` ; tous provenaient de `push` ou
+de `workflow_dispatch`. Cause : **GitHub n'exécute les crons que depuis la branche par
+défaut**, et `main` ne contient à ce stade que le `README.md` initial. Le collecteur
+n'a donc jamais tourné tout seul ; les données n'avançaient que parce qu'un `push`
+déclenchait le workflow.
+
+Conséquences pratiques :
+
+1. Il faut que `main` contienne le workflow (`collect.yml`) pour que le cron démarre.
+   C'est le cas dès que la pull request est fusionnée.
+2. Vérifier ensuite avec `gh run list --workflow=collect.yml --event=schedule`.
+3. Le site **détecte** ce cas : si la dernière collecte date de plus de 40 minutes, le
+   bandeau passe en « Instantané figé — collecte il y a X » (pastille ambre, infobulle
+   explicite) et un message précise que rien n'est extrapolé. C'est testé
+   (`instantané figé`, 6 h simulées).
+
+> Autres limites du cron GitHub, à connaître : granularité **5 minutes** minimum, démarrages
+> parfois retardés de 5 à 15 min aux heures de pointe, et **désactivation automatique
+> après 60 jours** sans activité sur le dépôt (ici les commits du collecteur l'évitent).
 
 ### Quotas à connaître
 

@@ -48,13 +48,19 @@ répond honnêtement `502 upstream_unavailable`.
 
 Le workflow GitHub Actions `collect.yml` interroge les sources toutes les
 5 minutes, met à jour `public/data/*.json` et pousse sur la branche de données :
-Cloudflare Pages redéploie automatiquement, sans action manuelle. Voir
-[`docs/DEPLOY.md`](docs/DEPLOY.md) pour le quota de déploiements Pages et la
-variante Cloudflare KV + Worker.
+Cloudflare Pages redéploie automatiquement, sans action manuelle.
+
+> **Avant mise en ligne** : GitHub n'exécute un cron que depuis la **branche par
+> défaut**. Tant que `main` ne contient que le README initial, aucune exécution
+> planifiée ne part (vérifié : 0 run `schedule` sur 129). Après fusion de la PR,
+> vérifier avec `gh run list --workflow=collect.yml --event=schedule`. Le site signale
+> de lui-même un collecteur muet : bandeau « Instantané figé — collecte il y a X »,
+> pastille ambre, aucun chiffre extrapolé. Détails et quotas (dont les 500 déploiements
+> Pages/mois) dans [`docs/DEPLOY.md`](docs/DEPLOY.md).
 
 ## Tests
 
-`scripts/visual-test.mjs` (**44 vérifications**) pilote un vrai Chrome : données,
+`scripts/visual-test.mjs` (**51 vérifications**) pilote un vrai Chrome : données,
 carte, replay, couches météo, quatre largeurs d'écran, mobile, pannes de source.
 Les captures sont dans `data/diagnostics/visual/`. Détail dans
 [`docs/TESTING.md`](docs/TESTING.md).
