@@ -249,6 +249,7 @@ for (const w of [1024, 1280, 1440, 1920]) {
     markers: document.querySelectorAll('.boat-marker').length,
   }));
   check(`desktop ${w}px : pas de débordement`, m.sw <= m.iw + 1 && m.markers > 0, JSON.stringify(m));
+  if (w === 1280) await shot(rp, '19-desktop-1280');
   await rp.close();
 }
 
