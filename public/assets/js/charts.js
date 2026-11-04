@@ -41,12 +41,24 @@
           boxWidth: 6,
           boxHeight: 6,
           callbacks: {
+            title: dateTitle,
             label: (c) => ` ${c.dataset.label} : ${c.parsed.y === null || c.parsed.y === undefined ? '—' : c.parsed.y.toLocaleString('fr-FR', { maximumFractionDigits: 1 })}${unit ? ' ' + unit : ''}`,
           },
         },
       },
       scales: {
-        x: { ...AXIS, type: 'category', ticks: { ...AXIS.ticks, maxTicksLimit: 6 } },
+        // A linear time axis, in epoch milliseconds: the tracker publishes every
+        // 5 min at the start and every hour later, so a category axis would
+        // stretch the first hours of the race to half the chart.
+        x: {
+          ...AXIS,
+          type: 'linear',
+          ticks: {
+            ...AXIS.ticks,
+            maxTicksLimit: 6,
+            callback: (v) => dateTick(v),
+          },
+        },
         y: { ...AXIS, beginAtZero: false, title: { display: !!yTitle, text: yTitle, color: '#4d637a', font: { size: 8 } } },
       },
     };
@@ -79,24 +91,44 @@
     };
   }
 
-  const dateLabel = (iso) => {
-    const d = new Date(iso);
-    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' }) + ' ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' });
+  /** ISO timestamp → epoch ms, or null (Chart.js skips null points). */
+  const ms = (iso) => {
+    const t = Date.parse(iso);
+    return Number.isFinite(t) ? t : null;
   };
+
+  /** Axis tick: day + hour in Paris time, weekday kept for the 48 h forecast. */
+  const dateTick = (v) => {
+    const d = new Date(v);
+    if (Number.isNaN(d.getTime())) return '';
+    const day = d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+    const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' });
+    return `${day} ${time}`;
+  };
+
+  /** Same, for tooltip titles. */
+  const dateTitle = (items) => {
+    const v = items?.[0]?.parsed?.x;
+    if (!Number.isFinite(v)) return '';
+    return new Date(v).toLocaleString('fr-FR', {
+      weekday: 'short', day: '2-digit', month: 'short',
+      hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris',
+    });
+  };
+
+  /** Build [{x, y}] pairs from a parallel array of ISO dates. */
+  const pairs = (dates, values) => dates.map((iso, i) => ({ x: ms(iso), y: values[i] ?? null })).filter((p) => p.x !== null);
 
   /* ---------------------------------------------------- Laurent history */
   C.laurentHistory = function (h) {
     if (!h || !h.dates || !h.dates.length) return;
     theme();
-    const labels = h.dates.map(dateLabel);
-
     make('chartSpeed', {
       type: 'line',
       data: {
-        labels,
         datasets: [
-          line(h.speed, 'rgb(62,230,176)', { label: 'Vitesse', fill: true }),
-          line(h.vmg, 'rgb(114,185,241)', { label: 'VMG', dash: [4, 3] }),
+          line(pairs(h.dates, h.speed), 'rgb(62,230,176)', { label: 'Vitesse', fill: true }),
+          line(pairs(h.dates, h.vmg), 'rgb(114,185,241)', { label: 'VMG', dash: [4, 3] }),
         ],
       },
       options: baseOpts('nœuds', 'nd'),
@@ -107,10 +139,9 @@
     make('chartRank', {
       type: 'line',
       data: {
-        labels,
         datasets: [
           {
-            data: ranks,
+            data: pairs(h.dates, ranks),
             borderColor: 'rgb(255,194,75)',
             backgroundColor: 'rgba(255,194,75,.12)',
             borderWidth: 2,
@@ -125,7 +156,7 @@
       options: {
         ...baseOpts('rang', ''),
         scales: {
-          x: { ...AXIS, ticks: { ...AXIS.ticks, maxTicksLimit: 6 } },
+          x: { ...AXIS, type: 'linear', ticks: { ...AXIS.ticks, maxTicksLimit: 6, callback: (v) => dateTick(v) } },
           y: { ...AXIS, reverse: true, min: 1, max: maxRank, ticks: { ...AXIS.ticks, stepSize: 1, precision: 0 } },
         },
       },
@@ -134,10 +165,9 @@
     make('chartDtf', {
       type: 'line',
       data: {
-        labels,
         datasets: [
-          line(h.dtf, 'rgb(255,194,75)', { label: 'DTF', fill: true }),
-          line(h.dtl, 'rgb(255,107,87)', { label: 'DTL' }),
+          line(pairs(h.dates, h.dtf), 'rgb(255,194,75)', { label: 'DTF', fill: true }),
+          line(pairs(h.dates, h.dtl), 'rgb(255,107,87)', { label: 'DTL' }),
         ],
       },
       options: baseOpts('milles', 'mi'),
@@ -146,12 +176,11 @@
     make('chartWind', {
       type: 'line',
       data: {
-        labels,
         datasets: [
           // official tracker units: wind in tenths of a knot, waves in decimetres
-          line(h.windspeed.map((v) => (Number.isFinite(v) ? v / 10 : null)), 'rgb(114,185,241)', { label: 'Vent', fill: true }),
-          line(h.windgust.map((v) => (Number.isFinite(v) ? v / 10 : null)), 'rgb(255,107,87)', { label: 'Rafales', dash: [3, 3] }),
-          line(h.waveheight.map((v) => (Number.isFinite(v) ? v / 10 : null)), 'rgb(62,230,176)', { label: 'Vagues' }),
+          line(pairs(h.dates, h.windspeed.map((v) => (Number.isFinite(v) ? v / 10 : null))), 'rgb(114,185,241)', { label: 'Vent', fill: true }),
+          line(pairs(h.dates, h.windgust.map((v) => (Number.isFinite(v) ? v / 10 : null))), 'rgb(255,107,87)', { label: 'Rafales', dash: [3, 3] }),
+          line(pairs(h.dates, h.waveheight.map((v) => (Number.isFinite(v) ? v / 10 : null))), 'rgb(62,230,176)', { label: 'Vagues' }),
         ],
       },
       options: baseOpts('nd · m', ''),
@@ -162,18 +191,14 @@
   C.forecast = function (s) {
     if (!s || !s.time.length) return;
     theme();
-    const labels = s.time.map((t) => {
-      const d = new Date(t + ':00Z');
-      return d.toLocaleDateString('fr-FR', { weekday: 'short' }) + ' ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' });
-    });
+    const iso = s.time.map((t) => t + ':00Z');
     make('chartForecast', {
       type: 'line',
       data: {
-        labels,
         datasets: [
-          line(s.wind, 'rgb(114,185,241)', { label: 'Vent', fill: true }),
-          line(s.gust, 'rgb(255,138,61)', { label: 'Rafales' }),
-          line(s.waves, 'rgb(62,230,176)', { label: 'Vagues', dash: [4, 3] }),
+          line(pairs(iso, s.wind), 'rgb(114,185,241)', { label: 'Vent', fill: true }),
+          line(pairs(iso, s.gust), 'rgb(255,138,61)', { label: 'Rafales' }),
+          line(pairs(iso, s.waves), 'rgb(62,230,176)', { label: 'Vagues', dash: [4, 3] }),
         ],
       },
       options: baseOpts('nd · m', ''),
@@ -185,25 +210,24 @@
     const core = dataStore.core;
     if (!hist || !hist.dates) return;
     theme();
-    const labels = hist.dates.map(dateLabel);
     const me = hist.dtl.map((v) => (Number.isFinite(v) ? v : null));
     const datasets = [
       {
-        ...line(me, 'rgb(47,123,255)', { label: 'La French Fab', width: 2.4, fill: true }),
+        ...line(pairs(hist.dates, me), 'rgb(47,123,255)', { label: 'La French Fab', width: 2.4, fill: true }),
       },
     ];
     if (showAll && fleet && fleet.series) {
       for (const [id, s] of Object.entries(fleet.series)) {
         if (String(id) === String(hist.boatId)) continue;
         datasets.push({
-          ...line(s.dtl.map((v) => (Number.isFinite(v) ? v : null)), 'rgb(92,117,145)', { width: 1 }),
+          ...line(pairs(hist.dates, s.dtl.map((v) => (Number.isFinite(v) ? v : null))), 'rgb(92,117,145)', { width: 1 }),
           label: core?.boats?.[id]?.n || `#${id}`,
         });
       }
     }
     make('chartRivals', {
       type: 'line',
-      data: { labels, datasets },
+      data: { datasets },
       options: {
         ...baseOpts('milles de retard', 'mi'),
         plugins: {

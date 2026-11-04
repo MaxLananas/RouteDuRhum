@@ -180,6 +180,28 @@ const chartsInfo = await page.evaluate(() => {
 });
 check('graphiques rendus', chartsInfo.length >= 4, JSON.stringify(chartsInfo));
 
+// the x axis must be a real time axis: the tracker published every 5 min at the
+// start and every hour later, so a category axis would distort the whole race
+const axis = await page.evaluate(() => {
+  const c = window.charts?.instances?.chartSpeed;
+  if (!c) return null;
+  const sc = c.scales.x;
+  const pts = c.data.datasets[0].data;
+  const span = pts[pts.length - 1].x - pts[0].x;
+  const px = (v) => sc.getPixelForValue(v);
+  return {
+    type: sc.type,
+    points: pts.length,
+    uniform: Math.abs(px(pts[0].x + span / 2) - px(pts[0].x) - (px(pts[0].x + span) - px(pts[0].x + span / 2))) < 1.5,
+    early: Math.round(px(pts[3].x) - px(pts[1].x)),
+    late: Math.round(px(pts[pts.length - 1].x) - px(pts[pts.length - 3].x)),
+    tick: String(sc.ticks?.[1]?.label || ''),
+  };
+});
+check('graphiques : axe de temps réel',
+  !!axis && axis.type === 'linear' && axis.uniform && axis.late > axis.early + 4,
+  JSON.stringify(axis));
+
 /* weather layers */
 await page.click('#tabs .tab[data-pane="meteo"]');
 await page.click('#tglWind');
