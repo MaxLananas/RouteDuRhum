@@ -1,6 +1,6 @@
-# Rapport de test — 2026-11-04T16:42:55.026Z
+# Rapport de test — 2026-11-04T17:07:45.952Z
 
-**44 tests OK / 0 en échec**
+**44 tests OK / 1 en échec**
 
 | Test | Résultat | Détail |
 | --- | --- | --- |
@@ -13,19 +13,19 @@
 | trace dessinée sur le canvas | ✅ |  |
 | météo modèle chargée | ✅ |  |
 | performances officielles non nulles | ✅ | ["4 heures37,2 mi8,7 nd12,6 nd","24 heures259 mi8,9 nd20,2 nd","48 heures—14,8 nd25,4 nd","Depuis le départ1 284 mi15,0 nd25,4 nd"] |
-| écarts flotte sans doublon Laurent | ✅ | ["Anne-Claire LE BERRE +22,7 mi 12,1","Erwan LE DRAOULEC −80,4 mi 13,1","Luke BERRY −119,4 mi 17,6","Thibaut VAUCHEL-CAMUS −179,4 mi 19,4","Baptiste HULIN −269, |
+| écarts flotte sans doublon Laurent | ✅ | ["Anne-Claire LE BERRE +31,0 mi 10,4","Erwan LE DRAOULEC −78,2 mi 14,1","Luke BERRY −125,9 mi 19,5","Thibaut VAUCHEL-CAMUS −184,5 mi 19,8","Baptiste HULIN −257, |
 | API officielle live | ✅ |  |
 | rang affiché | ✅ | 8 / 10 |
-| vitesse affichée | ✅ | 17,3nd |
+| vitesse affichée | ✅ | 21,2nd |
 | aucune erreur JS | ✅ |  |
 | comparaison avec la flotte | ✅ | 10 courbes |
 | graphiques rendus | ✅ | [{"key":"chartSpeed","points":109,"w":379,"h":176,"visible":true},{"key":"chartRank","points":109,"w":379,"h":132,"visible":true},{"key":"chartDtf","points":109 |
-| particules de vent visibles | ✅ | 39189 pixels visibles |
+| particules de vent visibles | ✅ | 36421 pixels visibles |
 | lecteur météo au survol | ✅ | 15.9 nd 279° O |
-| couche nuages : voile dessiné | ✅ | {"layer":"clouds","painted":16483,"legend":true,"otherLegends":[],"readout":"9 % ciel dégagé","hasValue":true} |
+| couche nuages : voile dessiné | ✅ | {"layer":"clouds","painted":16488,"legend":true,"otherLegends":[],"readout":"9 % ciel dégagé","hasValue":true} |
 | calque météo : couvre toute la carte | ✅ | {"stage":[1188,938],"css":[1188,938],"backing":[1188,938],"internal":[1188,938],"dpr":1} |
 | couche nuages : légende et lecteur dédiés | ✅ | 9 % ciel dégagé |
-| replay actif | ✅ | {"active":true,"playing":true,"t":1793516699.987999,"timelineOpen":true,"ghost":true} |
+| replay actif | ✅ | {"active":true,"playing":true,"t":1793516697.9960005,"timelineOpen":true,"ghost":true} |
 | replay : direct mis en retrait | ✅ | {"card":true,"op":"0.28"} |
 | desktop 1024px : rail entièrement visible | ✅ | {"iw":1024,"rail":360,"railRight":1024,"barRight":1024,"stage":664,"outside":0,"chipsOn":3,"chipsClipped":[],"markers":11} |
 | desktop 1024px : aucun élément hors écran | ✅ | 0 éléments |
@@ -42,12 +42,13 @@
 | mobile : pas de débordement horizontal | ✅ | 390px / 390px [{"tag":"img","cls":"leaflet-tile leaflet-tile-loaded","right":562,"w":215},{"tag":"img","cls":"leaflet-tile leaflet-tile-loaded","right":562,"w": |
 | mobile : marqueurs présents | ✅ | 4 |
 | mobile : bouton d’ouverture du panneau | ✅ | {"b":true,"t":true} |
+| mobile : titre lisible et boutons décrits | ❌ | {"title":"La French Fab · Route du Rhum 2026","titleClipped":false,"liveLabel":"Revenir au direct","refreshLabel":"Actualiser les données"} |
 | photo officielle du skipper | ✅ | {"src":"https://static.wixstatic.com/media/547c0f_875ec65a36e246a7a69418d05054dadb~mv2.avif","ok":true,"hidden":false} |
 | panne de source : message explicite | ✅ | 
           Les données sont momentanément indisponibles.
           HTTP 503 sur /data/core |
 | panne de source : aucune fausse position | ✅ | 0 marqueurs |
-| API live bloquée : snapshot conservé | ✅ | {"markers":11,"status":"Direct · pointage officiel il y a 2 h 44","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,5 |
+| API live bloquée : snapshot conservé | ✅ | {"markers":11,"status":"Direct · pointage officiel il y a 3 h 09","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,5 |
 | sans tuiles : mode schématique annoncé | ✅ | {"cls":true,"badge":true,"markers":11,"trail":3566} |
 | sans tuiles : trace et bateaux toujours lisibles | ✅ | {"cls":true,"badge":true,"markers":11,"trail":3566} |
 
@@ -60,6 +61,7 @@
 [error] Failed to load resource: net::ERR_FAILED
 [error] Failed to load resource: net::ERR_FAILED
 [error] Failed to load resource: the server responded with a status of 404 (File not found)
+[error] Failed to load resource: net::ERR_TIMED_OUT
 [error] Failed to load resource: net::ERR_FAILED
 [error] Failed to load resource: net::ERR_FAILED
 [error] Failed to load resource: net::ERR_FAILED
@@ -108,16 +110,14 @@ FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapSer
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/8 — net::ERR_ABORTED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/3 — net::ERR_ABORTED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/9 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/9 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/9 — net::ERR_ABORTED
 FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED
 FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED
-HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793810671653
+HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793812151941
 FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED
 FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED
-FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793810677067 — net::ERR_FAILED
-HTTP 404 http://127.0.0.1:8099/api/classement?_=1793810677067
+FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793812157250 — net::ERR_FAILED
+HTTP 404 http://127.0.0.1:8099/api/classement?_=1793812157250
+FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_TIMED_OUT
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/6 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/6 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/5 — net::ERR_FAILED
