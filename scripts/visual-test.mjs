@@ -190,6 +190,33 @@ await page.click('#tglBarbs');
 await new Promise((r) => setTimeout(r, 1500));
 await shot(page, '09-desktop-couche-pression');
 
+/* clouds: model opacity veil + its own legend and hover readout */
+await page.click('#layerSeg button[data-layer="clouds"]');
+await new Promise((r) => setTimeout(r, 2000));
+await page.mouse.move(box.x + 60, box.y + 60);
+await new Promise((r) => setTimeout(r, 800));
+const clouds = await page.evaluate(() => {
+  const cv = document.getElementById('windCanvas');
+  const ctx = cv.getContext('2d');
+  const d = ctx.getImageData(0, 0, cv.width, cv.height).data;
+  let painted = 0;
+  for (let i = 3; i < d.length; i += 4 * 37) if (d[i] > 0) painted++;
+  return {
+    layer: window.wxCtl.layer,
+    painted,
+    legend: !document.getElementById('legendClouds')?.classList.contains('hide'),
+    otherLegends: ['legendWind', 'legendWaves', 'legendPressure']
+      .filter((id) => !document.getElementById(id)?.classList.contains('hide')),
+    readout: document.getElementById('wxReadout')?.textContent.trim() || '',
+    hasValue: window.wxCtl.scalarAt(42, -27, 'cloud') !== null,
+  };
+});
+check('couche nuages : voile dessiné', clouds.layer === 'clouds' && clouds.painted > 40, JSON.stringify(clouds));
+check('couche nuages : légende et lecteur dédiés',
+  clouds.legend && clouds.otherLegends.length === 0 && /%/.test(clouds.readout) && clouds.hasValue,
+  clouds.readout || 'pas de lecteur');
+await shot(page, '09b-desktop-couche-nuages');
+
 /* replay */
 await page.click('#tabs .tab[data-pane="live"]');
 await page.click('#btnReplay');

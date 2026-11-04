@@ -33,10 +33,10 @@
 
   function wireLayers() {
     const showLegend = () => {
-      ['legendWind', 'legendWaves', 'legendPressure'].forEach((id) => {
+      ['legendWind', 'legendWaves', 'legendPressure', 'legendClouds'].forEach((id) => {
         const el = document.getElementById(id);
         if (!el) return;
-        const key = { legendWind: 'wind', legendWaves: 'waves', legendPressure: 'pressure' }[id];
+        const key = { legendWind: 'wind', legendWaves: 'waves', legendPressure: 'pressure', legendClouds: 'clouds' }[id];
         el.classList.toggle('hide', wxCtl.layer !== key);
       });
     };
@@ -47,6 +47,7 @@
         document.getElementById('tglWind')?.setAttribute('aria-pressed', String(btn.dataset.layer === 'wind'));
         document.getElementById('tglWaves')?.setAttribute('aria-pressed', String(btn.dataset.layer === 'waves'));
         document.getElementById('tglPressure')?.setAttribute('aria-pressed', String(btn.dataset.layer === 'pressure'));
+        document.getElementById('tglClouds')?.setAttribute('aria-pressed', String(btn.dataset.layer === 'clouds'));
         showLegend();
         if (btn.dataset.layer !== 'none' && !wxCtl.ready) util.toast('Chargement du modèle météo…');
       });
@@ -58,6 +59,7 @@
       tglWind: 'wind',
       tglWaves: 'waves',
       tglPressure: 'pressure',
+      tglClouds: 'clouds',
     };
     Object.entries(map).forEach(([id, layer]) => {
       const el = document.getElementById(id);
@@ -69,8 +71,8 @@
         );
         wxCtl.setLayer(on ? layer : 'none');
         Object.keys(map).forEach((k) => document.getElementById(k)?.setAttribute('aria-pressed', String(k === id && on)));
-        ['legendWind', 'legendWaves', 'legendPressure'].forEach((lid) => {
-          const key = { legendWind: 'wind', legendWaves: 'waves', legendPressure: 'pressure' }[lid];
+        ['legendWind', 'legendWaves', 'legendPressure', 'legendClouds'].forEach((lid) => {
+          const key = { legendWind: 'wind', legendWaves: 'waves', legendPressure: 'pressure', legendClouds: 'clouds' }[lid];
           document.getElementById(lid)?.classList.toggle('hide', !(on && key === layer));
         });
       });

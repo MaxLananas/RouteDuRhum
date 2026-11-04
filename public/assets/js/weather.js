@@ -431,6 +431,15 @@
     return [c[0], c[1], c[2], 66];
   }
 
+  /** Cloud cover: model opacity, the base map stays visible underneath. */
+  function cloudRGBA(pct) {
+    if (!Number.isFinite(pct)) return 'rgba(0,0,0,0)';
+    const t = util.clamp(pct / 100, 0, 1);
+    // barely visible below ~25 %, then a soft white veil, never fully opaque
+    const a = Math.round(Math.pow(t, 1.25) * 150);
+    return [235, 241, 249, a];
+  }
+
   W.frame = function () {
     const cv = W.canvas;
     if (!cv || !W.ctx) return;
@@ -504,6 +513,7 @@
   /** Smooth scalar field: sampled small then upscaled with interpolation. */
   W.drawScalarField = function (ctx, map) {
     const isWave = W.layer === 'waves';
+    const isCloud = W.layer === 'clouds';
     const block = 5;
     const sw = Math.ceil(W.w / block);
     const sh = Math.ceil(W.h / block);
@@ -518,13 +528,14 @@
     for (let y = 0; y < sh; y++) {
       for (let x = 0; x < sw; x++) {
         const ll = map.containerPointToLatLng([x * block + block / 2, y * block + block / 2]);
-        const v = isWave ? W.scalarAt(ll.lat, ll.lng, 'waves') : W.scalarAt(ll.lat, ll.lng, 'pressure');
+        const which = isWave ? 'waves' : isCloud ? 'cloud' : 'pressure';
+        const v = W.scalarAt(ll.lat, ll.lng, which);
         const i = (y * sw + x) * 4;
         if (v === null) {
           data[i + 3] = 0;
           continue;
         }
-        const c = isWave ? waveRGBA(v) : pressureRGBA(v);
+        const c = isWave ? waveRGBA(v) : isCloud ? cloudRGBA(v) : pressureRGBA(v);
         data[i] = c[0];
         data[i + 1] = c[1];
         data[i + 2] = c[2];
@@ -536,7 +547,7 @@
     ctx.imageSmoothingQuality = 'high';
     ctx.globalCompositeOperation = 'source-over';
     ctx.drawImage(W.small, 0, 0, W.w, W.h);
-    if (!isWave) W.drawIsobars(ctx, map);
+    if (!isWave && !isCloud) W.drawIsobars(ctx, map);
   };
 
   /** Marching squares: contiguous isobars with interpolated crossings. */
@@ -733,6 +744,17 @@
       const d = W.scalarAt(lat, lon, 'wavedir');
       const per = W.scalarAt(lat, lon, 'waveperiod');
       return { label: 'Vagues modèle', value: `${h.toFixed(1)} m`, sub: `${d !== null ? Math.round(d) + '° ' + util.cardinal(d) : ''}${per ? ' · ' + per.toFixed(1) + ' s' : ''}`, color: `rgb(${waveRGBA(h).slice(0, 3).join(',')})` };
+    }
+    if (W.layer === 'clouds') {
+      const c = W.scalarAt(lat, lon, 'cloud');
+      if (c === null) return null;
+      const rgba = cloudRGBA(c);
+      return {
+        label: 'Nuages modèle',
+        value: `${Math.round(c)} %`,
+        sub: c < 12 ? 'ciel dégagé' : c < 50 ? 'partiellement couvert' : c < 87 ? 'très nuageux' : 'ciel couvert',
+        color: `rgb(${rgba.slice(0, 3).join(',')})`,
+      };
     }
     if (W.layer === 'pressure') {
       const p = W.scalarAt(lat, lon, 'pressure');

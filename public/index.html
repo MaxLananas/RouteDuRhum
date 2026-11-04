@@ -99,6 +99,7 @@
             <button data-layer="wind" aria-pressed="false">Vent</button>
             <button data-layer="waves" aria-pressed="false">Vagues</button>
             <button data-layer="pressure" aria-pressed="false">Pression</button>
+            <button data-layer="clouds" aria-pressed="false">Nuages</button>
           </div>
         </div>
       </div>
@@ -118,6 +119,9 @@
         </div>
         <div class="legend hide" id="legendWaves">
           <span>Vagues</span><div><div class="legend__bar" style="background:linear-gradient(90deg,#1c4f8a,#3b8fbf,#6ed0c4,#c9e88a,#ffd45e,#ff8a3d)"></div><div class="legend__scale"><span>0</span><span>3</span><span>8+</span></div></div><span class="faint">m</span>
+        </div>
+        <div class="legend hide" id="legendClouds">
+          <span>Nuages</span><div><div class="legend__bar" style="background:linear-gradient(90deg,rgba(233,241,250,.10),rgba(233,241,250,.38),rgba(240,246,253,.72),rgba(250,252,255,.92))"></div><div class="legend__scale"><span>0</span><span>50</span><span>100 %</span></div></div><span class="faint">octas</span>
         </div>
         <div class="legend hide" id="legendPressure">
           <span>Pression</span><div><div class="legend__bar" style="background:linear-gradient(90deg,#5b3fd0,#3b6fe0,#3ee6b0,#ffd45e,#ff8a3d)"></div><div class="legend__scale"><span>990</span><span>1013</span><span>1035</span></div></div><span class="faint">hPa</span>
@@ -333,6 +337,7 @@
             <div class="switch"><div><div class="switch__t">Flux de vent</div><div class="switch__s">particules animées, modèle</div></div><button class="tgl" id="tglWind" aria-pressed="false"></button></div>
             <div class="switch"><div><div class="switch__t">Champ de vagues</div><div class="switch__s">hauteur significative, modèle</div></div><button class="tgl" id="tglWaves" aria-pressed="false"></button></div>
             <div class="switch"><div><div class="switch__t">Isobares</div><div class="switch__s">pression au niveau de la mer</div></div><button class="tgl" id="tglPressure" aria-pressed="false"></button></div>
+            <div class="switch"><div><div class="switch__t">Couverture nuageuse</div><div class="switch__s">opacité du modèle, 0–100 %</div></div><button class="tgl" id="tglClouds" aria-pressed="false"></button></div>
             <div class="switch"><div><div class="switch__t">Barbules de vent</div><div class="switch__s">direction et force sur la grille</div></div><button class="tgl" id="tglBarbs" aria-pressed="false"></button></div>
             <div class="warnbox" id="wxWarn" style="margin-top:10px;display:none"></div>
           </div>
