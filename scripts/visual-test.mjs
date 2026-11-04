@@ -236,6 +236,22 @@ if (rows.length > 3) {
 }
 await shot(page, '13-desktop-flotte-focus');
 
+/* --------------------------------------------- responsive widths on desktop */
+for (const w of [1024, 1280, 1440, 1920]) {
+  const rp = await newPage(w, 900, false);
+  await rp.goto(BASE, { waitUntil: 'networkidle2', timeout: 90000 });
+  await new Promise((r) => setTimeout(r, 3200));
+  const m = await rp.evaluate(() => ({
+    sw: document.documentElement.scrollWidth,
+    iw: window.innerWidth,
+    rail: Math.round(document.querySelector('.rail')?.getBoundingClientRect().width || 0),
+    stage: Math.round(document.querySelector('.stage')?.getBoundingClientRect().width || 0),
+    markers: document.querySelectorAll('.boat-marker').length,
+  }));
+  check(`desktop ${w}px : pas de débordement`, m.sw <= m.iw + 1 && m.markers > 0, JSON.stringify(m));
+  await rp.close();
+}
+
 /* -------------------------------------------------------------- mobile */
 const m = await newPage(390, 844, true);
 await m.goto(BASE, { waitUntil: 'networkidle2', timeout: 90000 });
