@@ -415,6 +415,7 @@ const mapTab = await m.evaluate(() => {
     inside: r.left >= -0.5 && r.right <= window.innerWidth + 0.5 && r.width > 24,
     box: [Math.round(r.left), Math.round(r.right), Math.round(r.width), window.innerWidth],
     clickable: !!mid && t.contains(mid),
+    at: mid ? (mid.id || mid.className || mid.tagName) : null,
     label: t.textContent.trim(),
   };
 });
