@@ -1,5 +1,5 @@
 {
- "startedAt": "2026-11-04T22:55:38.826Z",
+ "startedAt": "2026-11-04T22:59:45.099Z",
  "shots": [
   "01-desktop-direct",
   "01b-desktop-direct-bas",
@@ -57,7 +57,9 @@
   "[error] Failed to load resource: net::ERR_FAILED",
   "[error] Failed to load resource: net::ERR_FAILED",
   "[error] Failed to load resource: net::ERR_FAILED",
-  "[error] Failed to load resource: net::ERR_FAILED"
+  "[error] Failed to load resource: net::ERR_FAILED",
+  "[error] Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
+  "[error] Failed to load resource: the server responded with a status of 429 (Too Many Requests)"
  ],
  "network": [
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/5 — net::ERR_ABORTED",
@@ -86,11 +88,11 @@
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_ABORTED",
   "FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED",
   "FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED",
-  "HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793833027041",
+  "HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793833273089",
   "FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED",
   "FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED",
-  "FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793833032239 — net::ERR_FAILED",
-  "HTTP 404 http://127.0.0.1:8099/api/classement?_=1793833032239",
+  "FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793833278304 — net::ERR_FAILED",
+  "HTTP 404 http://127.0.0.1:8099/api/classement?_=1793833278304",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/6 — net::ERR_FAILED",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/6 — net::ERR_FAILED",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/5 — net::ERR_FAILED",
@@ -110,7 +112,9 @@
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/4 — net::ERR_FAILED",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/8 — net::ERR_FAILED",
   "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/4 — net::ERR_FAILED",
-  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_FAILED"
+  "FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_FAILED",
+  "HTTP 429 https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44",
+  "HTTP 429 https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,44,44,44,44,44,44,44,36,36,36,36,36,36,36,28,28,28,28,28,28,28,20,20,20"
  ],
  "checks": [
   {
@@ -213,7 +217,7 @@
   {
    "name": "particules de vent visibles",
    "ok": true,
-   "detail": "34871 pixels visibles"
+   "detail": "39497 pixels visibles"
   },
   {
    "name": "lecteur météo au survol",
@@ -223,7 +227,7 @@
   {
    "name": "couche nuages : voile dessiné",
    "ok": true,
-   "detail": "{\"layer\":\"clouds\",\"painted\":16483,\"legend\":true,\"otherLegends\":[],\"readout\":\"28 % partiellement couvert\",\"hasValue\":true}"
+   "detail": "{\"layer\":\"clouds\",\"painted\":16484,\"legend\":true,\"otherLegends\":[],\"readout\":\"28 % partiellement couvert\",\"hasValue\":true}"
   },
   {
    "name": "calque météo : couvre toute la carte",
@@ -238,7 +242,7 @@
   {
    "name": "replay actif",
    "ok": true,
-   "detail": "{\"active\":true,\"playing\":true,\"t\":1793516701.992,\"timelineOpen\":true,\"ghost\":true}"
+   "detail": "{\"active\":true,\"playing\":true,\"t\":1793516699.9760003,\"timelineOpen\":true,\"ghost\":true}"
   },
   {
    "name": "replay : direct mis en retrait",
@@ -358,7 +362,7 @@
   {
    "name": "API live bloquée : snapshot conservé",
    "ok": true,
-   "detail": "{\"markers\":11,\"status\":\"Direct · pointage officiel il y a 57 min\",\"wxUrls\":{\"atmo\":\"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn\",\"marine\":\"https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wave_height,wave_direction,wave_period,sea_surface_temperature\"},\"perfRows\":[\"4 heures48,0 mi11,6 nd20,6 nd\",\"24 heures293 mi10,6 nd21,3 nd\",\"48 heures—13,5 nd22,7 nd\",\"Depuis le départ1 380 mi14,9 nd25,4 nd\"],\"gapRows\":[\"Anne-Claire LE BERRE +25,7 mi 14,0\",\"Erwan LE DRAOULEC −116,8 mi 20,2\",\"Luke BERRY −173,3 mi 21,9\",\"Thibaut VAUCHEL-CAMUS −216,4 mi 18,6\",\"Baptiste HULIN −268,9 mi 15,4\"],\"officialOk\":false,\"wxReady\":false,\"rank\":\"8 / 10\"}"
+   "detail": "{\"markers\":11,\"status\":\"Direct · pointage officiel il y a 1 h 01\",\"wxUrls\":{\"atmo\":\"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn\",\"marine\":\"https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44,44,44,44,44,44,44,44,44,44,44,44,40,40,40,40,40,40,40,40,40,40,40,40,40,40,36,36,36,36,36,36,36,36,36,36,36,36,36,36,32,32,32,32,32,32,32,32,32,32,32,32,32,32,28,28,28,28,28,28,28,28,28,28,28,28,28,28,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20,16,16,16,16,16,16,16,16,16,16,16,16,16,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16,-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wave_height,wave_direction,wave_period,sea_surface_temperature\"},\"perfRows\":[\"4 heures48,0 mi11,6 nd20,6 nd\",\"24 heures293 mi10,6 nd21,3 nd\",\"48 heures—13,5 nd22,7 nd\",\"Depuis le départ1 380 mi14,9 nd25,4 nd\"],\"gapRows\":[\"Anne-Claire LE BERRE +25,7 mi 14,0\",\"Erwan LE DRAOULEC −116,8 mi 20,2\",\"Luke BERRY −173,3 mi 21,9\",\"Thibaut VAUCHEL-CAMUS −216,4 mi 18,6\",\"Baptiste HULIN −268,9 mi 15,4\"],\"officialOk\":false,\"wxReady\":false,\"rank\":\"8 / 10\"}"
   },
   {
    "name": "instantané figé : la page cesse de dire « direct »",
@@ -412,7 +416,7 @@
   ],
   "officialOk": true,
   "officialError": null,
-  "status": "Direct · pointage officiel il y a 55 min",
+  "status": "Direct · pointage officiel il y a 59 min",
   "rankTxt": "8 / 10",
   "speedTxt": "14,3nd",
   "charts": [],
@@ -593,7 +597,7 @@
    "visible": false
   }
  ],
- "finishedAt": "2026-11-04T22:57:31.009Z",
+ "finishedAt": "2026-11-04T23:01:37.038Z",
  "passed": 53,
  "failed": 0
 }
