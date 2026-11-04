@@ -410,6 +410,7 @@
 
     bootMap();
     wxCtl.init(document.getElementById('windCanvas'));
+    wxCtl.watch();
     wxCtl.onChange.push(() => {
       if (document.querySelector('.pane[data-pane="meteo"].is-active')) panels.renderWeather();
       wxCtl.frame();

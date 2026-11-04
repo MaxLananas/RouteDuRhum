@@ -280,13 +280,36 @@
 
   W.resize = function () {
     if (!W.canvas) return;
-    const rect = W.canvas.getBoundingClientRect();
+    // Measure the stage, not the canvas: a canvas whose backing store is still
+    // 300×150 (or measured before layout settles) reports the wrong box, and
+    // the layer then covers only part of the map.
+    const stage = document.getElementById('stage') || W.canvas.parentElement;
+    const rect = stage.getBoundingClientRect();
+    const w = Math.max(1, Math.round(rect.width));
+    const h = Math.max(1, Math.round(rect.height));
     W.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W.canvas.width = Math.max(1, Math.round(rect.width * W.dpr));
-    W.canvas.height = Math.max(1, Math.round(rect.height * W.dpr));
-    W.w = rect.width;
-    W.h = rect.height;
-    W.schedule();
+    const changed = w !== W.w || h !== W.h || W.canvas.width !== Math.round(w * W.dpr);
+    W.w = w;
+    W.h = h;
+    W.canvas.width = Math.max(1, Math.round(w * W.dpr));
+    W.canvas.height = Math.max(1, Math.round(h * W.dpr));
+    if (changed) W.schedule();
+  };
+
+  /* Follow the stage box for the whole session (rail opening, fullscreen,
+     mobile sheet, rotation). Cheap: only resizes the backing store on change. */
+  W.watch = function () {
+    const stage = document.getElementById('stage');
+    if (!stage || typeof ResizeObserver === 'undefined') return;
+    let raf = 0;
+    const ro = new ResizeObserver(() => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        W.resize();
+      });
+    });
+    ro.observe(stage);
   };
 
   W.schedule = function () {

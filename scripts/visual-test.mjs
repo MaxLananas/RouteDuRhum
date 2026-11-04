@@ -212,6 +212,23 @@ const clouds = await page.evaluate(() => {
   };
 });
 check('couche nuages : voile dessiné', clouds.layer === 'clouds' && clouds.painted > 40, JSON.stringify(clouds));
+const canvasFit = await page.evaluate(() => {
+  const st = document.getElementById('stage').getBoundingClientRect();
+  const cv = document.getElementById('windCanvas');
+  const r = cv.getBoundingClientRect();
+  return {
+    stage: [Math.round(st.width), Math.round(st.height)],
+    css: [Math.round(r.width), Math.round(r.height)],
+    backing: [cv.width, cv.height],
+    internal: [Math.round(window.wxCtl.w), Math.round(window.wxCtl.h)],
+    dpr: window.wxCtl.dpr,
+  };
+});
+check('calque météo : couvre toute la carte',
+  canvasFit.internal[0] === canvasFit.stage[0] && canvasFit.internal[1] === canvasFit.stage[1]
+  && canvasFit.backing[0] === Math.round(canvasFit.stage[0] * canvasFit.dpr),
+  JSON.stringify(canvasFit));
+
 check('couche nuages : légende et lecteur dédiés',
   clouds.legend && clouds.otherLegends.length === 0 && /%/.test(clouds.readout) && clouds.hasValue,
   clouds.readout || 'pas de lecteur');
