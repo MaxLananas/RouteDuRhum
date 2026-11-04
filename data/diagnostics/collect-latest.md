@@ -1,10 +1,10 @@
-# Collect run 19 — 2026-11-04T14:54:43Z
+# Collect run 20 — 2026-11-04T15:05:59Z
 
 ```
-versions {config:20261104114533,tracks:20261104140442,reports:20261104140439,live:20261104140439,geoblog:0}
+versions {config:20261104114533,tracks:20261104150442,reports:20261104150440,live:20261104150439,geoblog:0}
 config: downloaded 18673B -> 64274B decoded (v=20261104114533)
-tracks: downloaded 222633B -> 629853B decoded (v=20261104140442)
-reports: downloaded 687254B -> 1953838B decoded (v=20261104140439)
-live: downloaded 10933B -> 24062B decoded (v=20261104140439)
-done in 1.8s — boats=115 laurent=Laurent BOURGUES
+tracks: downloaded 224986B -> 637090B decoded (v=20261104150442)
+reports: downloaded 695565B -> 1972728B decoded (v=20261104150440)
+live: downloaded 10933B -> 23980B decoded (v=20261104150439)
+done in 1.4s — boats=115 laurent=Laurent BOURGUES
 ```
