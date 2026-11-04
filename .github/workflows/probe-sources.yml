@@ -28,12 +28,13 @@ jobs:
         run: |
           node tools/probe-tiles.mjs 2>&1 | tee probe.log
           node tools/probe-carto.mjs 2>&1 | tee -a probe.log || true
+          node tools/probe-bundles.mjs 2>&1 | tee -a probe.log || true
       - name: Publish results
         if: always()
         run: |
           mkdir -p data/diagnostics
           cp -f tiles-probe.json data/diagnostics/tiles-probe.json || true
-          rm -f data/diagnostics/bundle-*.js
+          rm -f data/diagnostics/bundle-*.js data/diagnostics/bundles/*.js
           echo '```json' >> $GITHUB_STEP_SUMMARY
           cat tiles-probe.json >> $GITHUB_STEP_SUMMARY || true
           echo '```' >> $GITHUB_STEP_SUMMARY
