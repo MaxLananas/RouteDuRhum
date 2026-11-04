@@ -123,6 +123,19 @@ check('aucune erreur JS', report.console.filter((c) => c.startsWith('[pageerror]
 
 await shot(page, '01-desktop-direct');
 
+/* the whole "Direct" pane, scrolled, so the metric cards can be reviewed */
+await page.evaluate(() => {
+  const body = document.getElementById('railBody');
+  if (body) body.scrollTop = body.scrollHeight * 0.42;
+});
+await new Promise((r) => setTimeout(r, 400));
+await shot(page, '01b-desktop-direct-bas');
+await page.evaluate(() => {
+  const body = document.getElementById('railBody');
+  if (body) body.scrollTop = 0;
+});
+await new Promise((r) => setTimeout(r, 250));
+
 /* official race communications live in the Flotte pane */
 await page.click('#tabs .tab[data-pane="fleet"]');
 await new Promise((r) => setTimeout(r, 1200));
