@@ -91,7 +91,7 @@
       if (!h || lastIdx < 0) {
         body.innerHTML = '<tr><td colspan="4" class="faint" style="font-size:11px">Historique indisponible</td></tr>';
       } else {
-        const g = (k) => h[k][lastIdx];
+        const g = (k) => (Array.isArray(h[k]) ? h[k][lastIdx] : null);
         const row = (label, dist, vmg, vmax) =>
           `<tr><td>${label}</td><td class="num">${dist != null ? util.nm(dist) + ' mi' : '—'}</td><td class="num">${vmg != null ? util.one(vmg) + ' nd' : '—'}</td><td class="num">${vmax != null ? util.one(vmax) + ' nd' : '—'}</td></tr>`;
         body.innerHTML =

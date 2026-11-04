@@ -29,6 +29,7 @@ jobs:
           node tools/probe-tiles.mjs 2>&1 | tee probe.log
           node tools/probe-carto.mjs 2>&1 | tee -a probe.log || true
           node tools/probe-bundles.mjs 2>&1 | tee -a probe.log || true
+          node tools/probe-openmeteo.mjs 2>&1 | tee -a probe.log || true
       - name: Publish results
         if: always()
         run: |

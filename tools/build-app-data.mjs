@@ -115,7 +115,7 @@ function seriesFor(boatId, fields) {
 
 const LAURENT_FIELDS = [
   'rank', 'dtf', 'dtl', 'speed', 'heading', 'vmg', 'dist1', 'vmg1', 'dist2', 'vmg2',
-  'vitmax4', 'vitmax24', 'vitmax48', 'vitmoy48', 'vit_moy_depart', 'dog',
+  'vitmax4', 'vitmax24', 'vitmax48', 'vitmaxd', 'vitmoy48', 'vit_moy_depart', 'dog',
   'winddir', 'windspeed', 'windgust', 'currentdir', 'currentspeed', 'wavedir', 'waveheight',
   'tempair', 'tempwater', 'rain', 'clouds', 'racestatus',
 ];
@@ -241,6 +241,34 @@ const core = {
     trackLaurent: trackFiles[laurentId] || null,
   },
 };
+
+/* ---------------------------------------------------- 4. merge with last good build
+ * The web-export workflow can run on a fresh runner without data/classement.json.
+ * In that case we keep the standings and the file index already published, and only
+ * refresh the metadata, so a missing collect never blanks the site. */
+const prev = read(join(OUT, 'core.json'));
+const prevOk =
+  prev &&
+  prev.files &&
+  prev.files.trackLaurent &&
+  read(join(OUT, prev.files.trackLaurent)) &&
+  Array.isArray(prev.standings) &&
+  prev.standings.some((c) => (c.etat || []).some((b) => Number.isFinite(b.dtf)));
+
+if (prevOk) {
+  core.trackIndex = prev.trackIndex || core.trackIndex;
+  core.files = prev.files;
+  core.standings = prev.standings;
+  if (Number.isFinite(prev.laurent?.rank)) {
+    core.laurent = { ...core.laurent, ...prev.laurent, rankHistory: prev.laurent.rankHistory || core.laurent.rankHistory };
+  }
+  core.freshness = {
+    ...core.freshness,
+    officialStandings: prev.freshness?.officialStandings || core.freshness.officialStandings,
+    officialLiveAt: prev.freshness?.officialLiveAt || null,
+  };
+  console.log('build: kept previous standings and track index');
+}
 
 const coreBytes = write('core.json', core);
 
