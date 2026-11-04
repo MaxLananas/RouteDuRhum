@@ -1,4 +1,4 @@
-# Rapport de test — 2026-11-04T16:03:41.540Z
+# Rapport de test — 2026-11-04T16:15:51.922Z
 
 **40 tests OK / 1 en échec**
 
@@ -13,20 +13,20 @@
 | trace dessinée sur le canvas | ✅ |  |
 | météo modèle chargée | ✅ |  |
 | performances officielles non nulles | ✅ | ["4 heures37,2 mi8,7 nd12,6 nd","24 heures259 mi8,9 nd20,2 nd","48 heures—14,8 nd25,4 nd","Depuis le départ1 284 mi15,0 nd25,4 nd"] |
-| écarts flotte sans doublon Laurent | ✅ | ["Anne-Claire LE BERRE +17,9 mi 13,4","Erwan LE DRAOULEC −80,6 mi 12,3","Luke BERRY −116,0 mi 16,3","Thibaut VAUCHEL-CAMUS −176,2 mi 19,2","Baptiste HULIN −269, |
+| écarts flotte sans doublon Laurent | ✅ | ["Anne-Claire LE BERRE +22,7 mi 12,1","Erwan LE DRAOULEC −80,4 mi 13,1","Luke BERRY −119,4 mi 17,6","Thibaut VAUCHEL-CAMUS −179,4 mi 19,4","Baptiste HULIN −269, |
 | API officielle live | ✅ |  |
 | rang affiché | ✅ | 8 / 10 |
-| vitesse affichée | ✅ | 12,6nd |
+| vitesse affichée | ✅ | 17,3nd |
 | aucune erreur JS | ✅ |  |
 | comparaison avec la flotte | ✅ | 10 courbes |
 | graphiques rendus | ✅ | [{"key":"chartSpeed","points":109,"w":379,"h":176,"visible":true},{"key":"chartRank","points":109,"w":379,"h":132,"visible":true},{"key":"chartDtf","points":109 |
-| particules de vent visibles | ✅ | 30816 pixels visibles |
+| particules de vent visibles | ✅ | 33093 pixels visibles |
 | lecteur météo au survol | ✅ | 15.5 nd 283° ONO |
-| replay actif | ✅ | {"active":true,"playing":true,"t":1793516699.9880009,"timelineOpen":true,"ghost":true} |
+| replay actif | ✅ | {"active":true,"playing":true,"t":1793516699.9880004,"timelineOpen":true,"ghost":true} |
 | replay : direct mis en retrait | ✅ | {"card":true,"op":"0.28"} |
-| desktop 1024px : rail entièrement visible | ✅ | {"iw":1024,"rail":360,"railRight":1024,"barRight":1024,"stage":664,"outside":0,"chipsOn":4,"chipsClipped":[{"t":"Dernier pointage1 h 03","w":140,"right":743,"li |
+| desktop 1024px : rail entièrement visible | ✅ | {"iw":1024,"rail":360,"railRight":1024,"barRight":1024,"stage":664,"outside":0,"chipsOn":4,"chipsClipped":[{"t":"Dernier pointage16 min","w":140,"right":743,"li |
 | desktop 1024px : aucun élément hors écran | ✅ | 0 éléments |
-| desktop 1024px : indicateurs du bandeau lisibles | ❌ | 4 indicateurs, tronqués: [{"t":"Dernier pointage1 h 03","w":140,"right":743,"limit":700,"vw":"107/107"}] |
+| desktop 1024px : indicateurs du bandeau lisibles | ❌ | 4 indicateurs, tronqués: [{"t":"Dernier pointage16 min","w":140,"right":743,"limit":700,"vw":"107/107"}] |
 | desktop 1280px : rail entièrement visible | ✅ | {"iw":1280,"rail":412,"railRight":1280,"barRight":1280,"stage":868,"outside":0,"chipsOn":5,"chipsClipped":[],"markers":11} |
 | desktop 1280px : aucun élément hors écran | ✅ | 0 éléments |
 | desktop 1280px : indicateurs du bandeau lisibles | ✅ | 5 indicateurs, tronqués: [] |
@@ -44,7 +44,7 @@
           Les données sont momentanément indisponibles.
           HTTP 503 sur /data/core |
 | panne de source : aucune fausse position | ✅ | 0 marqueurs |
-| API live bloquée : snapshot conservé | ✅ | {"markers":11,"status":"Direct · pointage officiel il y a 2 h 05","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,5 |
+| API live bloquée : snapshot conservé | ✅ | {"markers":11,"status":"Direct · pointage officiel il y a 2 h 17","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,5 |
 | sans tuiles : mode schématique annoncé | ✅ | {"cls":true,"badge":true,"markers":11,"trail":3566} |
 | sans tuiles : trace et bateaux toujours lisibles | ✅ | {"cls":true,"badge":true,"markers":11,"trail":3566} |
 
@@ -107,11 +107,11 @@ FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapSer
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_ABORTED
 FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED
 FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED
-HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793808303617
+HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793809039709
 FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED
 FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED
-FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793808308736 — net::ERR_FAILED
-HTTP 404 http://127.0.0.1:8099/api/classement?_=1793808308736
+FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793809044965 — net::ERR_FAILED
+HTTP 404 http://127.0.0.1:8099/api/classement?_=1793809044965
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/6 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/6 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/5 — net::ERR_FAILED
