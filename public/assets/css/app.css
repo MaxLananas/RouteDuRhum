@@ -122,9 +122,9 @@ p { margin: 0 0 0.75em; }
 }
 
 /* ------------------------------------------------------------------ shell */
-.app { display: grid; grid-template-rows: var(--topbar-h) 1fr; height: 100dvh; }
+.app { display: grid; grid-template-rows: var(--topbar-h) 1fr; grid-template-columns: minmax(0, 1fr); height: 100dvh; }
 .topbar {
-  display: flex; align-items: center; gap: 18px;
+  display: flex; align-items: center; gap: 18px; min-width: 0; overflow: hidden;
   padding: 0 18px;
   background: linear-gradient(180deg, rgba(6, 13, 22, 0.96), rgba(6, 13, 22, 0.82));
   border-bottom: 1px solid var(--line);

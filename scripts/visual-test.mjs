@@ -241,14 +241,26 @@ for (const w of [1024, 1280, 1440, 1920]) {
   const rp = await newPage(w, 900, false);
   await rp.goto(BASE, { waitUntil: 'networkidle2', timeout: 90000 });
   await new Promise((r) => setTimeout(r, 3200));
-  const m = await rp.evaluate(() => ({
-    sw: document.documentElement.scrollWidth,
-    iw: window.innerWidth,
-    rail: Math.round(document.querySelector('.rail')?.getBoundingClientRect().width || 0),
-    stage: Math.round(document.querySelector('.stage')?.getBoundingClientRect().width || 0),
-    markers: document.querySelectorAll('.boat-marker').length,
-  }));
-  check(`desktop ${w}px : pas de débordement`, m.sw <= m.iw + 1 && m.markers > 0, JSON.stringify(m));
+  const m = await rp.evaluate(() => {
+    const r = (sel) => document.querySelector(sel)?.getBoundingClientRect() || { width: 0, right: 0 };
+    const rail = r('.rail');
+    const bar = r('.topbar');
+    return {
+      iw: window.innerWidth,
+      rail: Math.round(rail.width),
+      railRight: Math.round(rail.right),
+      barRight: Math.round(bar.right),
+      stage: Math.round(r('.stage').width),
+      // real overflow test: getBoundingClientRect ignores the overflow:hidden mask
+      outside: [...document.querySelectorAll('.topbar__stats .tchip, .rail__body *')]
+        .filter((el) => el.getBoundingClientRect().right > window.innerWidth + 1).length,
+      markers: document.querySelectorAll('.boat-marker').length,
+    };
+  });
+  check(`desktop ${w}px : rail entièrement visible`,
+    m.railRight <= m.iw + 1 && m.barRight <= m.iw + 1 && Math.abs(m.stage + m.rail - m.iw) <= 1 && m.markers > 0,
+    JSON.stringify(m));
+  check(`desktop ${w}px : aucun élément hors écran`, m.outside === 0, `${m.outside} éléments`);
   if (w === 1280) await shot(rp, '19-desktop-1280');
   await rp.close();
 }
