@@ -1,0 +1,6 @@
+# Cloudflare Pages configuration
+# Deploy:  npx wrangler pages deploy public --project-name la-french-fab
+# The Functions in ./functions are bundled automatically by Pages.
+name = "la-french-fab"
+compatibility_date = "2026-10-01"
+pages_build_output_dir = "public"

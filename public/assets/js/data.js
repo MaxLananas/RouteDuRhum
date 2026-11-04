@@ -157,7 +157,44 @@
   };
 
   /* --------------------------------- official live standings (browser) */
+  /**
+   * Official standings. Two routes, in order:
+   *   1. the organiser's API directly (it sends Access-Control-Allow-Origin: *),
+   *   2. our own Pages Function /api/classement, which proxies and edge-caches it.
+   * If both fail we keep the snapshot and say so in the UI.
+   */
   store.refreshOfficial = async function () {
+    const attempts = [
+      { url: `${OFFICIAL_API}&_=${Date.now()}`, via: 'direct' },
+      { url: `/api/classement?_=${Date.now()}`, via: 'proxy' },
+    ];
+    let lastErr = null;
+    for (const attempt of attempts) {
+      try {
+        const j = await fetchJson(attempt.url, { timeout: 9000, cache: 'no-store' });
+        if (!j || !Array.isArray(j.classes)) throw new Error('format inattendu');
+        store.official = j;
+        store.officialOk = true;
+        store.officialVia = attempt.via;
+        store.officialAt = new Date().toISOString();
+        store.mergeOfficial();
+        store.emit('official');
+        return true;
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    {
+      const e = lastErr || new Error('indisponible');
+      store.officialOk = false;
+      store.officialError = e.message;
+      store.emit('official');
+      return false;
+    }
+  };
+
+  /** kept for reference: single-endpoint version used before the proxy fallback */
+  store._refreshOfficialDirect = async function () {
     try {
       const j = await fetchJson(`${OFFICIAL_API}&_=${Date.now()}`, { timeout: 9000, cache: 'no-store' });
       if (!j || !Array.isArray(j.classes)) throw new Error('format inattendu');

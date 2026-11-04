@@ -34,6 +34,15 @@ jobs:
       - name: Build app data from the latest snapshot
         run: node tools/build-app-data.mjs
 
+      - name: Upload screenshots (before the run, in case it crashes)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-partial
+          path: data/diagnostics/visual/*.png
+          retention-days: 5
+          if-no-files-found: ignore
+
       - name: Run visual tests
         env:
           CHROME_PATH: /usr/bin/google-chrome

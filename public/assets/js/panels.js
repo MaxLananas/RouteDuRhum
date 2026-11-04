@@ -314,7 +314,7 @@
       const ok = dataStore.officialOk;
       o.innerHTML = `<div><div class="srcrow__n">API classement — appel navigateur</div><div class="srcrow__u">CORS autorisé par l'organisateur</div></div>
         <div style="text-align:right"><span class="dot ${ok ? 'dot--ok' : ok === false ? 'dot--bad' : 'dot--warn'}" style="display:inline-block"></span>
-        <div class="mono" style="font-size:9px;color:var(--ink-faint)">${ok ? 'actif · ' + util.ago(dataStore.officialAt) : ok === false ? 'bloqué, snapshot utilisé' : 'test en cours'}</div></div>
+        <div class="mono" style="font-size:9px;color:var(--ink-faint)">${ok ? 'actif (' + (dataStore.officialVia === 'proxy' ? 'proxy' : 'direct') + ') · ' + util.ago(dataStore.officialAt) : ok === false ? 'bloqué, snapshot utilisé' : 'test en cours'}</div></div>
         ${ok === false ? `<div class="srcrow__d" style="color:#ffb3b3">${util.esc(dataStore.officialError || '')} — les chiffres affichés proviennent du dernier instantané du collecteur.</div>` : ''}`;
       list.appendChild(o);
     }
