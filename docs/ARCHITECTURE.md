@@ -61,7 +61,7 @@ variante KV décrite dans `DEPLOY.md` (§5) est prête à être implémentée.
 | `functions/api/classement.js` | proxy Pages + cache edge du classement officiel |
 | `public/assets/js/data.js` | chargement, fusion API live, calculs dérivés |
 | `public/assets/js/map.js` | Leaflet, traces, replay, pictogrammes |
-| `public/assets/js/weather.js` | grille Open-Meteo, flux de particules, isobares |
+| `public/assets/js/weather.js` | grille Open-Meteo, flux de particules, isobares, vagues, couverture nuageuse |
 | `public/assets/js/charts.js` | graphiques Chart.js |
 | `public/assets/js/panels.js` | rendu des onglets du panneau latéral |
 | `public/assets/js/app.js` | orchestration, rafraîchissement, résilience |
@@ -91,7 +91,11 @@ variante KV décrite dans `DEPLOY.md` (§5) est prête à être implémentée.
 
 ## Performance
 
-- `core.json` ≈ 70 Ko, trace de Laurent ≈ 5 Ko (321 points), historique ≈ 15 Ko.
+- `core.json` ≈ 70 Ko, trace de Laurent ≈ 5 Ko (325 points), historique ≈ 15 Ko.
+- Le calque météo est un seul canvas redimensionné sur la boîte de la scène
+  (`ResizeObserver` sur `#stage`), pas une pile de tuiles : le coût d'un changement
+  de couche est un seul `putImageData`, et le bord de grille est fondu sur 2,5°
+  pour ne pas dessiner une ligne droite au milieu de l'océan.
 - Trace peinte sur un canvas 2D (pas de milliers de polygones Leaflet).
 - Chaque bateau est un `L.marker` (pictogramme SVG inline, rotation par CSS).
 - Les traces des autres classes ne sont pas téléchargées : seuls les marqueurs

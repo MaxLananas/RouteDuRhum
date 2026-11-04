@@ -12,10 +12,12 @@ environnements ont donc été utilisés, chacun pour ce qu'il peut faire :
 | GitHub Actions (`visual-test.yml`) | rendu et comportements dans un vrai Chrome (headless), captures d'écran |
 | Local (sandbox) | syntaxe, build des données hors ligne, serveur de dev, proxy Pages |
 
-## Tests automatisés (24 vérifications, `scripts/visual-test.mjs`)
+## Tests automatisés (44 vérifications, `scripts/visual-test.mjs`)
 
 Lancés à chaque modification de `public/` et de `tools/build-app-data.mjs`, ils
-produisent `data/diagnostics/visual/report.md` + captures PNG.
+produisent `data/diagnostics/visual/report.md` + captures PNG. Les tests de largeur
+tournent en boucle sur quatre tailles d'écran, d'où le nombre total plus élevé que
+le nombre de lignes ci-dessous.
 
 | # | Test | Ce qu'il prouve |
 | --- | --- | --- |
@@ -29,26 +31,39 @@ produisent `data/diagnostics/visual/report.md` + captures PNG.
 | 8 | météo modèle | la grille Open-Meteo est chargée (paires lat/lon valides) |
 | 9 | performances officielles | les colonnes 4 h / 24 h / course ne sont pas nulles (couvre le bug d'ordre des pointages) |
 | 10 | écarts flotte | Laurent n'apparaît pas dans sa propre liste de concurrents |
-| 11 | API officielle | l'appel navigateur au classement fonctionne |
+| 11 | API officielle | l'appel navigateur au classement fonctionne (direct ou via le proxy `/api/classement`) |
 | 12-13 | rang / vitesse | les valeurs sont affichées |
 | 14 | aucune erreur JS | pas d'exception pendant le chargement et les interactions |
 | 15 | graphiques | 5 graphiques rendus avec des données |
 | 16 | particules de vent | le canvas météo contient > 20 000 pixels visibles |
 | 17 | lecteur météo | le survol d'une couche affiche valeur + direction |
-| 18 | replay | lecture active, curseur ouvert, bateau fantôme présent |
-| 19 | comparaison flotte | 10 courbes (Laurent + 9 concurrents) |
-| 20 | mobile sans débordement | `scrollWidth == viewport` (couvre un vrai bug : 463 px au lieu de 390 px) |
-| 21 | mobile marqueurs | la carte mobile affiche des bateaux |
-| 22 | panne totale de source | message explicite, **zéro marqueur** (aucune fausse position) |
-| 23 | API live bloquée | le snapshot reste affiché, le rang reste correct |
-| 24 | météo indisponible | gérée sans casser la page |
+| 18 | **couche nuages** | le voile de couverture nuageuse est réellement peint (pixels non transparents) |
+| 19 | **calque météo plein cadre** | la taille interne du canvas = celle de la scène (couvre un vrai bug : calque limité à une partie de la carte) |
+| 20 | **légende et lecteur nuages** | la bonne légende est affichée, les autres masquées, le lecteur donne un pourcentage |
+| 21 | replay | lecture active, curseur ouvert, bateau fantôme présent |
+| 22 | **replay : direct en retrait** | en replay, les marqueurs du direct passent à `opacity ≤ 0.5` et la carte live est marquée `is-replay` |
+| 23-25 | **desktop 1024 / 1280 / 1440 / 1920 px** | trois contrôles par largeur : le rail tient entièrement dans la fenêtre, aucun élément du panneau ou du bandeau ne dépasse, les indicateurs du bandeau sont soit complets soit masqués (jamais tronqués) |
+| 26 | mobile sans débordement | `scrollWidth == viewport` (couvre un vrai bug : 463 px au lieu de 390 px) |
+| 27 | mobile marqueurs | la carte mobile affiche des bateaux |
+| 28 | **bouton mobile** | le bouton d'ouverture du panneau et l'onglet Carte existent et sont visibles |
+| 29 | **photo du skipper** | la photo officielle (CDN du site de la course) est chargée et visible |
+| 30-31 | panne totale de source | message explicite, **zéro marqueur** (aucune fausse position) |
+| 32 | API live bloquée | le snapshot reste affiché, le rang reste correct |
+| 33 | météo indisponible | gérée sans casser la page |
+| 34-35 | **sans tuiles** | après 6 échecs de tuiles sans succès, le mode schématique est annoncé et la trace + les bateaux restent lisibles |
+
+Les tests 18 à 25 et 28 à 29, 34 à 35 sont ceux ajoutés après la première version
+du site ; le test 19 a été écrit parce que la couche météo ne couvrait qu'une partie
+de la carte — un défaut invisible dans les captures précédentes, où le calque
+s'arrêtait pile sur une côte.
 
 ### Tests manuels complémentaires (visuels)
 
 Les captures de `data/diagnostics/visual/` couvrent : carte par défaut, onglets
 Direct / Flotte / Analyses / Météo / Bateau / Sources, couche vent (avec lecteur),
-couche vagues, pression + barbules + isobares, replay + curseur, fond nuit, focus sur
-un concurrent, panne de source, mobile (carte, panneau ouvert, analyses, météo).
+couche vagues, pression + barbules + isobares, **couverture nuageuse**, replay +
+curseur, fond nuit, focus sur un concurrent, mise en page 1280 px, panne de source,
+sans tuiles, mobile (carte, panneau ouvert, analyses, météo).
 
 ## Cas de panne testés
 
