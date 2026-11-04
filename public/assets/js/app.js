@@ -473,13 +473,15 @@
       return i < 0 ? CHIP_PRIORITY.length : i; // unknown chips go last
     };
     chips.forEach((c) => c.classList.remove('is-cut'));
+    // measure every chip while all of them are still rendered
+    const width = new Map(chips.map((c) => [c, c.offsetWidth]));
     const avail = strip.clientWidth;
+    let used = chips.reduce((n, c) => n + (width.get(c) || 0), 0);
     const drop = [...chips].sort((a, b) => prio(b) - prio(a));
-    let used = chips.reduce((n, c) => n + c.offsetWidth, 0);
     for (const chip of drop) {
       if (used <= avail) break;
       chip.classList.add('is-cut');
-      used -= chip.offsetWidth || 0;
+      used -= width.get(chip) || 0;
     }
   }
   window.addEventListener('load', fitTopStats);
