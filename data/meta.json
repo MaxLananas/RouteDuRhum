@@ -2,9 +2,9 @@
   "sources": {
     "carto.versions": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:52:26.074Z",
-      "lastAttempt": "2026-11-04T14:52:26.074Z",
-      "lastSuccessBefore": "2026-11-04T14:51:18.910Z",
+      "lastSuccess": "2026-11-04T14:52:37.800Z",
+      "lastAttempt": "2026-11-04T14:52:37.800Z",
+      "lastSuccessBefore": "2026-11-04T14:52:26.074Z",
       "versions": {
         "config": 20261104114533,
         "tracks": 20261104140442,
@@ -15,25 +15,25 @@
     },
     "carto.config": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:52:26.216Z",
-      "lastAttempt": "2026-11-04T14:52:26.216Z",
-      "lastSuccessBefore": "2026-11-04T14:51:19.056Z",
+      "lastSuccess": "2026-11-04T14:52:37.932Z",
+      "lastAttempt": "2026-11-04T14:52:37.932Z",
+      "lastSuccessBefore": "2026-11-04T14:52:26.216Z",
       "bytes": 64274,
       "boats": 115
     },
     "carto.tracks": {
       "ok": false,
       "lastError": "findLaurentId is not defined",
-      "lastFailure": "2026-11-04T14:52:26.275Z",
-      "lastAttempt": "2026-11-04T14:52:26.275Z",
+      "lastFailure": "2026-11-04T14:52:38.008Z",
+      "lastAttempt": "2026-11-04T14:52:38.008Z",
       "lastSuccessBefore": null,
       "error": "findLaurentId is not defined"
     },
     "carto.reports": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:52:26.454Z",
-      "lastAttempt": "2026-11-04T14:52:26.454Z",
-      "lastSuccessBefore": "2026-11-04T14:51:19.332Z",
+      "lastSuccess": "2026-11-04T14:52:38.226Z",
+      "lastAttempt": "2026-11-04T14:52:38.226Z",
+      "lastSuccessBefore": "2026-11-04T14:52:26.454Z",
       "bytes": 1953838,
       "reports": 108,
       "columns": 38,
@@ -41,9 +41,9 @@
     },
     "carto.live": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:52:26.475Z",
-      "lastAttempt": "2026-11-04T14:52:26.475Z",
-      "lastSuccessBefore": "2026-11-04T14:51:19.367Z",
+      "lastSuccess": "2026-11-04T14:52:38.251Z",
+      "lastAttempt": "2026-11-04T14:52:38.251Z",
+      "lastSuccessBefore": "2026-11-04T14:52:26.475Z",
       "bytes": 24062,
       "bytesDecoded": 24062,
       "latestReport": "2026-11-04T14:00:00Z",
@@ -53,26 +53,26 @@
     "rdr.classement": {
       "ok": false,
       "lastError": "LAURENT is not defined",
-      "lastFailure": "2026-11-04T14:52:26.780Z",
-      "lastAttempt": "2026-11-04T14:52:26.780Z",
+      "lastFailure": "2026-11-04T14:52:38.586Z",
+      "lastAttempt": "2026-11-04T14:52:38.586Z",
       "lastSuccessBefore": "2026-11-04T14:51:19.760Z",
       "error": "LAURENT is not defined"
     },
     "open-meteo": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:52:27.255Z",
-      "lastAttempt": "2026-11-04T14:52:27.255Z",
-      "lastSuccessBefore": "2026-11-04T14:51:20.639Z",
+      "lastSuccess": "2026-11-04T14:52:39.084Z",
+      "lastAttempt": "2026-11-04T14:52:39.084Z",
+      "lastSuccessBefore": "2026-11-04T14:52:27.255Z",
       "position": {
         "lat": 42.258,
         "lon": -26.822
       }
     }
   },
-  "generatedAt": "2026-11-04T14:52:25.939Z",
+  "generatedAt": "2026-11-04T14:52:37.632Z",
   "host": "github-actions",
-  "runId": "41851886845",
-  "runNumber": "15",
+  "runId": "41851899339",
+  "runNumber": "16",
   "versionCache": {
     "config": 20261104114533,
     "tracks": 20261104140442,
