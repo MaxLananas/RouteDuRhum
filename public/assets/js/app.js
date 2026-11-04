@@ -134,6 +134,12 @@
     });
     document.getElementById('refreshBtn')?.addEventListener('click', () => manualRefresh());
     document.getElementById('infoBtn')?.addEventListener('click', () => switchPane('sources', true));
+    const rivals = document.getElementById('tglRivals');
+    rivals?.addEventListener('click', () => {
+      const on = rivals.getAttribute('aria-pressed') !== 'true';
+      rivals.setAttribute('aria-pressed', String(on));
+      panels.setRivals(on);
+    });
   }
 
   function wireTimeline() {

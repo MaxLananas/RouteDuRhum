@@ -180,5 +180,45 @@
     });
   };
 
+  /** Gap to the leader for Laurent (+ optionally the whole Ocean Fifty fleet). */
+  C.rivals = function (hist, fleet, showAll) {
+    const core = dataStore.core;
+    if (!hist || !hist.dates) return;
+    theme();
+    const labels = hist.dates.map(dateLabel);
+    const me = hist.dtl.map((v) => (Number.isFinite(v) ? v : null));
+    const datasets = [
+      {
+        ...line(me, 'rgb(47,123,255)', { label: 'La French Fab', width: 2.4, fill: true }),
+      },
+    ];
+    if (showAll && fleet && fleet.series) {
+      for (const [id, s] of Object.entries(fleet.series)) {
+        if (String(id) === String(hist.boatId)) continue;
+        datasets.push({
+          ...line(s.dtl.map((v) => (Number.isFinite(v) ? v : null)), 'rgb(92,117,145)', { width: 1 }),
+          label: core?.boats?.[id]?.n || `#${id}`,
+        });
+      }
+    }
+    make('chartRivals', {
+      type: 'line',
+      data: { labels, datasets },
+      options: {
+        ...baseOpts('milles de retard', 'mi'),
+        plugins: {
+          ...baseOpts().plugins,
+          tooltip: {
+            ...baseOpts().plugins.tooltip,
+            callbacks: {
+              label: (c) =>
+                ` ${c.dataset.label} : ${c.parsed.y === null ? '—' : c.parsed.y.toLocaleString('fr-FR', { maximumFractionDigits: 1 })} mi`,
+            },
+          },
+        },
+      },
+    });
+  };
+
   window.charts = C;
 })();

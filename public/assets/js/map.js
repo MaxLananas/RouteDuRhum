@@ -268,10 +268,18 @@
     const wanted = new Set();
     const cls = core.standings.find((c) => /ocean/i.test(c.cle || c.nom || ''));
     if (cls && showOthers) {
-      for (const b of cls.etat) {
-        if (!Number.isFinite(b.lat) || !Number.isFinite(b.lon)) continue;
-        wanted.add(String(b.id));
+      let rivals = cls.etat.filter((b) => Number.isFinite(b.lat) && Number.isFinite(b.lon));
+      if (util.isMobile()) {
+        // phones: Laurent + the three closest boats keeps the map readable
+        const me = core.laurent;
+        rivals = rivals
+          .filter((b) => !dataStore.isLaurentName(b.n))
+          .map((b) => ({ b, d: util.haversine(me.lat, me.lon, b.lat, b.lon) }))
+          .sort((x, y) => x.d - y.d)
+          .slice(0, 3)
+          .map((x) => x.b);
       }
+      for (const b of rivals) wanted.add(String(b.id));
     }
     // Laurent always
     wanted.add(me);

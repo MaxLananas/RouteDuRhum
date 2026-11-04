@@ -135,6 +135,18 @@ for (const [tab, name] of [
   await new Promise((r) => setTimeout(r, 1400));
   await shot(page, name);
 }
+// rival comparison toggle
+await page.click('#tabs .tab[data-pane="charts"]');
+await new Promise((r) => setTimeout(r, 700));
+await page.click('#tglRivals');
+await new Promise((r) => setTimeout(r, 1200));
+const rivalSeries = await page.evaluate(() => {
+  const c = window.charts.instances.chartRivals;
+  return c ? c.data.datasets.length : 0;
+});
+check('comparaison avec la flotte', rivalSeries >= 10, `${rivalSeries} courbes`);
+await shot(page, '03b-desktop-flotte-compare');
+
 const chartsInfo = await page.evaluate(() => {
   const keys = Object.keys(window.charts?.instances || {});
   return keys.map((k) => {

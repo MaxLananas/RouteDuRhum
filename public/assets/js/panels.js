@@ -5,6 +5,12 @@
   'use strict';
 
   const P = {};
+  const state = { rivals: false };
+
+  P.setRivals = function (on) {
+    state.rivals = on;
+    charts.rivals(dataStore.history, dataStore.oce50History, on);
+  };
 
   const fmtRank = (r) => (Number.isFinite(r) ? r : '—');
 
@@ -200,6 +206,7 @@
   P.renderCharts = function () {
     const h = dataStore.history;
     if (h) charts.laurentHistory(h);
+    charts.rivals(h, dataStore.oce50History, !!state.rivals);
     const note = document.getElementById('chTimeNote');
     if (note && h && h.dates.length) note.textContent = `${h.dates.length} pointages officiels`;
     const c = dataStore.computed();
