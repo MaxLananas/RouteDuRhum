@@ -364,6 +364,11 @@ p { margin: 0 0 0.75em; }
 .legend__scale { display: flex; justify-content: space-between; width: 92px; font-size: 8.5px; color: var(--ink-faint); }
 .legend--trail { opacity: .92; }
 
+.news { padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,.07); }
+.news:last-child { border-bottom: 0; }
+.news__h { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.news__p { font-size: 11.5px; color: var(--ink-dim); margin: 4px 0 5px; line-height: 1.45; }
+
 /* ------------------------------------------------------------------- rail */
 .rail {
   display: flex; flex-direction: column; min-height: 0; min-width: 0; max-width: 100vw;

@@ -180,7 +180,8 @@
           const me = dataStore.isLaurentName(b.n);
           const rankCls = b.r === 1 ? 'rank-pill--1' : me ? 'rank-pill--me' : '';
           const retired = b.st && b.st !== 'RAC';
-          return `<tr class="${me ? 'is-me' : ''}" data-boat="${util.esc(b.id)}">
+          const why = b.raison ? ` title="${util.esc(b.raison)}"` : '';
+          return `<tr class="${me ? 'is-me' : ''}" data-boat="${util.esc(b.id)}"${why}>
             <td><span class="rank-pill ${rankCls}">${retired ? '—' : b.r ?? '—'}</span></td>
             <td>
               <div class="who"><div style="min-width:0">
@@ -197,6 +198,29 @@
         tr.addEventListener('click', () => mapCtl.focusBoat(tr.dataset.boat, core))
       );
     }
+    // official race news: retirements are safety information, not a footnote
+    const news = document.getElementById('raceNews');
+    if (news) {
+      const retired = [];
+      core.standings.forEach((c) => (c.etat || []).forEach((b) => {
+        if (b.st && b.st !== 'RAC') retired.push({ ...b, classe: c.nom });
+      }));
+      if (!retired.length) {
+        news.innerHTML = '<div class="faint" style="font-size:12px">Aucun abandon publié par la direction de course à cette heure.</div>';
+      } else {
+        news.innerHTML = retired
+          .sort((a, b) => (a.classe === 'Ocean Fifty' ? -1 : 0) - (b.classe === 'Ocean Fifty' ? -1 : 0))
+          .map((b) => `<div class="news">
+            <div class="news__h"><b>${util.esc(b.n)}</b> <span class="faint">· ${util.esc(b.b || '')}</span>
+              <span class="badge badge--off" style="margin-left:auto">${util.esc(b.st)}${b.motif ? ' · ' + util.esc(b.motif) : ''}</span></div>
+            ${b.classe !== 'Ocean Fifty' ? `<div class="faint" style="font-size:9.5px;letter-spacing:.08em;text-transform:uppercase">${util.esc(b.classe)}</div>` : ''}
+            ${b.raison ? `<div class="news__p">${util.esc(b.raison)}</div>` : '<div class="news__p faint">Motif non précisé par l’organisation.</div>'}
+            ${b.article ? `<a class="link" style="font-size:10.5px" href="${util.esc(b.article)}" target="_blank" rel="noopener">Communiqué officiel ↗</a>` : ''}
+          </div>`)
+          .join('');
+      }
+    }
+
     const ft = document.getElementById('fleetTime');
     if (ft) ft.textContent = core.freshness.officialStandings ? `MAJ ${util.fmtDate(core.freshness.officialStandings)}` : '—';
 

@@ -403,7 +403,10 @@
       <div class="kv"><span class="kv__k">Vitesse</span><span class="kv__v">${util.kn(b.v)} nd</span></div>
       <div class="kv"><span class="kv__k">Cap</span><span class="kv__v">${b.cap ?? '—'}° ${util.cardinal(b.cap)}</span></div>
       <div class="kv"><span class="kv__k">À l'arrivée</span><span class="kv__v">${util.nm(b.dtf)} mi</span></div>
-      <div class="kv"><span class="kv__k">Écart leader</span><span class="kv__v">${util.nm(b.dtl)} mi</span></div>`;
+      <div class="kv"><span class="kv__k">Écart leader</span><span class="kv__v">${util.nm(b.dtl)} mi</span></div>
+      ${b.st && b.st !== 'RAC' ? `<div class="kv"><span class="kv__k">Statut officiel</span><span class="kv__v">${util.esc(b.st)}${b.motif ? ' · ' + util.esc(b.motif) : ''}</span></div>` : ''}
+      ${b.raison ? `<div class="kv" style="display:block"><span class="kv__k">Communiqué de course</span><div style="font-size:11.5px;color:var(--ink-dim);margin-top:3px">${util.esc(b.raison)}</div></div>` : ''}
+      ${b.article ? `<a class="link" style="font-size:11px" href="${util.esc(b.article)}" target="_blank" rel="noopener">Article officiel ↗</a>` : ''}`;
     L.popup({ closeButton: true, className: 'boatpop', maxWidth: 260 })
       .setLatLng([b.lat, b.lon])
       .setContent(html)

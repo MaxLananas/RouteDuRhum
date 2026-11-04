@@ -286,6 +286,7 @@
         hist: l.hist || null,
         motif: l.motif || null,
         raison: l.raison || null,
+        article: l.article || null,
         photo: l.photo ? `https://static.wixstatic.com/media/${l.photo}` : null,
         photoBoat: l.photoBoat ? `https://static.wixstatic.com/media/${l.photoBoat}` : null,
         fiche: l.fiche ? `https://www.routedurhum.com${l.fiche}` : null,
