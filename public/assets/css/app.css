@@ -384,7 +384,7 @@ p { margin: 0 0 0.75em; }
   .tab { display: inline-block; }
   /* floating "back to map" action, moved out of the strip by app.js */
   .tab--float.tab--map {
-    position: absolute; top: 4px; right: 10px; z-index: 3;
+    position: absolute; top: 25px; right: 10px; z-index: 3;
     padding: 6px 10px; border-radius: 8px;
     background: rgba(255, 194, 75, 0.14);
     border: 1px solid rgba(255, 194, 75, 0.38);
