@@ -478,36 +478,30 @@
       const i = CHIP_PRIORITY.indexOf(el.querySelector('.tchip__v')?.id);
       return i < 0 ? CHIP_PRIORITY.length : i; // unknown chips go last
     };
-    const wasCut = chips.map((c) => c.classList.contains('is-cut'));
-    const width = new Map();
-    chips.forEach((c, i) => {
-      if (wasCut[i]) c.classList.remove('is-cut'); // measure the full value
-      width.set(c, Math.ceil(c.getBoundingClientRect().width));
-    });
 
-    // Real room = up to the action buttons; flexbox clips anything past it.
-    const edge = right.getBoundingClientRect().left - strip.getBoundingClientRect().left;
-    const avail = Math.floor(Math.min(strip.getBoundingClientRect().width, edge));
-
-    const hide = new Set();
-    let used = chips.reduce((n, c) => n + (width.get(c) || 0), 0);
-    for (const chip of [...chips].sort((a, b) => prio(b) - prio(a))) {
-      if (used <= avail - 1) break; // 1px slack for fractional layout
-      hide.add(chip);
-      used -= width.get(chip) || 0;
+    // The strip's own box shrinks as chips are hidden, so a single calculation
+    // can be wrong by a few pixels. Iterate instead: hide the least important
+    // chip, re-read the layout, repeat — this converges in at most 6 steps.
+    const visible = new Set(chips);
+    const order = [...chips].sort((a, b) => prio(b) - prio(a));
+    for (let step = 0; step <= chips.length; step++) {
+      chips.forEach((c) => c.classList.toggle('is-cut', !visible.has(c)));
+      // real room: the strip's usable width, never past the action buttons
+      const edge = right.getBoundingClientRect().left - strip.getBoundingClientRect().left;
+      const room = Math.floor(Math.min(strip.clientWidth, edge));
+      const need = [...visible].reduce((n, c) => n + Math.ceil(c.getBoundingClientRect().width), 0);
+      if (need <= room) break;
+      const next = order.find((c) => visible.has(c));
+      if (!next) break;
+      visible.delete(next);
     }
-    chips.forEach((c, i) => {
-      const cut = hide.has(c);
-      if (cut !== wasCut[i]) c.classList.toggle('is-cut', cut);
-    });
+
     // exposed for the visual test / manual diagnosis
     window.__topStatsFit = {
-      avail: Math.round(avail),
-      stripLeft: Math.round(strip.getBoundingClientRect().left),
-      stripWidth: Math.round(strip.getBoundingClientRect().width),
-      rightsLeft: Math.round(right.getBoundingClientRect().left),
-      widths: chips.map((c) => [c.querySelector('.tchip__v')?.id, Math.round(width.get(c))]),
-      hidden: chips.filter((c) => hide.has(c)).map((c) => c.querySelector('.tchip__v')?.id),
+      room: Math.floor(strip.clientWidth),
+      shown: chips.filter((c) => visible.has(c)).map((c) => c.querySelector('.tchip__v')?.id),
+      hidden: chips.filter((c) => !visible.has(c)).map((c) => c.querySelector('.tchip__v')?.id),
+      need: [...visible].reduce((n, c) => n + Math.ceil(c.getBoundingClientRect().width), 0),
     };
   }
   window.addEventListener('load', fitTopStats);
