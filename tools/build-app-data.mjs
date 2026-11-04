@@ -254,7 +254,16 @@ const core = {
  * In that case we keep the standings and the file index already published, and only
  * refresh the metadata, so a missing collect never blanks the site. */
 const prev = read(join(OUT, 'core.json'));
+
+/* Only fall back to the published standings when THIS build genuinely has none.
+   The condition used to be "the previous build has standings", which is always
+   true — so a perfectly good fresh ranking (22:00) was silently discarded in
+   favour of the 14:00 copy, for hours, while every log line said "success". */
+const freshStandings =
+  Array.isArray(classement?.classes) &&
+  classement.classes.some((c) => (c.lignes || []).length > 0);
 const prevOk =
+  !freshStandings &&
   prev &&
   prev.files &&
   prev.files.trackLaurent &&
