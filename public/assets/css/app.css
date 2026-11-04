@@ -655,8 +655,18 @@ input[type='range']::-moz-range-thumb { width: 14px; height: 14px; border: 0; bo
   .tl-ticks { display: none; }
   .topbar { padding: 0 12px; gap: 10px; }
   .brand__sub { display: none; }
+  /* the wordmark takes the room the KPI strip frees up, and may use two lines
+     instead of being cut to "La French Fab · Route du…" */
+  .brand { flex: 1 1 auto; }
+  .brand__name {
+    font-size: 12.5px; line-height: 1.25; white-space: normal;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
   .topbar__stats { display: none; }
+  /* icons only, but every control keeps a readable tooltip + label */
+  .topbar__right .pill { padding: 0 9px; }
   .topbar__right .pill span.lbl { display: none; }
+  .topbar__right .pill--live { padding: 0 12px; }
   .modal__box { padding: 20px; }
 }
 

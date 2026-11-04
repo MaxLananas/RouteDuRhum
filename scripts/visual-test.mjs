@@ -390,6 +390,19 @@ const mobileInfo = await m.evaluate(() => ({
 check('mobile : pas de débordement horizontal', !mobileInfo.overflow, `${mobileInfo.scrollWidth}px / ${mobileInfo.innerWidth}px ${JSON.stringify(mobileInfo.offenders)}`);
 check('mobile : marqueurs présents', mobileInfo.markers >= 2, String(mobileInfo.markers));
 check('mobile : bouton d’ouverture du panneau', mobileInfo.sheetBtn && mobileInfo.mapTab, JSON.stringify({ b: mobileInfo.sheetBtn, t: mobileInfo.mapTab }));
+const mobileBar = await page.evaluate(() => {
+  const name = document.querySelector('.brand__name');
+  const live = document.getElementById('liveBtn');
+  return {
+    title: name?.textContent.trim(),
+    titleClipped: name ? name.scrollHeight > name.clientHeight + 1 || name.scrollWidth > name.clientWidth + 1 : true,
+    liveLabel: live?.getAttribute('aria-label') || '',
+    refreshLabel: document.getElementById('refreshBtn')?.getAttribute('aria-label') || '',
+  };
+});
+check('mobile : titre lisible et boutons décrits',
+  !mobileBar.titleClipped && /aria-label/.test(mobileBar.liveLabel + mobileBar.refreshLabel) && mobileBar.liveLabel.length > 3,
+  JSON.stringify(mobileBar));
 // the hero photo must come from the official CDN
 const hero = await m.evaluate(() => {
   const img = document.getElementById('heroPhoto');

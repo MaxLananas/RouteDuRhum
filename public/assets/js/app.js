@@ -85,6 +85,25 @@
     });
   }
 
+  /* On phones the pills are icon-only: keep an accessible label and a hint. */
+  function labelMobilePills() {
+    const live = document.getElementById('liveBtn');
+    const refresh = document.getElementById('refreshBtn');
+    const info = document.getElementById('infoBtn');
+    if (live && !live.getAttribute('aria-label')) {
+      live.setAttribute('aria-label', 'Revenir au direct');
+      live.setAttribute('title', 'Revenir au direct');
+    }
+    if (refresh) {
+      refresh.setAttribute('aria-label', 'Actualiser les données');
+      refresh.setAttribute('title', 'Actualiser les données');
+    }
+    if (info) {
+      info.setAttribute('aria-label', 'Sources et méthodologie');
+      info.setAttribute('title', 'Sources et méthodologie');
+    }
+  }
+
   function wireMapButtons() {
     document.getElementById('btnSheet')?.addEventListener('click', () => {
       document.getElementById('rail')?.classList.toggle('is-open');
@@ -405,6 +424,7 @@
     wireTimeline();
     wireTabs();
     wireMobileRail();
+    labelMobilePills();
     wireModal();
     replayLoop();
 
