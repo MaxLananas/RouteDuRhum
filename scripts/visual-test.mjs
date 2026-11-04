@@ -399,6 +399,16 @@ const mapTab = await page.evaluate(() => {
     found: true,
     shown: getComputedStyle(t).display !== 'none',
     inside: r.left >= -0.5 && r.right <= window.innerWidth + 0.5 && r.width > 24,
+    debug: {
+      display: getComputedStyle(t).display,
+      w: Math.round(r.width), l: Math.round(r.left), rt: Math.round(r.right),
+      vw: window.innerWidth,
+      tabsScroll: (() => { const b = t.parentElement; return [Math.round(b.scrollLeft), Math.round(b.scrollWidth), Math.round(b.clientWidth)]; })(),
+      rules: [...document.styleSheets].flatMap((ss) => { try { return [...ss.cssRules]; } catch { return []; } })
+        .flatMap((r) => (r.cssRules ? [...r.cssRules] : [r]))
+        .filter((r) => r.selectorText && /tab--map/.test(r.selectorText))
+        .map((r) => `${r.selectorText}{${r.style.cssText.slice(0, 60)}}`),
+    },
     clickable: !!mid && t.contains(mid),
     label: t.textContent.trim(),
   };
