@@ -55,3 +55,34 @@ for (const [name, url] of mVariants) {
     console.log(`${name.padEnd(22)} ERROR ${e.message}`);
   }
 }
+
+// ---- reproduce the browser request exactly (headers matter) ----
+const exact = 'https://api.open-meteo.com/v1/forecast?latitude=52,48,44,40,36,32,28,24,20,16&longitude=-68,-64,-60,-56,-52,-48,-44,-40,-36,-32,-28,-24,-20,-16&timezone=UTC&forecast_days=3&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl,cloud_cover,temperature_2m&wind_speed_unit=kn';
+const headerSets = [
+  ['plain', {}],
+  ['browser-ish', {
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/131 Safari/537.36',
+    'Accept': '*/*',
+    'Origin': 'http://127.0.0.1:8099',
+    'Referer': 'http://127.0.0.1:8099/',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'cross-site',
+    'Sec-Fetch-Dest': 'empty',
+  }],
+  ['origin-only', { 'Origin': 'http://127.0.0.1:8099' }],
+  ['accept-encoding', { 'Accept-Encoding': 'gzip, deflate, br, zstd' }],
+];
+for (const [name, headers] of headerSets) {
+  try {
+    const res = await fetch(exact, { headers });
+    const body = await res.text();
+    console.log(`EXACT ${name.padEnd(16)} HTTP ${res.status} ${body.length}B ${res.status !== 200 ? body.slice(0, 220) : ''}`);
+  } catch (e) {
+    console.log(`EXACT ${name.padEnd(16)} ERROR ${e.message}`);
+  }
+}
+
+// and a 2-day version of the same grid
+const twoDay = exact.replace('forecast_days=3', 'forecast_days=2');
+let r2 = await fetch(twoDay);
+console.log(`EXACT 2days            HTTP ${r2.status} ${(await r2.text()).length}B`);
