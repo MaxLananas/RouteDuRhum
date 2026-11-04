@@ -2,9 +2,9 @@
   "sources": {
     "carto.versions": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:50:33.096Z",
-      "lastAttempt": "2026-11-04T14:50:33.096Z",
-      "lastSuccessBefore": "2026-11-04T14:50:18.300Z",
+      "lastSuccess": "2026-11-04T14:51:18.910Z",
+      "lastAttempt": "2026-11-04T14:51:18.910Z",
+      "lastSuccessBefore": "2026-11-04T14:50:33.096Z",
       "versions": {
         "config": 20261104114533,
         "tracks": 20261104140442,
@@ -15,25 +15,25 @@
     },
     "carto.config": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:50:33.717Z",
-      "lastAttempt": "2026-11-04T14:50:33.717Z",
-      "lastSuccessBefore": "2026-11-04T14:50:18.332Z",
+      "lastSuccess": "2026-11-04T14:51:19.056Z",
+      "lastAttempt": "2026-11-04T14:51:19.056Z",
+      "lastSuccessBefore": "2026-11-04T14:50:33.717Z",
       "bytes": 64274,
       "boats": 115
     },
     "carto.tracks": {
       "ok": false,
       "lastError": "Cannot access 'LAURENT' before initialization",
-      "lastFailure": "2026-11-04T14:50:33.849Z",
-      "lastAttempt": "2026-11-04T14:50:33.849Z",
+      "lastFailure": "2026-11-04T14:51:19.141Z",
+      "lastAttempt": "2026-11-04T14:51:19.141Z",
       "lastSuccessBefore": null,
       "error": "Cannot access 'LAURENT' before initialization"
     },
     "carto.reports": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:50:34.091Z",
-      "lastAttempt": "2026-11-04T14:50:34.091Z",
-      "lastSuccessBefore": "2026-11-04T14:50:18.574Z",
+      "lastSuccess": "2026-11-04T14:51:19.332Z",
+      "lastAttempt": "2026-11-04T14:51:19.332Z",
+      "lastSuccessBefore": "2026-11-04T14:50:34.091Z",
       "bytes": 1953838,
       "reports": 108,
       "columns": 38,
@@ -41,9 +41,9 @@
     },
     "carto.live": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:50:34.154Z",
-      "lastAttempt": "2026-11-04T14:50:34.154Z",
-      "lastSuccessBefore": "2026-11-04T14:50:18.596Z",
+      "lastSuccess": "2026-11-04T14:51:19.367Z",
+      "lastAttempt": "2026-11-04T14:51:19.367Z",
+      "lastSuccessBefore": "2026-11-04T14:50:34.154Z",
       "bytes": 24062,
       "bytesDecoded": 24062,
       "latestReport": "2026-11-04T14:00:00Z",
@@ -52,9 +52,9 @@
     },
     "rdr.classement": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:50:34.441Z",
-      "lastAttempt": "2026-11-04T14:50:34.441Z",
-      "lastSuccessBefore": "2026-11-04T14:50:18.849Z",
+      "lastSuccess": "2026-11-04T14:51:19.760Z",
+      "lastAttempt": "2026-11-04T14:51:19.760Z",
+      "lastSuccessBefore": "2026-11-04T14:50:34.441Z",
       "bytes": 75895,
       "maj": "2026-11-04T14:00:24Z",
       "boats": 115,
@@ -62,19 +62,19 @@
     },
     "open-meteo": {
       "ok": true,
-      "lastSuccess": "2026-11-04T14:50:35.751Z",
-      "lastAttempt": "2026-11-04T14:50:35.751Z",
-      "lastSuccessBefore": "2026-11-04T14:50:19.443Z",
+      "lastSuccess": "2026-11-04T14:51:20.639Z",
+      "lastAttempt": "2026-11-04T14:51:20.639Z",
+      "lastSuccessBefore": "2026-11-04T14:50:35.751Z",
       "position": {
         "lat": 42.258,
         "lon": -26.822
       }
     }
   },
-  "generatedAt": "2026-11-04T14:50:32.476Z",
+  "generatedAt": "2026-11-04T14:51:18.441Z",
   "host": "github-actions",
-  "runId": "41851540883",
-  "runNumber": "13",
+  "runId": "41851706139",
+  "runNumber": "14",
   "versionCache": {
     "config": 20261104114533,
     "tracks": 20261104140442,
