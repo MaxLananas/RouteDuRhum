@@ -20,7 +20,10 @@ jobs:
         with:
           node-version: '20'
       - name: Run probe
-        run: node tools/geo/probe.mjs 2>&1 | tee tmp_probe.log
+        run: |
+          node tools/geo/probe.mjs 2>&1 | tee tmp_probe.log
+          echo "\n=== TILES / API PROBE ===" | tee -a tmp_probe.log
+          node tools/probe-tiles.mjs 2>&1 | tee -a tmp_probe.log
       - name: Show log in job summary
         if: always()
         run: |
@@ -38,6 +41,7 @@ jobs:
       - name: Commit probe log
         if: always()
         run: |
+          cp -f tiles-probe.json data/diagnostics/tiles-probe.json || true
           mkdir -p data/diagnostics
           { echo "# Probe $(date -u +%FT%TZ)"; echo; echo '```'; head -c 200000 tmp_probe.log; echo '```'; } > data/diagnostics/probe-latest.md
           git config user.name 'rdr-bot'
