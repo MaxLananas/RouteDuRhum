@@ -1,0 +1,134 @@
+{
+  "sources": {
+    "carto.versions": {
+      "ok": true,
+      "lastSuccess": "2026-11-04T14:00:32.511Z",
+      "lastAttempt": "2026-11-04T14:00:32.511Z",
+      "lastSuccessBefore": null,
+      "versions": {
+        "config": 20261104114533,
+        "tracks": 20261104132844,
+        "reports": 20261104132842,
+        "live": 20261104132842,
+        "geoblog": 0
+      }
+    },
+    "carto.config": {
+      "ok": true,
+      "lastSuccess": "2026-11-04T14:00:32.538Z",
+      "lastAttempt": "2026-11-04T14:00:32.538Z",
+      "lastSuccessBefore": null,
+      "bytes": 64274,
+      "boats": 115
+    },
+    "carto.tracks": {
+      "ok": false,
+      "lastError": "Cannot access 'LAURENT' before initialization",
+      "lastFailure": "2026-11-04T14:00:32.623Z",
+      "lastAttempt": "2026-11-04T14:00:32.623Z",
+      "lastSuccessBefore": null,
+      "error": "Cannot access 'LAURENT' before initialization"
+    },
+    "carto.reports": {
+      "ok": true,
+      "lastSuccess": "2026-11-04T14:00:32.833Z",
+      "lastAttempt": "2026-11-04T14:00:32.833Z",
+      "lastSuccessBefore": null,
+      "bytes": 1934870,
+      "reports": 107,
+      "columns": 38,
+      "latest": "2026-11-01T12:02:00Z"
+    },
+    "carto.live": {
+      "ok": true,
+      "lastSuccess": "2026-11-04T14:00:32.873Z",
+      "lastAttempt": "2026-11-04T14:00:32.873Z",
+      "lastSuccessBefore": null,
+      "bytes": 24038,
+      "bytesDecoded": 24038,
+      "latestReport": "2026-11-04T13:00:00Z",
+      "freshPoints": 0,
+      "state": "RUNNING"
+    },
+    "rdr.classement": {
+      "ok": true,
+      "lastSuccess": "2026-11-04T14:00:33.252Z",
+      "lastAttempt": "2026-11-04T14:00:33.252Z",
+      "lastSuccessBefore": null,
+      "bytes": 75955,
+      "maj": "2026-11-04T13:00:40Z",
+      "boats": 115,
+      "laurentFound": true
+    },
+    "open-meteo": {
+      "ok": true,
+      "lastSuccess": "2026-11-04T14:00:34.262Z",
+      "lastAttempt": "2026-11-04T14:00:34.262Z",
+      "lastSuccessBefore": null,
+      "position": {
+        "lat": 42.368,
+        "lon": -26.695
+      }
+    }
+  },
+  "generatedAt": "2026-11-04T14:00:31.933Z",
+  "host": "github-actions",
+  "runId": "41843295720",
+  "runNumber": "2",
+  "versionCache": {
+    "config": 20261104114533,
+    "tracks": 20261104132844,
+    "reports": 20261104132842,
+    "live": 20261104132842
+  },
+  "race": {
+    "name": "Route du Rhum",
+    "category": "multiclass real",
+    "state": "RUNNING",
+    "start": "2026-11-01T12:02:00Z",
+    "depart": "2026-11-01T12:02:00Z",
+    "distance": 3542,
+    "phase": "course",
+    "maj": "2026-11-04T13:00:40Z"
+  },
+  "classes": [
+    {
+      "name": "Ultim",
+      "boats": 8
+    },
+    {
+      "name": "Ocean Fifty",
+      "boats": 10
+    },
+    {
+      "name": "IMOCA",
+      "boats": 22
+    },
+    {
+      "name": "Class40",
+      "boats": 49
+    },
+    {
+      "name": "Vintage Mono",
+      "boats": 13
+    },
+    {
+      "name": "Vintage Multi",
+      "boats": 13
+    }
+  ],
+  "laurent": {
+    "nom": "Laurent BOURGUES",
+    "bateau": "LA FRENCH FAB",
+    "classe": "Ocean Fifty",
+    "trackerId": "11",
+    "rang": 8,
+    "dtf": 2425.2,
+    "statut": "RAC"
+  },
+  "dataFreshness": {
+    "live": "2026-11-04T13:00:00Z",
+    "reports": "2026-11-01T12:02:00Z",
+    "trackLast": null
+  }
+}
