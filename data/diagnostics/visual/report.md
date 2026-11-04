@@ -1,4 +1,4 @@
-# Rapport de test — 2026-11-04T15:48:23.131Z
+# Rapport de test — 2026-11-04T16:03:41.540Z
 
 **40 tests OK / 1 en échec**
 
@@ -20,13 +20,13 @@
 | aucune erreur JS | ✅ |  |
 | comparaison avec la flotte | ✅ | 10 courbes |
 | graphiques rendus | ✅ | [{"key":"chartSpeed","points":109,"w":379,"h":176,"visible":true},{"key":"chartRank","points":109,"w":379,"h":132,"visible":true},{"key":"chartDtf","points":109 |
-| particules de vent visibles | ✅ | 31846 pixels visibles |
+| particules de vent visibles | ✅ | 30816 pixels visibles |
 | lecteur météo au survol | ✅ | 15.5 nd 283° ONO |
-| replay actif | ✅ | {"active":true,"playing":true,"t":1793516701.9920008,"timelineOpen":true,"ghost":true} |
+| replay actif | ✅ | {"active":true,"playing":true,"t":1793516699.9880009,"timelineOpen":true,"ghost":true} |
 | replay : direct mis en retrait | ✅ | {"card":true,"op":"0.28"} |
-| desktop 1024px : rail entièrement visible | ✅ | {"iw":1024,"rail":360,"railRight":1024,"barRight":1024,"stage":664,"outside":0,"chipsOn":4,"chipsClipped":[{"t":"Dernier pointage48 min","w":140,"right":743,"li |
+| desktop 1024px : rail entièrement visible | ✅ | {"iw":1024,"rail":360,"railRight":1024,"barRight":1024,"stage":664,"outside":0,"chipsOn":4,"chipsClipped":[{"t":"Dernier pointage1 h 03","w":140,"right":743,"li |
 | desktop 1024px : aucun élément hors écran | ✅ | 0 éléments |
-| desktop 1024px : indicateurs du bandeau lisibles | ❌ | 4 indicateurs, tronqués: [{"t":"Dernier pointage48 min","w":140,"right":743,"limit":700,"vw":"107/107"}] |
+| desktop 1024px : indicateurs du bandeau lisibles | ❌ | 4 indicateurs, tronqués: [{"t":"Dernier pointage1 h 03","w":140,"right":743,"limit":700,"vw":"107/107"}] |
 | desktop 1280px : rail entièrement visible | ✅ | {"iw":1280,"rail":412,"railRight":1280,"barRight":1280,"stage":868,"outside":0,"chipsOn":5,"chipsClipped":[],"markers":11} |
 | desktop 1280px : aucun élément hors écran | ✅ | 0 éléments |
 | desktop 1280px : indicateurs du bandeau lisibles | ✅ | 5 indicateurs, tronqués: [] |
@@ -44,7 +44,7 @@
           Les données sont momentanément indisponibles.
           HTTP 503 sur /data/core |
 | panne de source : aucune fausse position | ✅ | 0 marqueurs |
-| API live bloquée : snapshot conservé | ✅ | {"markers":11,"status":"Direct · pointage officiel il y a 1 h 50","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,5 |
+| API live bloquée : snapshot conservé | ✅ | {"markers":11,"status":"Direct · pointage officiel il y a 2 h 05","wxUrls":{"atmo":"https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,5 |
 | sans tuiles : mode schématique annoncé | ✅ | {"cls":true,"badge":true,"markers":11,"trail":3566} |
 | sans tuiles : trace et bateaux toujours lisibles | ✅ | {"cls":true,"badge":true,"markers":11,"trail":3566} |
 
@@ -105,40 +105,31 @@ FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapSer
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/8 — net::ERR_ABORTED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/3 — net::ERR_ABORTED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/23/28 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/24/25 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/24/28 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/25/27 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/22/25 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/25/28 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/24/24 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/24/29 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/26/26 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/26/27 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/21/25 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/22/24 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/25/29 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/26/25 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/21/24 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/23/23 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/23/30 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/26/24 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/22/23 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/25/23 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/25/30 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/21/23 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/6/21/30 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/9 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/9 — net::ERR_ABORTED
-FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/9 — net::ERR_ABORTED
 FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED
 FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED
-HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793807396477
+HTTP 503 http://127.0.0.1:8099/data/core.json?v=1793808303617
 FAILED https://api.open-meteo.com/v1/forecast?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44,44,44 — net::ERR_FAILED
 FAILED https://marine-api.open-meteo.com/v1/marine?latitude=52,52,52,52,52,52,52,52,52,52,52,52,52,52,48,48,48,48,48,48,48,48,48,48,48,48,48,48,44, — net::ERR_FAILED
-FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793807401591 — net::ERR_FAILED
-HTTP 404 http://127.0.0.1:8099/api/classement?_=1793807401591
+FAILED https://www.routedurhum.com/_functions/classement?lang=fr&_=1793808308736 — net::ERR_FAILED
+HTTP 404 http://127.0.0.1:8099/api/classement?_=1793808308736
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/6 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/6 — net::ERR_FAILED
 FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/5 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/7 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/5 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/7 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/6 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/6 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/5 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/7 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/5 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/7 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/4 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/8 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/4 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/8 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/4 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/4/8 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/4 — net::ERR_FAILED
+FAILED https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/7/8 — net::ERR_FAILED
 ```
