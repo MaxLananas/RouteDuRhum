@@ -2,88 +2,88 @@
   "sources": {
     "carto.versions": {
       "ok": true,
-      "lastSuccess": "2026-11-04T22:58:50.409Z",
-      "lastAttempt": "2026-11-04T22:58:50.409Z",
-      "lastSuccessBefore": "2026-11-04T22:35:11.976Z",
+      "lastSuccess": "2026-11-05T01:12:38.513Z",
+      "lastAttempt": "2026-11-05T01:12:38.513Z",
+      "lastSuccessBefore": "2026-11-04T22:58:50.409Z",
       "versions": {
         "config": 20261104114533,
-        "tracks": 20261104220442,
-        "reports": 20261104220440,
-        "live": 20261104220439,
+        "tracks": 20261105010443,
+        "reports": 20261105010440,
+        "live": 20261105010440,
         "geoblog": 0
       }
     },
     "carto.config": {
       "ok": true,
-      "lastSuccess": "2026-11-04T22:58:50.511Z",
-      "lastAttempt": "2026-11-04T22:58:50.511Z",
-      "lastSuccessBefore": "2026-11-04T22:35:12.011Z",
+      "lastSuccess": "2026-11-05T01:12:38.637Z",
+      "lastAttempt": "2026-11-05T01:12:38.637Z",
+      "lastSuccessBefore": "2026-11-04T22:58:50.511Z",
       "bytes": 64274,
       "boats": 115
     },
     "carto.tracks": {
       "ok": true,
-      "lastSuccess": "2026-11-04T22:58:50.616Z",
-      "lastAttempt": "2026-11-04T22:58:50.616Z",
-      "lastSuccessBefore": "2026-11-04T22:35:12.074Z",
-      "bytes": 688395,
-      "points": 39128,
+      "lastSuccess": "2026-11-05T01:12:38.738Z",
+      "lastAttempt": "2026-11-05T01:12:38.738Z",
+      "lastSuccessBefore": "2026-11-04T22:58:50.616Z",
+      "bytes": 710510,
+      "points": 40383,
       "predPoints": 0,
       "boats": 115,
-      "laurentPoints": 353,
-      "lastPoint": "2026-11-04T21:45:00.000Z"
+      "laurentPoints": 365,
+      "lastPoint": "2026-11-05T00:45:00.000Z"
     },
     "carto.reports": {
       "ok": true,
-      "lastSuccess": "2026-11-04T22:58:50.800Z",
-      "lastAttempt": "2026-11-04T22:58:50.800Z",
-      "lastSuccessBefore": "2026-11-04T22:35:12.234Z",
-      "bytes": 2105400,
-      "reports": 116,
+      "lastSuccess": "2026-11-05T01:12:38.978Z",
+      "lastAttempt": "2026-11-05T01:12:38.978Z",
+      "lastSuccessBefore": "2026-11-04T22:58:50.800Z",
+      "bytes": 2162235,
+      "reports": 119,
       "columns": 38,
       "latest": "2026-11-01T12:02:00Z"
     },
     "carto.live": {
       "ok": true,
-      "lastSuccess": "2026-11-04T22:58:50.825Z",
-      "lastAttempt": "2026-11-04T22:58:50.825Z",
-      "lastSuccessBefore": "2026-11-04T22:35:12.260Z",
-      "bytes": 24066,
-      "bytesDecoded": 24066,
-      "latestReport": "2026-11-04T22:00:00Z",
+      "lastSuccess": "2026-11-05T01:12:39.027Z",
+      "lastAttempt": "2026-11-05T01:12:39.027Z",
+      "lastSuccessBefore": "2026-11-04T22:58:50.825Z",
+      "bytes": 23990,
+      "bytesDecoded": 23990,
+      "latestReport": "2026-11-05T01:00:00Z",
       "freshPoints": 0,
       "state": "RUNNING"
     },
     "rdr.classement": {
       "ok": true,
-      "lastSuccess": "2026-11-04T22:58:51.161Z",
-      "lastAttempt": "2026-11-04T22:58:51.161Z",
-      "lastSuccessBefore": "2026-11-04T22:35:12.595Z",
-      "bytes": 75955,
-      "maj": "2026-11-04T22:00:18Z",
+      "lastSuccess": "2026-11-05T01:12:39.334Z",
+      "lastAttempt": "2026-11-05T01:12:39.334Z",
+      "lastSuccessBefore": "2026-11-04T22:58:51.161Z",
+      "bytes": 76165,
+      "maj": "2026-11-05T01:01:30Z",
       "boats": 115,
       "laurentFound": true
     },
     "open-meteo": {
       "ok": true,
-      "lastSuccess": "2026-11-04T22:58:52.359Z",
-      "lastAttempt": "2026-11-04T22:58:52.359Z",
-      "lastSuccessBefore": "2026-11-04T22:35:13.502Z",
+      "lastSuccess": "2026-11-05T01:12:40.610Z",
+      "lastAttempt": "2026-11-05T01:12:40.610Z",
+      "lastSuccessBefore": "2026-11-04T22:58:52.359Z",
       "position": {
-        "lat": 40.946,
-        "lon": -28.398
+        "lat": 40.545,
+        "lon": -29.695
       }
     }
   },
-  "generatedAt": "2026-11-04T22:58:49.829Z",
+  "generatedAt": "2026-11-05T01:12:38.295Z",
   "host": "github-actions",
-  "runId": "41929890234",
-  "runNumber": "24",
+  "runId": "41946901194",
+  "runNumber": "25",
   "versionCache": {
     "config": 20261104114533,
-    "tracks": 20261104220442,
-    "reports": 20261104220440,
-    "live": 20261104220439
+    "tracks": 20261105010443,
+    "reports": 20261105010440,
+    "live": 20261105010440
   },
   "race": {
     "name": "Route du Rhum",
@@ -93,7 +93,7 @@
     "depart": "2026-11-01T12:02:00Z",
     "distance": 3542,
     "phase": "course",
-    "maj": "2026-11-04T22:00:18Z"
+    "maj": "2026-11-05T01:01:30Z"
   },
   "classes": [
     {
@@ -127,12 +127,12 @@
     "classe": "Ocean Fifty",
     "trackerId": "11",
     "rang": 8,
-    "dtf": 2318.2,
+    "dtf": 2249.9,
     "statut": "RAC"
   },
   "dataFreshness": {
-    "live": "2026-11-04T22:00:00Z",
+    "live": "2026-11-05T01:00:00Z",
     "reports": "2026-11-01T12:02:00Z",
-    "trackLast": "2026-11-04T21:45:00.000Z"
+    "trackLast": "2026-11-05T00:45:00.000Z"
   }
 }

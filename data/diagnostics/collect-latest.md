@@ -1,12 +1,12 @@
-# Collect run 24 — 2026-11-04T22:58:52Z
+# Collect run 25 — 2026-11-05T01:12:40Z
 
 ```
-versions {config:20261104114533,tracks:20261104220442,reports:20261104220440,live:20261104220439,geoblog:0}
+versions {config:20261104114533,tracks:20261105010443,reports:20261105010440,live:20261105010440,geoblog:0}
 config: downloaded 18673B -> 64274B decoded (v=20261104114533)
-tracks: downloaded 241567B -> 688395B decoded (v=20261104220442)
-reports: downloaded 754086B -> 2105400B decoded (v=20261104220440)
-live: downloaded 10905B -> 24066B decoded (v=20261104220439)
-done in 1.9s — boats=115 laurent=Laurent BOURGUES
-reports: 116 entries, payload order ancien→récent
-core.json 69.9 kB · 115 tracks (18114 pts) · 116 reports · 6 classes · laurent P8
+tracks: downloaded 248604B -> 710510B decoded (v=20261105010443)
+reports: downloaded 778933B -> 2162235B decoded (v=20261105010440)
+live: downloaded 10783B -> 23990B decoded (v=20261105010440)
+done in 2.1s — boats=115 laurent=Laurent BOURGUES
+reports: 119 entries, payload order ancien→récent
+core.json 69.9 kB · 115 tracks (18222 pts) · 119 reports · 6 classes · laurent P8
 ```
