@@ -2,9 +2,9 @@
   "sources": {
     "carto.versions": {
       "ok": true,
-      "lastSuccess": "2026-11-05T01:35:10.818Z",
-      "lastAttempt": "2026-11-05T01:35:10.818Z",
-      "lastSuccessBefore": "2026-11-05T01:15:32.655Z",
+      "lastSuccess": "2026-11-05T01:38:32.166Z",
+      "lastAttempt": "2026-11-05T01:38:32.166Z",
+      "lastSuccessBefore": "2026-11-05T01:35:10.818Z",
       "versions": {
         "config": 20261104114533,
         "tracks": 20261105010443,
@@ -15,17 +15,17 @@
     },
     "carto.config": {
       "ok": true,
-      "lastSuccess": "2026-11-05T01:35:11.403Z",
-      "lastAttempt": "2026-11-05T01:35:11.403Z",
-      "lastSuccessBefore": "2026-11-05T01:15:32.676Z",
+      "lastSuccess": "2026-11-05T01:38:32.270Z",
+      "lastAttempt": "2026-11-05T01:38:32.270Z",
+      "lastSuccessBefore": "2026-11-05T01:35:11.403Z",
       "bytes": 64274,
       "boats": 115
     },
     "carto.tracks": {
       "ok": true,
-      "lastSuccess": "2026-11-05T01:35:11.644Z",
-      "lastAttempt": "2026-11-05T01:35:11.644Z",
-      "lastSuccessBefore": "2026-11-05T01:15:32.739Z",
+      "lastSuccess": "2026-11-05T01:38:32.362Z",
+      "lastAttempt": "2026-11-05T01:38:32.362Z",
+      "lastSuccessBefore": "2026-11-05T01:35:11.644Z",
       "bytes": 710510,
       "points": 40383,
       "predPoints": 0,
@@ -35,9 +35,9 @@
     },
     "carto.reports": {
       "ok": true,
-      "lastSuccess": "2026-11-05T01:35:12.316Z",
-      "lastAttempt": "2026-11-05T01:35:12.316Z",
-      "lastSuccessBefore": "2026-11-05T01:15:32.875Z",
+      "lastSuccess": "2026-11-05T01:38:32.573Z",
+      "lastAttempt": "2026-11-05T01:38:32.573Z",
+      "lastSuccessBefore": "2026-11-05T01:35:12.316Z",
       "bytes": 2162235,
       "reports": 119,
       "columns": 38,
@@ -45,9 +45,9 @@
     },
     "carto.live": {
       "ok": true,
-      "lastSuccess": "2026-11-05T01:35:12.824Z",
-      "lastAttempt": "2026-11-05T01:35:12.824Z",
-      "lastSuccessBefore": "2026-11-05T01:15:32.898Z",
+      "lastSuccess": "2026-11-05T01:38:32.613Z",
+      "lastAttempt": "2026-11-05T01:38:32.613Z",
+      "lastSuccessBefore": "2026-11-05T01:35:12.824Z",
       "bytes": 23990,
       "bytesDecoded": 23990,
       "latestReport": "2026-11-05T01:00:00Z",
@@ -56,9 +56,9 @@
     },
     "rdr.classement": {
       "ok": true,
-      "lastSuccess": "2026-11-05T01:35:13.162Z",
-      "lastAttempt": "2026-11-05T01:35:13.162Z",
-      "lastSuccessBefore": "2026-11-05T01:15:33.130Z",
+      "lastSuccess": "2026-11-05T01:38:32.908Z",
+      "lastAttempt": "2026-11-05T01:38:32.908Z",
+      "lastSuccessBefore": "2026-11-05T01:35:13.162Z",
       "bytes": 76165,
       "maj": "2026-11-05T01:01:30Z",
       "boats": 115,
@@ -66,19 +66,19 @@
     },
     "open-meteo": {
       "ok": true,
-      "lastSuccess": "2026-11-05T01:35:14.392Z",
-      "lastAttempt": "2026-11-05T01:35:14.392Z",
-      "lastSuccessBefore": "2026-11-05T01:15:33.899Z",
+      "lastSuccess": "2026-11-05T01:38:34.304Z",
+      "lastAttempt": "2026-11-05T01:38:34.304Z",
+      "lastSuccessBefore": "2026-11-05T01:35:14.392Z",
       "position": {
         "lat": 40.545,
         "lon": -29.695
       }
     }
   },
-  "generatedAt": "2026-11-05T01:35:10.222Z",
+  "generatedAt": "2026-11-05T01:38:31.333Z",
   "host": "github-actions",
-  "runId": "41949491016",
-  "runNumber": "27",
+  "runId": "41949867431",
+  "runNumber": "28",
   "versionCache": {
     "config": 20261104114533,
     "tracks": 20261105010443,
