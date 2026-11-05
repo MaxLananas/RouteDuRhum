@@ -103,11 +103,16 @@
     return Number.isFinite(t) ? t : null;
   };
 
-  /** Axis tick: day + hour in Paris time, weekday kept for the 48 h forecast. */
+  /**
+   * Axis tick: day + hour, both in Paris time.
+   * The timeZone is required on BOTH parts: without it the day came from the
+   * machine's zone while the hour came from Paris, so any tick between 00:00
+   * and 01:59 read as the previous day (e.g. "04 nov. 00:30" for 5 Nov).
+   */
   const dateTick = (v) => {
     const d = new Date(v);
     if (Number.isNaN(d.getTime())) return '';
-    const day = d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+    const day = d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', timeZone: 'Europe/Paris' });
     const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' });
     return `${day} ${time}`;
   };
