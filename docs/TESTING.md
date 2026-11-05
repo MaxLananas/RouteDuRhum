@@ -56,6 +56,33 @@ largeurs d'écran (1024, 1280, 1440, 1920 px) et une sur chaque onglet : d'où
 | 42 | **conditions à sa position** | les deux cartes du panneau Direct viennent du modèle réel — jamais un tiret qui ressemble à une mesure ; si le modèle manque, la raison est écrite |
 | 43-44 | **sans tuiles** | après 6 échecs de tuiles sans succès, le mode schématique est annoncé et la trace + les bateaux restent lisibles |
 
+## Serveur de dev / aperçu — 16 vérifications (`scripts/serve-test.mjs`)
+
+`tools/serve.mjs` sert l'aperçu et émule Cloudflare Pages. Il avait un défaut qui a
+fait tomber l'aperçu de façon répétée : `decodeURIComponent(url.pathname)` lève une
+`URIError` sur une séquence d'échappement invalide (`/%E0%A4%A`, `/%zz`…). Dans un
+gestionnaire `async`, cela devient un *unhandled rejection*, et Node 22 tue le
+processus. Le journal restait vide et l'aperçu disparaissait — le conteneur ne
+redémarrait que pour retomber au mauvais URL suivant.
+
+Le correctif : décodage protégé (réponse **400**), gestionnaire enveloppé pour
+qu'aucune exception ne quitte la requête, et filets `unhandledRejection` /
+`uncaughtException` en dernier recours.
+
+| # | Test | Ce qu'il prouve |
+| --- | --- | --- |
+| 1-2 | démarrage, PID lisible | le serveur démarre sur un port libre et est identifiable |
+| 3-6 | routes normales | `/`, `/data/core.json`, JS et CSS répondent 200 |
+| 7-11 | URL malformées (`/%E0%A4%A`, `/%zz`, `/%C0%AF`, `/%ED%A0%80`, `/%`) | réponse propre **400**, jamais une exception |
+| 12-13 | processus vivant, même `starttime` | **aucun redémarrage** : c'est la preuve que rien n'a tué le serveur |
+| 14 | service toujours opérationnel | une requête normale passe après les requêtes hostiles |
+| 15 | traversée de chemin | `/../../etc/passwd` renvoie l'application, jamais un fichier système |
+| 16 | sortie d'erreur silencieuse | aucune exception non gérée |
+
+Vérifié dans les deux sens : **OK** sur le serveur corrigé, **9 FAIL** sur l'ancien
+version (qui meurt dès la première URL malformée). Le test est exécuté par
+`visual-test.yml` avant les tests navigateur, et disponible via `npm run test:serve`.
+
 ### Tests manuels complémentaires (visuels)
 
 Les captures de `data/diagnostics/visual/` couvrent : carte par défaut, onglets

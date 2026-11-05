@@ -43,6 +43,11 @@ jobs:
           retention-days: 5
           if-no-files-found: ignore
 
+      # The preview server used to die on a single malformed URL (URIError from
+      # decodeURIComponent inside an async handler). This catches any regression.
+      - name: Server resilience (malformed URLs must not kill the process)
+        run: node scripts/serve-test.mjs 2>&1 | tee serve-test.log
+
       - name: Run visual tests
         env:
           CHROME_PATH: /usr/bin/google-chrome

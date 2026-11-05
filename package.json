@@ -8,7 +8,9 @@
     "collect": "node tools/collect.mjs --inspect",
     "build:data": "node tools/build-app-data.mjs",
     "dev": "node tools/serve.mjs",
-    "test:visual": "node scripts/visual-test.mjs"
+    "test:visual": "node scripts/visual-test.mjs",
+    "test:serve": "node scripts/serve-test.mjs",
+    "test": "node scripts/serve-test.mjs && node scripts/visual-test.mjs"
   },
   "devDependencies": {
     "puppeteer-core": "23.11.1"

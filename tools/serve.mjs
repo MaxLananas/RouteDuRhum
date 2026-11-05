@@ -38,9 +38,45 @@ async function serveFile(res, path) {
   }
 }
 
-const server = createServer(async (req, res) => {
+/**
+ * Wrap a handler so nothing can ever take the whole server down.
+ * Before this, a single malformed percent-escape (e.g. `/%E0%A4%A`) threw from
+ * decodeURIComponent inside an async handler: that becomes an unhandled
+ * rejection, and Node kills the process. The preview then went dark until it
+ * was restarted, with nothing in the log to explain why.
+ */
+function safe(handler) {
+  return async (req, res) => {
+    try {
+      await handler(req, res);
+    } catch (err) {
+      if (res.headersSent) {
+        try { res.destroy(); } catch { /* ignore */ }
+        return;
+      }
+      const code = err instanceof URIError ? 400 : 500;
+      try {
+        res.writeHead(code, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache' });
+        res.end(code === 400 ? 'bad request: malformed URL' : 'internal error');
+      } catch { /* ignore */ }
+      console.error(`[serve] ${req.method} ${String(req.url).slice(0, 120)} -> ${code}: ${err.message}`);
+    }
+  };
+}
+
+const server = createServer(safe(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
-  const pathname = decodeURIComponent(url.pathname);
+
+  // decodeURIComponent throws URIError on malformed escapes: answer 400 instead
+  // of letting it bubble up as an unhandled rejection.
+  let pathname;
+  try {
+    pathname = decodeURIComponent(url.pathname);
+  } catch {
+    res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache' });
+    res.end('bad request: malformed URL');
+    return;
+  }
 
   if (pathname.startsWith('/api/')) {
     const name = pathname.replace('/api/', '').replace(/\/$/, '');
@@ -67,6 +103,14 @@ const server = createServer(async (req, res) => {
   if (await serveFile(res, target)) return;
   if (await serveFile(res, join(ROOT, 'index.html'))) return;
   res.writeHead(404).end('not found');
+}));
+
+// Last line of defence: a stray rejection must never take the preview offline.
+process.on('unhandledRejection', (err) => {
+  console.error('[serve] unhandled rejection:', err && err.stack ? err.stack.split('\n')[0] : err);
+});
+process.on('uncaughtException', (err) => {
+  console.error('[serve] uncaught exception:', err && err.stack ? err.stack.split('\n')[0] : err);
 });
 
 server.listen(PORT, HOST, () => {
