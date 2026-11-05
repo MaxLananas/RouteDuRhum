@@ -239,9 +239,10 @@ const axis = await page.evaluate(() => {
   const span = pts[pts.length - 1].x - pts[0].x;
   const px = (v) => sc.getPixelForValue(v);
   // same formatting contract as charts.js dateTick: day AND hour in Paris time
-  const parisTick = (v) => new Date(v).toLocaleDateString('fr-FR', {
+  const parisDay = (v) => new Date(v).toLocaleDateString('fr-FR', {
     day: '2-digit', month: 'short', timeZone: 'Europe/Paris',
-  }) + ' ' + new Date(v).toLocaleTimeString('fr-FR', {
+  });
+  const parisTick = (v) => parisDay(v) + ' ' + new Date(v).toLocaleTimeString('fr-FR', {
     hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris',
   });
   return {
@@ -253,17 +254,17 @@ const axis = await page.evaluate(() => {
     tick: String(sc.ticks?.[1]?.label || ''),
     firstTick: String(sc.ticks?.[0]?.label || ''),
     lastTick: String(sc.ticks?.[sc.ticks.length - 1]?.label || ''),
-    // expected labels derived from the data, in Paris time — hardcoding a date
-    // made this check fail the moment the race crossed midnight.
-    expectFirst: parisTick(pts[0].x),
-    expectLast: parisTick(pts[pts.length - 1].x),
-    // every tick label must be a coherent Paris day+hour pair
-    incoherent: (sc.ticks || []).map((t) => String(t.label || '')).filter((l) => {
-      const m = l.match(/^(\d{1,2}) (\w+)\.? (\d{1,2}):(\d{2})$/);
-      if (!m) return true;
-      const hours = +m[3];
-      return hours > 23 || hours < 0;
-    }).length,
+    // Ticks sit on round marks, not on the data, so compare each label with the
+    // label rebuilt from its own value: that is exactly the formatter contract.
+    // Hardcoding "4 nov." made this check expire the moment the race crossed
+    // midnight; rebuilding also catches the day/hour clock mix.
+    skewed: (sc.ticks || []).map((t) => ({ v: t.value, l: String(t.label || '') }))
+      .filter((t) => t.l !== parisTick(t.v))
+      .map((t) => `${new Date(t.v).toISOString()} -> ${t.l} (attendu ${parisTick(t.v)})`),
+    firstDay: parisDay(pts[0].x),
+    lastDay: parisDay(pts[pts.length - 1].x),
+    firstTickDay: String(sc.ticks?.[0]?.label || '').split(' ').slice(0, 2).join(' '),
+    lastTickDay: String(sc.ticks?.[sc.ticks.length - 1]?.label || '').split(' ').slice(0, 2).join(' '),
     // the axis must not invent hours before the start or after the last report
     bounds: (() => {
       const first = sc.min;
@@ -280,9 +281,9 @@ const axis = await page.evaluate(() => {
 check('graphiques : axe de temps réel',
   !!axis && axis.type === 'linear' && axis.uniform && axis.late > axis.early + 4
   && axis.bounds.leadH < 2 && axis.bounds.tailH < 2
-  // ticks must bracket the data, on the same Paris calendar as the points
-  && axis.firstTick === axis.expectFirst && axis.lastTick === axis.expectLast
-  && axis.incoherent === 0,
+  // no tick may be labelled with a day the data does not cover, in either end
+  && axis.skewed.length === 0
+  && axis.firstTickDay === axis.firstDay && axis.lastTickDay === axis.lastDay,
   JSON.stringify(axis));
 
 /* weather layers */
