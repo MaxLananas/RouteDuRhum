@@ -1,0 +1,90 @@
+name: Collect Route du Rhum data
+
+# The collector needs no secrets: it reads the official public tracker files and the
+# official standings API, then commits a normalised snapshot to the repository.
+#
+# DATA_BRANCH is the branch the snapshot is committed to. During development it is the
+# working branch; after the pull request is merged, set it to `main` (or delete the line
+# to fall back to the branch that triggered the run).
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/**'
+      - '.github/workflows/collect.yml'
+
+concurrency:
+  group: rdr-collect
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  DATA_BRANCH: arena/e3d3aa8e-routedurhum
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DATA_BRANCH }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Collect
+        env:
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          set -o pipefail
+          node tools/collect.mjs --inspect 2>&1 | tee collect.log
+
+      - name: Build the browser payload
+        run: |
+          set -o pipefail
+          node tools/build-app-data.mjs 2>&1 | tee -a collect.log
+          # fail loudly if the payload the site reads was not refreshed
+          node -e '
+            const c = require("./public/data/core.json");
+            const age = Date.now() - Date.parse(c.freshness.lastRun || 0);
+            if (!(age < 30 * 60 * 1000)) {
+              console.error(`stale payload: lastRun is ${Math.round(age / 60000)} min old`);
+              process.exit(1);
+            }
+            console.log(`payload fresh: lastRun ${c.freshness.lastRun}`);
+          '
+
+      - name: Keep the log in the repo (no artifact download needed)
+        if: always()
+        run: |
+          mkdir -p data/diagnostics
+          { echo "# Collect run ${{ github.run_number }} — $(date -u +%FT%TZ)"; echo; echo '```'; tail -c 120000 collect.log; echo '```'; } > data/diagnostics/collect-latest.md
+
+      - name: Commit data
+        if: always()
+        run: |
+          git config user.name 'rdr-bot'
+          git config user.email 'rdr-bot@users.noreply.github.com'
+          rm -f data/.cache_*
+          # public/data is what Cloudflare Pages actually serves: without it the
+          # site kept showing the snapshot from the last manual build (7 h stale
+          # on 4 Nov while every collector run reported success).
+          git add -A data public/data
+          if git diff --cached --quiet; then
+            echo "no data change"
+            exit 0
+          fi
+          git commit -m "data: tracker update $(date -u +%FT%TZ) [skip ci]"
+          for i in 1 2 3 4 5; do
+            if git push origin "HEAD:${DATA_BRANCH}"; then echo pushed; exit 0; fi
+            sleep 5
+            git pull --rebase --autostash origin "${DATA_BRANCH}" || true
+          done
+          echo "could not push data"; exit 1

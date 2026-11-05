@@ -1,0 +1,59 @@
+name: Probe third-party sources
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/probe-tiles.mjs'
+      - '.github/workflows/probe-sources.yml'
+
+permissions:
+  contents: write
+
+env:
+  DATA_BRANCH: arena/e3d3aa8e-routedurhum
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DATA_BRANCH }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Probe tiles and APIs
+        run: |
+          node tools/probe-tiles.mjs 2>&1 | tee probe.log
+          node tools/probe-carto.mjs 2>&1 | tee -a probe.log || true
+          node tools/probe-bundles.mjs 2>&1 | tee -a probe.log || true
+          { node tools/probe-openmeteo.mjs 2>&1 || true; } > openmeteo.log
+          echo '--- open-meteo grid ---' >> probe.log
+          cat openmeteo.log >> probe.log
+          echo '--- exact browser-emulated requests ---' | tee -a probe.log
+          rm -f headers.log
+          { node tools/probe-openmeteo-headers.mjs 2>&1 || true; } > headers.log
+          { node tools/probe-pred.mjs 2>&1 || true; } > pred.log
+          echo '--- predicted track probe ---' >> probe.log
+          cat pred.log >> probe.log
+          ls -la headers.log
+          echo '--- header probe ---' >> probe.log
+          cat headers.log >> probe.log
+          echo '--- end probe ---' >> probe.log
+      - name: Publish results
+        if: always()
+        run: |
+          mkdir -p data/diagnostics
+          cp -f tiles-probe.json data/diagnostics/tiles-probe.json || true
+          { echo '# Probe sources'; echo '```'; cat probe.log; echo '```'; } > data/diagnostics/probe-sources-latest.md
+          rm -f data/diagnostics/bundle-*.js data/diagnostics/bundles/*.js
+          echo '```json' >> $GITHUB_STEP_SUMMARY
+          cat tiles-probe.json >> $GITHUB_STEP_SUMMARY || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          git config user.name 'rdr-bot'
+          git config user.email 'rdr-bot@users.noreply.github.com'
+          git add data/diagnostics/
+          git commit -m 'data: third-party source probe [skip ci]' || true
+          git push origin "HEAD:${DATA_BRANCH}" || true

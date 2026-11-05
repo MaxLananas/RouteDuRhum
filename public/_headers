@@ -1,0 +1,24 @@
+# Cloudflare Pages headers
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  X-Frame-Options: SAMEORIGIN
+
+# App shell: always revalidate so a new deploy is picked up immediately
+/
+  Cache-Control: public, max-age=0, must-revalidate
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Data snapshots: short edge cache. The collector rewrites them every 5 minutes and the
+# client also busts the cache with ?v=timestamps.
+/data/*
+  Cache-Control: public, max-age=60, s-maxage=60, stale-while-revalidate=600
+  Access-Control-Allow-Origin: *
+
+# Fingerprinted-ish static assets: safe to cache for a week
+/assets/*
+  Cache-Control: public, max-age=604800
+/vendor/*
+  Cache-Control: public, max-age=604800
