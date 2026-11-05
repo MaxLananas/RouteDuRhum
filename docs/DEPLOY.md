@@ -102,6 +102,27 @@ Conséquences pratiques :
    La condition exige maintenant que le build courant n'ait réellement aucune
    ligne de classement.
 
+### Deux autres défauts, trouvés le 5 novembre 2026 (corrigés)
+
+3. **Une seule URL malformée tuait l'aperçu.** `tools/serve.mjs` faisait
+   `decodeURIComponent(url.pathname)` sans protection. Sur `/%E0%A4%A`, Node lève
+   une `URIError` ; dans un gestionnaire `async`, cela devient un *unhandled
+   rejection*, et Node 22 **termine le processus**. Le journal restait vide, le
+   serveur redémarrait, et le cycle recommençait au prochain mauvais URL — d'où un
+   aperçu qui semblait « tomber tout seul » entre deux vérifications. Le décodage
+   est maintenant protégé (réponse **400**), le gestionnaire est enveloppé, et des
+   filets `unhandledRejection`/`uncaughtException` empêchent toute exception de
+   sortir d'une requête. Régression couverte par `scripts/serve-test.mjs`
+   (16 vérifications, exécutées avant les tests navigateur).
+
+4. **L'axe de temps des graphiques mélangeait deux fuseaux.** Le jour était lu
+   dans le fuseau de la machine, l'heure dans celui de Paris : tout tick entre
+   00:00 et 01:59 heure de Paris affichait **la date de la veille**. Le défaut
+   était latent (aucun point de données ne tombe dans cette plage pour l'instant),
+   mais les ticks sont posés sur des heures rondes — donc exactement là où il
+   ressort. `dateTick` force désormais `Europe/Paris` sur les deux parties, et le
+   test reconstruit chaque étiquette à partir de sa propre valeur.
+
 Leçon retenue pour la suite : « le job est vert » ne veut pas dire « le site est à
 jour ». La vérification utile est cette commande, à lancer avant de se fier au site :
 

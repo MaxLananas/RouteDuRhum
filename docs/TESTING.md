@@ -14,7 +14,7 @@ environnements ont donc été utilisés, chacun pour ce qu'il peut faire :
 
 ## Tests automatisés (53 vérifications, `scripts/visual-test.mjs`)
 
-Le script contient **44 assertions**, dont cinq exécutées dans une boucle sur quatre
+Le script contient **45 assertions**, dont cinq exécutées dans une boucle sur quatre
 largeurs d'écran (1024, 1280, 1440, 1920 px) et une sur chaque onglet : d'où
 **53 vérifications** au total dans le rapport. Lancé à chaque modification de
 `public/`, de `scripts/visual-test.mjs` ou de `tools/build-app-data.mjs`, il produit
@@ -38,7 +38,7 @@ largeurs d'écran (1024, 1280, 1440, 1920 px) et une sur chaque onglet : d'où
 | 15 | **communiqués de course** | les abandons officiels s'affichent avec le texte de la direction de course et le lien vers l'article |
 | 16 | comparaison flotte | 10 courbes (Laurent + 9 concurrents) |
 | 17 | graphiques rendus | au moins 4 graphiques avec des données |
-| 18 | **axe de temps réel** | abscisses linéaires : 1 h occupe la même largeur partout (la cadence 5 min → 60 min n'est plus déformée), et l'axe ne déborde ni avant le départ ni après le dernier pointage |
+| 18 | **axe de temps réel** | abscisses linéaires : 1 h occupe la même largeur partout (la cadence 5 min → 60 min n'est plus déformée), l'axe ne déborde ni avant le départ ni après le dernier pointage, et **chaque étiquette est reconstruite depuis sa propre valeur** (jour *et* heure à Paris) — c'est ce qui attrape un mélange de fuseaux, invisible sur une simple capture |
 | 19 | particules de vent | canvas météo > 20 000 pixels visibles |
 | 20 | lecteur météo | le survol d'une couche affiche valeur + direction |
 | 21-23 | **couche nuages** | voile réellement peint, légende dédiée, lecteur en %, et **calque couvrant toute la carte** (taille interne du canvas = scène : couvre un vrai bug où la couche s'arrêtait à mi-carte) |
